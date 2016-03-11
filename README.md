@@ -1,4 +1,4 @@
-# soundtrack
+# Soundtrack v0.13
 
 1. Implement multitrack midi playback (AVAudioEngine + AVAudioUnitSampler + AVAudioSequence)
 2. Implement some intelligent playback control (Time & Beat based)
