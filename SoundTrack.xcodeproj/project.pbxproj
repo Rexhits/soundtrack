@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD3090441C9265E9001A9CFA /* MusicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3090431C9265E9001A9CFA /* MusicManager.swift */; };
+		FD3090481C928EB8001A9CFA /* Small Grand Piano.exs in Resources */ = {isa = PBXBuildFile; fileRef = FD3090461C928D80001A9CFA /* Small Grand Piano.exs */; };
+		FD30904A1C928EB8001A9CFA /* Fingerstyle Electric Bass.exs in Resources */ = {isa = PBXBuildFile; fileRef = FD3090471C928D88001A9CFA /* Fingerstyle Electric Bass.exs */; };
+		FD30904C1C928EE9001A9CFA /* EXS Factory Samples in Resources */ = {isa = PBXBuildFile; fileRef = FD30904B1C928EE9001A9CFA /* EXS Factory Samples */; };
+		FD46038B1C92996400EECFF7 /* test.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD46038A1C92996400EECFF7 /* test.mid */; };
+		FD4603B81C92AD5900EECFF7 /* Sampler Files in Resources */ = {isa = PBXBuildFile; fileRef = FD4603B71C92AD5900EECFF7 /* Sampler Files */; };
+		FD4603B91C92AD6900EECFF7 /* Stereo Drum Kit.exs in Resources */ = {isa = PBXBuildFile; fileRef = FD4603B61C92AD3500EECFF7 /* Stereo Drum Kit.exs */; };
 		FD70214B1C916F38005AB2C1 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD70214A1C916F38005AB2C1 /* Location.swift */; };
 		FD70214D1C917A42005AB2C1 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD70214C1C917A42005AB2C1 /* MapKit.framework */; };
 		FD70214F1C918280005AB2C1 /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD70214E1C918280005AB2C1 /* UserStatus.swift */; };
@@ -21,6 +28,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FD3090431C9265E9001A9CFA /* MusicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicManager.swift; sourceTree = "<group>"; };
+		FD3090461C928D80001A9CFA /* Small Grand Piano.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Small Grand Piano.exs"; sourceTree = "<group>"; };
+		FD3090471C928D88001A9CFA /* Fingerstyle Electric Bass.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fingerstyle Electric Bass.exs"; sourceTree = "<group>"; };
+		FD30904B1C928EE9001A9CFA /* EXS Factory Samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "EXS Factory Samples"; sourceTree = "<group>"; };
+		FD46038A1C92996400EECFF7 /* test.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = test.mid; sourceTree = "<group>"; };
+		FD4603B61C92AD3500EECFF7 /* Stereo Drum Kit.exs */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Stereo Drum Kit.exs"; sourceTree = "<group>"; };
+		FD4603B71C92AD5900EECFF7 /* Sampler Files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Sampler Files"; sourceTree = "<group>"; };
 		FD70214A1C916F38005AB2C1 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		FD70214C1C917A42005AB2C1 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		FD70214E1C918280005AB2C1 /* UserStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatus.swift; sourceTree = "<group>"; };
@@ -68,6 +82,8 @@
 		FD8E18E31C9160DC0096DB7F /* SoundTrack */ = {
 			isa = PBXGroup;
 			children = (
+				FD4603B71C92AD5900EECFF7 /* Sampler Files */,
+				FD30904B1C928EE9001A9CFA /* EXS Factory Samples */,
 				FD8E18E41C9160DC0096DB7F /* AppDelegate.swift */,
 				FD8E18F81C91615B0096DB7F /* ViewControllers */,
 				FD8E18E81C9160DC0096DB7F /* Main.storyboard */,
@@ -81,8 +97,13 @@
 		FD8E18F81C91615B0096DB7F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				FD3090461C928D80001A9CFA /* Small Grand Piano.exs */,
+				FD3090471C928D88001A9CFA /* Fingerstyle Electric Bass.exs */,
+				FD4603B61C92AD3500EECFF7 /* Stereo Drum Kit.exs */,
+				FD46038A1C92996400EECFF7 /* test.mid */,
 				FD70214A1C916F38005AB2C1 /* Location.swift */,
 				FD70214E1C918280005AB2C1 /* UserStatus.swift */,
+				FD3090431C9265E9001A9CFA /* MusicManager.swift */,
 				FD8E18E61C9160DC0096DB7F /* MainViewController.swift */,
 				FD8E18F61C91612A0096DB7F /* MapViewController.swift */,
 				FD8E18FB1C91618B0096DB7F /* MusicViewController.swift */,
@@ -149,8 +170,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD4603B91C92AD6900EECFF7 /* Stereo Drum Kit.exs in Resources */,
+				FD46038B1C92996400EECFF7 /* test.mid in Resources */,
+				FD3090481C928EB8001A9CFA /* Small Grand Piano.exs in Resources */,
+				FD30904A1C928EB8001A9CFA /* Fingerstyle Electric Bass.exs in Resources */,
 				FD8E18EF1C9160DC0096DB7F /* LaunchScreen.storyboard in Resources */,
+				FD4603B81C92AD5900EECFF7 /* Sampler Files in Resources */,
 				FD8E18EC1C9160DC0096DB7F /* Assets.xcassets in Resources */,
+				FD30904C1C928EE9001A9CFA /* EXS Factory Samples in Resources */,
 				FD8E18EA1C9160DC0096DB7F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -169,6 +196,7 @@
 				FD8E18E51C9160DC0096DB7F /* AppDelegate.swift in Sources */,
 				FD70214B1C916F38005AB2C1 /* Location.swift in Sources */,
 				FD8E18FA1C9161780096DB7F /* SettingsViewController.swift in Sources */,
+				FD3090441C9265E9001A9CFA /* MusicManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +258,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -268,7 +296,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -280,7 +308,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SoundTrack/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rexwang.SoundTrack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -292,7 +320,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SoundTrack/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rexwang.SoundTrack;
 				PRODUCT_NAME = "$(TARGET_NAME)";

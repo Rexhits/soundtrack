@@ -10,7 +10,7 @@ import CoreLocation
 import UIKit
 
 // Our Class for handling all location data
-class Location: NSObject, CLLocationManagerDelegate, UIAlertViewDelegate {
+class Location: NSObject, CLLocationManagerDelegate  {
     static let sharedInstance = Location()
     //  Create an Global instance of CLLocationManager
     let locationManager = CLLocationManager()
@@ -20,23 +20,22 @@ class Location: NSObject, CLLocationManagerDelegate, UIAlertViewDelegate {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
         
-    func askLocationPermission() {
+    func askLocationPermission(caller: UIViewController) {
         let authstate = CLLocationManager.authorizationStatus()
         if(authstate != CLAuthorizationStatus.AuthorizedAlways){
             locationManager.requestAlwaysAuthorization()
         }
         if (authstate == CLAuthorizationStatus.Denied) {
             print("denied")
-            let alert = UIAlertView()
-            alert.addButtonWithTitle("Sure")
-            alert.message = "Please turn Location to Always"
-            alert.show()
-            alert.delegate = self
+            let alert = UIAlertController(title: "Location Permission", message: "Please Please turn Location to Always", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "Sure", style: .Default, handler: { (action: UIAlertAction) -> Void in
+                 UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+            })
+            alert.addAction(action)
+            caller.presentViewController(alert, animated: true, completion: nil)
         }
     }
+    
 
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
-    }
 }
 

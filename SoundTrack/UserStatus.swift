@@ -9,13 +9,13 @@
 import UIKit
 import CoreMotion
 
-class UserStatus: NSObject, UIAlertViewDelegate {
+class UserStatus: NSObject {
     static let sharedInstance = UserStatus()
     
     let activityManager = CMMotionActivityManager()
     let now = NSDate()
 
-    func motionTracking() {
+    func motionTracking(caller: UIViewController) {
         if (CMMotionActivityManager.isActivityAvailable()) {
             
             activityManager.queryActivityStartingFromDate(now, toDate: now, toQueue: NSOperationQueue.mainQueue(), withHandler: { (activity: [CMMotionActivity]?, error: NSError?) -> Void in
@@ -24,11 +24,14 @@ class UserStatus: NSObject, UIAlertViewDelegate {
                         print("CMErrorMotionActivityNotAuthorized")
                     }else if(error!.code != Int(CMErrorMotionActivityNotEntitled.rawValue)){
                         print("CMErrorMotionActivityNotEntitled")
-                        let alert = UIAlertView()
-                        alert.addButtonWithTitle("Sure")
-                        alert.message = "Please turn on Motion & Fitness"
-                        alert.show()
-                        alert.delegate = self
+                        
+                        let alert = UIAlertController(title: "Motion & Fitness Permission", message: "Please turn on Motion & Fitness", preferredStyle: .Alert)
+                        let action = UIAlertAction(title: "Sure", style: .Default, handler: { (action: UIAlertAction) -> Void in
+                            UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+                        })
+                        alert.addAction(action)
+                        caller.presentViewController(alert, animated: true, completion: nil)
+                        
                     }else if(error!.code != Int(CMErrorMotionActivityNotAvailable.rawValue)){
                         print("CMErrorMotionActivityNotAvailable")
                     }
@@ -67,13 +70,13 @@ class UserStatus: NSObject, UIAlertViewDelegate {
                 }
             }
         } else {
-            let alert = UIAlertView()
-            alert.addButtonWithTitle("OK")
-            alert.message = "OOPS, Activity Data Not Avaliable"
-            alert.show()
+
+            
+            let alert = UIAlertController(title: "Activity Tracking Error", message: "OOPS, Activity Data Not Avaliable", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "Sure", style: .Default, handler: nil)
+            alert.addAction(action)
+            caller.presentViewController(alert, animated: true, completion: nil)
         }
     }
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
-    }
+
 }
