@@ -34,14 +34,17 @@ class MainViewController: UIViewController {
         musicManager.loadPatch(["piano", "bass", "drum"], filename: ["Small Grand Piano", "Fingerstyle Electric Bass", "Stereo Drum Kit"])
         musicManager.loadMidiFile("test", insts: ["piano", "bass", "drum"])
     }
+    
+    @IBAction func intelligentPlay(sender: UIButton) {
+        musicManager.intelligentPlay()
+    }
 
     @IBAction func play(sender: UIButton) {
-        try! musicManager.sequencer!.start()
+        musicManager.play()
     }
     
     @IBAction func stop(sender: UIButton) {
-        musicManager.sequencer!.stop()
-        musicManager.sequencer!.prepareToPlay()
+        musicManager.stop()
     }
 }
 

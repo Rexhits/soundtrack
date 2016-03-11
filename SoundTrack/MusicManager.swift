@@ -25,6 +25,7 @@ class MusicManager: NSObject {
     let bass = AVAudioUnitSampler()
     let drum = AVAudioUnitSampler()
     let strings = AVAudioUnitSampler()
+    let horns = AVAudioUnitSampler()
     let pad = AVAudioUnitSampler()
     
     // Effects
@@ -36,16 +37,16 @@ class MusicManager: NSObject {
     // Connection format
     let format = AVAudioFormat(commonFormat: AVAudioCommonFormat.PCMFormatFloat32, sampleRate: 44100, channels: 2, interleaved: false)
     
-    
+    var timer: NSTimer?
     // Initiallization
     override init() {
         super.init()
         engine.reset()
         
         //some preset
-        piano.volume = 1
-        bass.volume = 0.5
-        drum.volume = 2
+        piano.volume = 0
+        bass.volume = 0
+        drum.volume = 0
         reverb.loadFactoryPreset(AVAudioUnitReverbPreset.LargeHall)
         delay.delayTime = 0.2
         delay.feedback = 50
@@ -58,6 +59,7 @@ class MusicManager: NSObject {
         engine.attachNode(bass)
         engine.attachNode(drum)
         engine.attachNode(strings)
+        engine.attachNode(horns)
         engine.attachNode(pad)
         
         engine.attachNode(reverb)
@@ -70,8 +72,9 @@ class MusicManager: NSObject {
         engine.connect(bass, to: mixer, format: format)
         engine.connect(drum, to: mixer, format: format)
         engine.connect(strings, to: mixer, format: format)
+        engine.connect(horns, to: mixer, format: format)
         engine.connect(pad, to: mixer, format: format)
-        
+    
         engine.connect(mixer, to: delay, format: format)
         engine.connect(delay, to: reverb, format: format)
         
@@ -81,15 +84,26 @@ class MusicManager: NSObject {
 
         
         sequencer = AVAudioSequencer(audioEngine: engine)
-
-        // load midi file, using local files for test
-
-
         
         do {
             try engine.start()
         } catch let error as NSError {
             print(error)
+        }
+        
+        
+        // Let audio play in background
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            print("AVAudioSession Category Playback OK")
+            do {
+                try AVAudioSession.sharedInstance().setActive(true)
+                print("AVAudioSession is Active")
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        } catch let error as NSError {
+            print(error.localizedDescription)
         }
         
     }
@@ -177,6 +191,20 @@ class MusicManager: NSObject {
                     return
                 }
                 
+            case "horns" :
+                guard let soundfile = NSBundle.mainBundle().URLForResource(filename[i], withExtension: "exs")
+                    else {
+                        print("could not read horns")
+                        return
+                }
+                
+                do {
+                    try horns.loadInstrumentAtURL(soundfile)
+                    
+                } catch let error as NSError {
+                    print("\(error.localizedDescription)")
+                    return
+                }
             case "pad" :
                 guard let soundfile = NSBundle.mainBundle().URLForResource(filename[i], withExtension: "exs")
                     else {
@@ -233,6 +261,9 @@ class MusicManager: NSObject {
                 case "strings" :
                     currentTrack[i+1].destinationAudioUnit = self.strings
                     
+                case "horns" :
+                    currentTrack[i+1].destinationAudioUnit = self.horns
+                    
                 case "pad" :
                     currentTrack[i+1].destinationAudioUnit = self.pad
                     
@@ -242,9 +273,74 @@ class MusicManager: NSObject {
             }
             
         }
+        sequencer!.prepareToPlay()
     }
 
     func play() {
-        try! sequencer!.start()
+        
+        piano.volume = 1
+        bass.volume = 0.5
+        drum.volume = 2
+        
+        do {
+        try sequencer!.start()
+        
+        } catch let error as NSError {
+            print("\(error.localizedDescription)")
+            return
+        }
+    }
+    
+    func stop() {
+        sequencer!.stop()
+        sequencer!.currentPositionInBeats = 0
+        self.timer = nil
+    }
+    
+
+    
+    func intelligentPlay () {
+        sequencer!.rate = 1
+        piano.volume = 0
+        bass.volume = 0
+        drum.volume = 0
+        do {
+            try sequencer!.start()
+            
+        } catch let error as NSError {
+            print("\(error.localizedDescription)")
+            return
+        }
+
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: "intelligent", userInfo: nil, repeats: true)
+    }
+    
+    func intelligent() {
+        let currentBeat = sequencer!.currentPositionInBeats
+        let track = sequencer!.tracks
+        if (currentBeat < 15.5) {
+            sequencer!.rate = 1
+            piano.volume = 1
+            bass.volume = 0
+            drum.volume = 0
+        } else if (currentBeat > 15.9 && currentBeat < 31.5) {
+            piano.volume = 1
+            bass.volume = 0.5
+            drum.volume = 0
+        } else if (currentBeat > 31.9 && currentBeat < 62.5) {
+            print(">32")
+            piano.volume = 1
+            bass.volume = 0.5
+            drum.volume = 2
+        } else if (currentBeat > 87.9 && currentBeat < 91.5) {
+            drum.volume = 1
+            bass.volume = 0.5
+            piano.volume = 0
+            
+        } else if (currentBeat > 91.95) {
+            piano.volume = 1.4
+            bass.volume = 0.8
+            drum.volume = 2
+        }
     }
 }

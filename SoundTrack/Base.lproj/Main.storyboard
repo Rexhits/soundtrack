@@ -72,7 +72,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="phw-UX-kJi">
-                                <rect key="frame" x="113" y="400" width="95" height="30"/>
+                                <rect key="frame" x="113" y="361" width="95" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Load Midi File"/>
                                 <connections>
@@ -80,7 +80,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="nsh-6X-0cp">
-                                <rect key="frame" x="144" y="467" width="32" height="30"/>
+                                <rect key="frame" x="144" y="495" width="32" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Stop"/>
                                 <connections>
@@ -88,11 +88,20 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="LO9-0g-Glc">
-                                <rect key="frame" x="145" y="438" width="30" height="30"/>
+                                <rect key="frame" x="145" y="399" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Play"/>
                                 <connections>
                                     <action selector="play:" destination="0dT-IV-o9f" eventType="touchUpInside" id="wez-kL-9ru"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gU7-Gm-z1q">
+                                <rect key="frame" x="110" y="428" width="100" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Intelligent Play"/>
+                                <connections>
+                                    <action selector="intelligentPlay:" destination="0dT-IV-o9f" eventType="touchUpInside" id="fAJ-w3-d0t"/>
+                                    <action selector="play:" destination="0dT-IV-o9f" eventType="touchUpInside" id="q9I-Ed-bt9"/>
                                 </connections>
                             </button>
                         </subviews>
