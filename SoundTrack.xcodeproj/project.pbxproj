@@ -25,8 +25,8 @@
 		FDCFF8B81C99249A00B8132B /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDCFF8B71C99249A00B8132B /* AudioKit.framework */; };
 		FDCFF8B91C99249A00B8132B /* AudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDCFF8B71C99249A00B8132B /* AudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FDD9788D1C99501F00C02A28 /* Sampler Files in Resources */ = {isa = PBXBuildFile; fileRef = FDD9788C1C99501F00C02A28 /* Sampler Files */; };
-		FDD9788F1C9956FA00C02A28 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD9788E1C9956FA00C02A28 /* MotionManager.swift */; };
 		FDD978911C99613300C02A28 /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD978901C99613300C02A28 /* GlobalFunctions.swift */; };
+		FDD978931C99688400C02A28 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD978921C99688400C02A28 /* MotionManager.swift */; };
 		FDE119F51C990E6800E03E4C /* MusicEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE119F41C990E6800E03E4C /* MusicEngine.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,8 +64,8 @@
 		FD8E18FB1C91618B0096DB7F /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		FDCFF8B71C99249A00B8132B /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AudioKit.framework; sourceTree = "<group>"; };
 		FDD9788C1C99501F00C02A28 /* Sampler Files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Sampler Files"; sourceTree = "<group>"; };
-		FDD9788E1C9956FA00C02A28 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionManager.swift; path = ../MotionManager.swift; sourceTree = "<group>"; };
 		FDD978901C99613300C02A28 /* GlobalFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
+		FDD978921C99688400C02A28 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		FDE119F41C990E6800E03E4C /* MusicEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,8 +120,8 @@
 				FD3090471C928D88001A9CFA /* Fingerstyle Electric Bass.exs */,
 				FD4603B61C92AD3500EECFF7 /* Stereo Drum Kit.exs */,
 				FD46038A1C92996400EECFF7 /* test.mid */,
-				FDD9788E1C9956FA00C02A28 /* MotionManager.swift */,
 				FDD978901C99613300C02A28 /* GlobalFunctions.swift */,
+				FDD978921C99688400C02A28 /* MotionManager.swift */,
 				FD70214A1C916F38005AB2C1 /* Location.swift */,
 				FD70214E1C918280005AB2C1 /* UserStatus.swift */,
 				FDE119F41C990E6800E03E4C /* MusicEngine.swift */,
@@ -217,11 +217,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD70214F1C918280005AB2C1 /* UserStatus.swift in Sources */,
+				FDD978931C99688400C02A28 /* MotionManager.swift in Sources */,
 				FD8E18E71C9160DC0096DB7F /* MainViewController.swift in Sources */,
 				FDD978911C99613300C02A28 /* GlobalFunctions.swift in Sources */,
 				FD8E18FC1C91618B0096DB7F /* MusicViewController.swift in Sources */,
 				FD8E18F71C91612A0096DB7F /* MapViewController.swift in Sources */,
-				FDD9788F1C9956FA00C02A28 /* MotionManager.swift in Sources */,
 				FD8E18E51C9160DC0096DB7F /* AppDelegate.swift in Sources */,
 				FD70214B1C916F38005AB2C1 /* Location.swift in Sources */,
 				FD8E18FA1C9161780096DB7F /* SettingsViewController.swift in Sources */,
