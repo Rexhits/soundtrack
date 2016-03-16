@@ -11,7 +11,7 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    let musicManager = MusicManager.sharedInstance
+    let musicManager = MusicEngine.sharedInstance
     
     
     override func viewDidLoad() {
@@ -22,6 +22,8 @@ class MainViewController: UIViewController {
         Location.sharedInstance.askLocationPermission(self)
         
         UserStatus.sharedInstance.motionTracking(self)
+        
+        MotionManager.sharedInstance.startMotion()
         
     }
 
