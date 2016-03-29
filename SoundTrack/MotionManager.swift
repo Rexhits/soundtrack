@@ -38,6 +38,9 @@ class MotionManager: NSObject {
     
     func stopMotion() {
         self.motionManager.stopAccelerometerUpdates()
+        for i in 0 ... 127 {
+            MusicEngine.sharedInstance.piano.stopNote(i, channel: 1)
+        }
     }
     
     func playRandomNote() {

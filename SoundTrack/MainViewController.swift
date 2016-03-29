@@ -19,11 +19,18 @@ class MainViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         // Ask user for location permit
-        Location.sharedInstance.askLocationPermission(self)
+        LocationManager.sharedInstance.askLocationPermission(self)
         
         UserStatus.sharedInstance.motionTracking(self)
         
-        MotionManager.sharedInstance.startMotion()
+        
+        
+        TaskManager.sharedInstance.addNew("Smooth Funk", location: "GaTech", difficulty: "Easy", latitude: [33.775627], longitude: [-84.396296])
+    }
+
+    @IBOutlet var start: UIButton!
+
+    @IBAction func pressedStart(sender: UIButton) {
         
     }
 
@@ -32,9 +39,17 @@ class MainViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func loadMidiFile(sender: UIButton) {
-        musicManager.loadPatch(["piano", "bass", "drum"], filename: ["Small Grand Piano", "Fingerstyle Electric Bass", "Stereo Drum Kit"])
-        musicManager.loadMidiFile("test", insts: ["piano", "bass", "drum"])
+    @IBOutlet var motionSwitch: UISwitch!
+
+    @IBAction func motionSwitchAct(sender: UISwitch) {
+        musicManager.loadPatch(["piano"], filename: ["Small Grand Piano"])
+        delayFunc(1) { 
+            if (self.motionSwitch.on == true) {
+                MotionManager.sharedInstance.startMotion()
+            } else {
+                MotionManager.sharedInstance.stopMotion()
+            }
+        }
     }
     
     @IBAction func intelligentPlay(sender: UIButton) {
@@ -42,6 +57,8 @@ class MainViewController: UIViewController {
     }
 
     @IBAction func play(sender: UIButton) {
+        musicManager.loadPatch(["piano", "bass", "drum"], filename: ["Small Grand Piano", "Fingerstyle Electric Bass", "Stereo Drum Kit"])
+        musicManager.loadMidiFile("test", insts: ["piano", "bass", "drum"])
         musicManager.play()
     }
     

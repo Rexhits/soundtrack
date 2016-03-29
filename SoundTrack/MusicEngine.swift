@@ -49,6 +49,8 @@ class MusicEngine: NSObject {
     
     override init() {
         super.init()
+        AKSettings.sampleRate = 44100
+        
         pianoPan = AKPanner(piano)
         guitarPan = AKPanner(guitar)
         bassPan = AKPanner(bass)
@@ -99,7 +101,7 @@ class MusicEngine: NSObject {
         
         // function for loading instruments
         print(inst.count)
-        for var i = 0; i < inst.count; i++ {
+        for i in 0 ..< inst.count {
             print("loading")
             switch inst[i] {
             case "piano":
@@ -141,7 +143,7 @@ class MusicEngine: NSObject {
             
         let currentTrack = sequencer!.avTracks
             
-        for var i = 0; i < insts.count; i++ {
+        for i in 0 ..< insts.count {
                 
             switch insts[i] {
             case "piano" :
@@ -175,8 +177,8 @@ class MusicEngine: NSObject {
     func play() {
         
         pianoVol!.gain = 1
-        bassVol!.gain = 0.5
-        drumVol!.gain = 2
+        bassVol!.gain = 0.4
+        drumVol!.gain = 2.5
         sequencer!.play()
 
     }
@@ -184,7 +186,7 @@ class MusicEngine: NSObject {
     func stop() {
         sequencer!.stop()
         sequencer!.rewind()
-        sequencer!.setRate(0.5)
+//        sequencer!.setRate(0.5)
         if (self.timer != nil) {
             self.timer!.invalidate()
             self.timer = nil
@@ -199,7 +201,7 @@ class MusicEngine: NSObject {
         
         
         sequencer!.play()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: "intelligent", userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: #selector(MusicEngine.intelligent), userInfo: nil, repeats: true)
     }
     
     func intelligent() {
@@ -217,16 +219,17 @@ class MusicEngine: NSObject {
             print(">32")
             pianoVol!.gain = 1
             bassVol!.gain = 0.5
-            drumVol!.gain = 2
+            drumVol!.gain = 2.5
         } else if (currentBeat > 87.9 && currentBeat < 91.5) {
             pianoVol!.gain = 1
             bassVol!.gain = 0.5
             drumVol!.gain = 0
-            
+            self.loadPatch(["bass", "drum"], filename: ["Fingerstyle Electric Bass", "EXS 808"])
         } else if (currentBeat > 91.95) {
+            
             pianoVol!.gain = 1.4
             bassVol!.gain = 0.8
-            drumVol!.gain = 2
+            drumVol!.gain = 3
         }
     }
 
