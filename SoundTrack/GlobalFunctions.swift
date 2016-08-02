@@ -1,88 +1,176 @@
 //
 //  GlobalFunctions.swift
-//  SoundTrack
+//  soundTrack
 //
-//  Created by WangRex on 3/16/16.
+//  Created by WangRex on 7/19/16.
 //  Copyright © 2016 WangRex. All rights reserved.
 //
 
 import Foundation
+import UIKit
+import CoreData
 
-func arc4random <T: IntegerLiteralConvertible> (type: T.Type) -> T {
-    var r: T = 0
-    arc4random_buf(&r, Int(sizeof(T)))
-    return r
-}
-
-extension UInt32 {
-    static func random(lower: UInt32 = min, upper: UInt32 = max) -> UInt32 {
-        return arc4random_uniform(upper - lower) + lower
+class GlobalFunctions {
+    static func getURLInDocumentDirectoryWithFilename (filename: String) -> NSURL {
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentDirectory = path[0] as String
+        let fullpath = "\(documentDirectory)/\(filename)"
+        return NSURL(fileURLWithPath: fullpath)
     }
+    static let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    
 }
 
-extension Int32 {
-    static func random(lower: Int32 = min, upper: Int32 = max) -> Int32 {
-        let r = arc4random_uniform(UInt32(Int64(upper) - Int64(lower)))
-        return Int32(Int64(r) + Int64(lower))
+class DataManager {
+    private static func getContext() -> NSManagedObjectContext {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
     }
-}
-
-extension UInt64 {
-    static func random(lower: UInt64 = min, upper: UInt64 = max) -> UInt64 {
-        var m: UInt64
-        let u = upper - lower
-        var r = arc4random(UInt64)
-        
-        if u > UInt64(Int64.max) {
-            m = 1 + ~u
+    static func newMode(name: String, category: String, subCategory: String?, upScale: [Int], downScale:[Int]) {
+        let context = DataManager.getContext()
+        let scaleEntity = NSEntityDescription.entity(forEntityName: "Scale", in: context)
+        let newScale = NSManagedObject(entity: scaleEntity!, insertInto: context)
+        let modeEntity = NSEntityDescription.entity(forEntityName: "Mode", in: context)
+        let newMode = NSManagedObject(entity: modeEntity!, insertInto: context)
+        newMode.setValue(name, forKey: "name")
+        newMode.setValue(category, forKey: "category")
+        newMode.setValue(subCategory, forKey: "subCategory")
+        newScale.setValue(upScale, forKey: "upgoing")
+        newScale.setValue(downScale, forKey: "downgoing")
+        newMode.setValue(newScale, forKey: "scale")
+        newScale.setValue(newMode, forKey: "modeBelongsTo")
+        do {
+            try context.save()
+            print("saved")
+        } catch let err as NSError {
+            print("Could not save \(err), \(err.userInfo)")
+        }
+    }
+    
+    
+    static func preloadData() {
+        let directoryURL = NSPersistentContainer.defaultDirectoryURL()
+        let fileURL = directoryURL.appendingPathComponent("MusicTheory.sqlite")
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
+            print("file is not there")
+            let sourceSqliteURLs = [Bundle.main.url(forResource: "MusicTheory", withExtension: "sqlite")!, Bundle.main.url(forResource: "MusicTheory", withExtension: "sqlite-wal")!, Bundle.main.url(forResource: "MusicTheory", withExtension: "sqlite-shm")!]
+            let destSqliteURLs = [directoryURL.appendingPathComponent("MusicTheory.sqlite"), directoryURL.appendingPathComponent("MusicTheory.sqlite-wal"), directoryURL.appendingPathComponent("MusicTheory.sqlite-shm")]
+            for i in 0 ..< sourceSqliteURLs.count {
+                do {
+                    try FileManager.default.copyItem(at: sourceSqliteURLs[i], to: destSqliteURLs[i])
+                } catch let err as NSError {
+                    print("error copying database! \(err)")
+                }
+                
+            }
         } else {
-            m = ((max - (u * 2)) + 1) % u
+            print("file is there")
         }
-        
-        while r < m {
-            r = arc4random(UInt64)
-        }
-        
-        return (r % u) + lower
     }
-}
+    
+    static func getAllModes() -> [Mode] {
+        //create a fetch request, telling it about the entity
+        let fetchRequest: NSFetchRequest<Mode> = Mode.fetchRequest()
+        let context = DataManager.getContext()
+        do {
+            //go get the results
+            let searchResults = try context.fetch(fetchRequest)
+            
+            //I like to check the size of the returned results!
+            print ("num of results = \(searchResults.count)")
+            return searchResults as [Mode]
+        } catch {
+            print("Error with request: \(error)")
+            return []
+        }
+    }
 
-
-extension Int64 {
-    static func random(lower: Int64 = min, upper: Int64 = max) -> Int64 {
-        let (s, overflow) = Int64.subtractWithOverflow(upper, lower)
-        let u = overflow ? UInt64.max - UInt64(~s) : UInt64(s)
-        let r = UInt64.random(upper: u)
-        
-        if r > UInt64(Int64.max)  {
-            return Int64(r - (UInt64(~lower) + 1))
+    static func getModesbyCategory(category: String) -> [Mode] {
+        let fetchRequest: NSFetchRequest<Mode> = Mode.fetchRequest()
+        let context = DataManager.getContext()
+        fetchRequest.predicate = NSPredicate(format: "category == %@", category)
+        do {
+            let searchResults = try context.fetch(fetchRequest)
+            return searchResults as [Mode]
+        } catch {
+            print("Error with request: \(error)")
+            return []
+        }
+    }
+    
+    
+    static func getModesbyScale(scale: [Int]) -> [Mode] {
+        let fetchRequest: NSFetchRequest<Scale> = Scale.fetchRequest()
+        var modes = [Mode]()
+        let context = DataManager.getContext()
+        let upgoingPredicates = NSPredicate(format: "upgoing == %@", scale)
+        let downgoingPredicates = NSPredicate(format: "downgoing == %@", scale)
+        fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [upgoingPredicates, downgoingPredicates])
+        do {
+            let searchResults = try context.fetch(fetchRequest)
+            let scales = searchResults as [Scale]
+            for i in scales {
+                modes.append(i.modeBelongsTo!)
+            }
+        } catch {
+            print("Error with request: \(error)")
+        }
+        return modes
+    }
+    
+    static func getMode(category: String, subCategory: String?, name: String) -> [Mode] {
+        let fetchRequest: NSFetchRequest<Mode> = Mode.fetchRequest()
+        let context = DataManager.getContext()
+        let categoryPredicate = NSPredicate(format: "category == %@", category)
+        let namePredicate = NSPredicate(format: "name == %@", name)
+        if subCategory != nil {
+            let subCategoryPredicate = NSPredicate(format: "subCategory == %@", subCategory!)
+            fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, subCategoryPredicate, namePredicate])
         } else {
-            return Int64(r) + lower
+            fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, namePredicate])
+        }
+        do {
+            let searchResults = try context.fetch(fetchRequest)
+            return searchResults as [Mode]
+        } catch {
+            print("Error with request: \(error)")
+            return []
         }
     }
 }
 
-extension UInt {
-    static func random(lower: UInt = min, upper: UInt = max) -> UInt {
-        switch (__WORDSIZE) {
-        case 32: return UInt(UInt32.random(UInt32(lower), upper: UInt32(upper)))
-        case 64: return UInt(UInt64.random(UInt64(lower), upper: UInt64(upper)))
-        default: return lower
-        }
+extension Float {
+    static func randomPercent() -> Float {
+        return Float(arc4random() % 1000) / 10.0;
     }
 }
 
 extension Int {
-    static func random(lower: Int = min, upper: Int = max) -> Int {
-        switch (__WORDSIZE) {
-        case 32: return Int(Int32.random(Int32(lower), upper: Int32(upper)))
-        case 64: return Int(Int64.random(Int64(lower), upper: Int64(upper)))
-        default: return lower
+    static func random(input:Int) -> Int {
+        return Int(arc4random_uniform(UInt32(input)))
+    }
+    static func randomIndex(probabilities: [Double]) -> Int {
+        
+        // Sum of all probabilities (so that we don't have to require that the sum is 1.0):
+        let sum = probabilities.reduce(0, +)
+        // Random number in the range 0.0 <= rnd < sum :
+        let rnd = sum * Double(arc4random_uniform(UInt32.max)) / Double(UInt32.max)
+        // Find the first interval of accumulated probabilities into which `rnd` falls:
+        var accum = 0.0
+        for (i, p) in probabilities.enumerated() {
+            accum += p
+            if rnd < accum {
+                return i
+            }
         }
+        // This point might be reached due to floating point inaccuracies:
+        return (probabilities.count - 1)
     }
 }
-func delayFunc(delay:Double, closure:()->()) {
-    
-    dispatch_after(
-        dispatch_time( DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), closure)
+
+func ~=<T: Equatable>(lhs: [T], rhs: [T]) -> Bool {
+    return lhs == rhs
 }
+
+

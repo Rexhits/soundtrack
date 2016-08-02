@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11209.5" systemVersion="15G31" minimumToolsVersion="Xcode 8.0" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Mode" representedClassName=".Mode" syncable="YES">
+        <attribute name="category" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="subCategory" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="scale" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Scale" inverseName="modeBelongsTo" inverseEntity="Scale" syncable="YES"/>
+    </entity>
+    <entity name="Scale" representedClassName=".Scale" syncable="YES">
+        <attribute name="downgoing" attributeType="Transformable" syncable="YES"/>
+        <attribute name="upgoing" attributeType="Transformable" syncable="YES"/>
+        <relationship name="modeBelongsTo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Mode" inverseName="scale" inverseEntity="Mode" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Mode" positionX="-317" positionY="36" width="128" height="105"/>
+        <element name="Scale" positionX="-54" positionY="63" width="128" height="90"/>
+    </elements>
+</model>

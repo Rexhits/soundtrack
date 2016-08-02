@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>SoundTrack.xcscheme</key>
+		<key>soundTrack.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>FD8E18E01C9160DC0096DB7F</key>
+		<key>FD8AEF721D3CB8C6002A06B4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
