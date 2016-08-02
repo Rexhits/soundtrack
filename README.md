@@ -1,3 +1,11 @@
+# Soundtrack v0.2
+Totally rewritten sound engine, using Csound directly instead of AudioKit3 and AVAudioEngine
+
+1. Renewed sound engine (in STSequencer)
+2. Midi sequence implemented (in STSequencer)
+3. Midi file output (in STSequencer)
+4. Generate clips based on given modes (in STComposer)
+
 # Soundtrack v0.14
 
 1. Migrated the entire audio system from AVFoundation to AudioKit 3
