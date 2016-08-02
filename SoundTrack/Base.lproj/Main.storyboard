@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11151.4"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -11,8 +12,8 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="soundTrack" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9AG-SX-CcC"/>
-                        <viewControllerLayoutGuide type="bottom" id="x4g-Hf-lNn"/>
+                        <viewControllerLayoutGuide type="top" id="ZBZ-bm-nSX"/>
+                        <viewControllerLayoutGuide type="bottom" id="nnl-gR-w1Q"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -41,21 +42,33 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mode" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dvs-QS-GcH">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="93" id="PdI-ua-jC6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="3NH-K4-Fzb" firstAttribute="bottom" secondItem="x4g-Hf-lNn" secondAttribute="top" id="L0T-C9-vb2"/>
-                            <constraint firstAttribute="trailing" secondItem="68J-9V-zcS" secondAttribute="trailing" id="cL9-YD-MDR"/>
-                            <constraint firstItem="68J-9V-zcS" firstAttribute="leading" secondItem="3NH-K4-Fzb" secondAttribute="leading" id="dXZ-HE-Z3g"/>
-                            <constraint firstItem="68J-9V-zcS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="mMz-oX-T8S"/>
-                            <constraint firstItem="68J-9V-zcS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="nK5-ey-TiQ"/>
-                            <constraint firstItem="3NH-K4-Fzb" firstAttribute="top" secondItem="68J-9V-zcS" secondAttribute="bottom" id="qfU-S2-gqg"/>
-                            <constraint firstItem="68J-9V-zcS" firstAttribute="trailing" secondItem="3NH-K4-Fzb" secondAttribute="trailing" id="tEG-JW-txG"/>
+                            <constraint firstItem="dvs-QS-GcH" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="0db-oL-bg7"/>
+                            <constraint firstItem="3NH-K4-Fzb" firstAttribute="centerX" secondItem="dvs-QS-GcH" secondAttribute="centerX" id="CYj-FG-8N4"/>
+                            <constraint firstItem="dvs-QS-GcH" firstAttribute="top" secondItem="3NH-K4-Fzb" secondAttribute="bottom" constant="8" symbolic="YES" id="HYQ-hq-mvB"/>
+                            <constraint firstItem="68J-9V-zcS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="JLW-J7-pnx"/>
+                            <constraint firstItem="68J-9V-zcS" firstAttribute="leading" secondItem="3NH-K4-Fzb" secondAttribute="leading" id="LlQ-Ac-KeR"/>
+                            <constraint firstAttribute="trailing" secondItem="68J-9V-zcS" secondAttribute="trailing" id="MbF-x5-Ss6"/>
+                            <constraint firstItem="3NH-K4-Fzb" firstAttribute="top" secondItem="68J-9V-zcS" secondAttribute="bottom" id="bvT-eA-yQs"/>
+                            <constraint firstItem="68J-9V-zcS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="cWX-jO-Njc"/>
+                            <constraint firstItem="nnl-gR-w1Q" firstAttribute="top" secondItem="dvs-QS-GcH" secondAttribute="bottom" constant="56" id="vSQ-xa-pN3"/>
+                            <constraint firstItem="68J-9V-zcS" firstAttribute="trailing" secondItem="3NH-K4-Fzb" secondAttribute="trailing" id="zE9-iT-vHc"/>
                         </constraints>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
                         <outlet property="csoundConsole" destination="3NH-K4-Fzb" id="BIQ-ev-o7i"/>
+                        <outlet property="modeLabel" destination="dvs-QS-GcH" id="irY-sf-3ra"/>
                         <outlet property="switcher" destination="A3p-qw-EDB" id="8mL-ob-5Ue"/>
                     </connections>
                 </viewController>

@@ -80,7 +80,7 @@ class STComposer {
     static let compoer = Composer(mood: 5.0)
     static var sequencer = STSequencer()
     
-    static func test() {
+    static func test() -> Mode {
         
         sequencer.stop()
         sequencer = STSequencer()
@@ -95,7 +95,7 @@ class STComposer {
 
                 
         sequencer.start()
-
+        return mode
     }
     static func newNoteEventList(mode: Mode) -> NoteEvents {
         let scale = mode.scale!

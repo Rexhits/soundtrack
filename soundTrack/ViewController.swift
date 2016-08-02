@@ -16,6 +16,8 @@ class ViewController: UIViewController {
     var playing = false
     var sequencer = STComposer.sequencer
     
+    @IBOutlet var modeLabel: UILabel!
+    
     @IBAction func playPause(_ sender: UIBarButtonItem) {
         if playing {
             sequencer = STComposer.sequencer
@@ -23,7 +25,8 @@ class ViewController: UIViewController {
             switcher.title = "Play"
             playing = false
         } else {
-            STComposer.test()
+            let mode = STComposer.test()
+            modeLabel.text = "Category = \(mode.category!) \nSubCategory =  \(mode.subCategory) \nName = \(mode.name!)"
             sequencer = STComposer.sequencer
             sequencer.csound.setMessageCallback(#selector(messageCallback), withListener: self)
             csoundConsole.text = ""
@@ -73,7 +76,10 @@ class ViewController: UIViewController {
         let oldText = csoundConsole.text
         let fullText = oldText?.appending(newMessage)
         csoundConsole.text = fullText
+        csoundConsole.scrollRangeToVisible(csoundConsole.selectedRange)
     }
+    
+    
     func messageCallback (infoObj: NSValue) {
         var info = Message()
         infoObj.getValue(&info)
@@ -90,7 +96,7 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
 
