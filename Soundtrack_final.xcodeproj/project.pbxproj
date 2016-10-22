@@ -33,6 +33,7 @@
 		FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FD4395041DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld */; };
 		FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD4395071DA4D5B00089F7CF /* Assets.xcassets */; };
 		FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD4395091DA4D5B00089F7CF /* LaunchScreen.storyboard */; };
+		FD61A45C1DBB93F20050F099 /* Untitled.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD61A45B1DBB93F20050F099 /* Untitled.mid */; };
 		FD89AD651DB60C240009815A /* MusicEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD89AD641DB60C240009815A /* MusicEngine.swift */; };
 		FD90E5241DB5F404008B0881 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5231DB5F404008B0881 /* CoreMIDI.framework */; };
 		FD90E5261DB5F413008B0881 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5251DB5F413008B0881 /* AudioToolbox.framework */; };
@@ -123,6 +124,7 @@
 		FD4395071DA4D5B00089F7CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD43950A1DA4D5B00089F7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FD43950C1DA4D5B00089F7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FD61A45B1DBB93F20050F099 /* Untitled.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = Untitled.mid; sourceTree = "<group>"; };
 		FD89AD631DB5FA610009815A /* Csound iOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Csound iOS-Prefix.pch"; sourceTree = "<group>"; };
 		FD89AD641DB60C240009815A /* MusicEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicEngine.swift; sourceTree = "<group>"; };
 		FD90E5231DB5F404008B0881 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
@@ -351,6 +353,7 @@
 				FD43950C1DA4D5B00089F7CF /* Info.plist */,
 				FD4395041DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld */,
 				FD89AD631DB5FA610009815A /* Csound iOS-Prefix.pch */,
+				FD61A45B1DBB93F20050F099 /* Untitled.mid */,
 				FD1C99561DBA8B1A0049EBAD /* test.mid */,
 			);
 			path = Soundtrack_final;
@@ -426,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD1C99571DBA8B1A0049EBAD /* test.mid in Resources */,
+				FD61A45C1DBB93F20050F099 /* Untitled.mid in Resources */,
 				FD2FE5171DB5F79C003A08AA /* LICENSE.TXT in Resources */,
 				FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */,
 				FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */,

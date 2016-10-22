@@ -10,3 +10,8 @@ import Foundation
 
 var token = NSString()
 
+let n: UInt8 = 0
+
+func iteratorForTuple(tuple: Any) -> AnyIterator<Any> {
+    return AnyIterator(Mirror(reflecting: tuple).children.lazy.map { $0.value }.makeIterator())
+}

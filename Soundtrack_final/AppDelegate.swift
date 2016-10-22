@@ -34,7 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let fileURL = NSURL(string: url!)
         let parser = MIDIParser(url: fileURL!)
         parser.getInfo(track: parser.tempoTrack!)
-        print(parser.tempo)
+        parser.getInfo(track: parser.tracks[0])
+        parser.getInfo(track: parser.tracks[1])
+        print(parser.parsedTracks)
         return true
     }
 
