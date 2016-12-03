@@ -1,0 +1,29 @@
+{
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "CF62AFF489EC5CAA44EC939D83D4F00113564430" : 9223372036854775807,
+    "40AC036064B28DF7BC3421AE354DC24FA9B45847" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5AD5A062-EF45-482E-B159-C1E36E4C33F9",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "CF62AFF489EC5CAA44EC939D83D4F00113564430" : "..\/Applications\/JUCE\/modules\/stk_wrapper\/stk",
+    "40AC036064B28DF7BC3421AE354DC24FA9B45847" : "..\/Applications\/JUCE\/modules\/stk_wrapper"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Soundtrack_final",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Soundtrack_final.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/adamski\/stk_wrapper.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "40AC036064B28DF7BC3421AE354DC24FA9B45847"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:adamski\/stk.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "CF62AFF489EC5CAA44EC939D83D4F00113564430"
+    }
+  ]
+}

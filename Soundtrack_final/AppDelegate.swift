@@ -30,13 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         
-        let url = Bundle.main.path(forResource: "test", ofType: "mid")
-        let fileURL = NSURL(string: url!)
-        let parser = MIDIParser(url: fileURL!)
-        parser.getInfo(track: parser.tempoTrack!)
-        parser.getInfo(track: parser.tracks[0])
-        parser.getInfo(track: parser.tracks[1])
-        print(parser.parsedTracks)
         return true
     }
 

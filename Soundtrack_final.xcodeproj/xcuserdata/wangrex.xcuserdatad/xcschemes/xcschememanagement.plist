@@ -4,6 +4,16 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>STSynth.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
+		<key>SoundTrack-iOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>Soundtrack_final.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,7 +22,62 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>FD2D2D5E1DF2BC9D0032268E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD2D2D781DF2BD500032268E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>FD4394F91DA4D5B00089F7CF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD94C8711DF2804D00C9D5EA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD94C88A1DF280B400C9D5EA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD94C8A11DF2815100C9D5EA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD94C8C71DF28C3C00C9D5EA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FDA9874C1DF2C72900179724</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FDA9877C1DF2C83B00179724</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FDB5A98F1DF2ABA8001EF1AF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FDB5A9A71DF2AC28001EF1AF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FDF88F491DCAB9A700173F82</key>
 		<dict>
 			<key>primary</key>
 			<true/>

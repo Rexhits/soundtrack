@@ -83,7 +83,6 @@ static int MidiInDeviceOpen(CSOUND *csound, void **userData, const char *dev)
 {
     int k;
     ItemCount endpoints;
-        
     CFStringRef name = NULL, cname = NULL, pname = NULL;
     CFStringEncoding defaultEncoding = CFStringGetSystemEncoding();
     MIDIClientRef mclient = 0;
@@ -111,8 +110,7 @@ static int MidiInDeviceOpen(CSOUND *csound, void **userData, const char *dev)
 			csoundMessage(csound, "midi srcs %lu\n", endpoints); 
             for(k=0; k < endpoints; k++){
                 endpoint = MIDIGetSource(k);
-                MIDIPortConnectSource(mport, endpoint, NULL);
-                
+                MIDIPortConnectSource(mport, endpoint, NULL);                
             }
         }
     }

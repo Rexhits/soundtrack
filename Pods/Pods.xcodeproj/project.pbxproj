@@ -84,6 +84,27 @@
 			remoteGlobalIDString = 2486276EDA7ABEEA1C4977CC218AE159;
 			remoteInfo = Lockbox;
 		};
+		FD691BF61DF2C1AF00C37059 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD691BE21DF2C1AF00C37059 /* STSynth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E6A4939607C568111B5FE0AF;
+			remoteInfo = "STSynth (AUv3 AppExtension)";
+		};
+		FD691BF81DF2C1AF00C37059 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD691BE21DF2C1AF00C37059 /* STSynth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2BD72EA9BEE032722B09382A;
+			remoteInfo = "STSynth (AUv3 Standalone)";
+		};
+		FD691BFA1DF2C1AF00C37059 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD691BE21DF2C1AF00C37059 /* STSynth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 44F6F46B959AD47E8F3923BE;
+			remoteInfo = "STSynth (Shared Code)";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -160,6 +181,7 @@
 		F4F6FC424B1ED320EDE5C58227D00FFC /* Pods-Soundtrack_final-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Soundtrack_final-frameworks.sh"; sourceTree = "<group>"; };
 		F8EDB9FB8FB91A575B9DF88D925865A2 /* AFAutoPurgingImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFAutoPurgingImageCache.m; path = "UIKit+AFNetworking/AFAutoPurgingImageCache.m"; sourceTree = "<group>"; };
 		FD1531E4B6EA033A931D27E1A74174E4 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIWebView+AFNetworking.h"; path = "UIKit+AFNetworking/UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
+		FD691BE21DF2C1AF00C37059 /* STSynth.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = STSynth.xcodeproj; path = ../../../Users/wangrex/Documents/Programming/Juce/STSynth/Builds/iOS/STSynth.xcodeproj; sourceTree = "<group>"; };
 		FD90E52E1DB5F58A008B0881 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		FE36CFAE4F8A2EB42581B934991DDD80 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -337,6 +359,7 @@
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
+				FD691BE21DF2C1AF00C37059 /* STSynth.xcodeproj */,
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				20B56609144CE204DFA8221F742B2D76 /* Frameworks */,
 				5C014586E5E8B3411E2BC62E83574DB2 /* Pods */,
@@ -424,6 +447,16 @@
 				FE36CFAE4F8A2EB42581B934991DDD80 /* AFSecurityPolicy.m */,
 			);
 			name = Security;
+			sourceTree = "<group>";
+		};
+		FD691BE31DF2C1AF00C37059 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FD691BF71DF2C1AF00C37059 /* STSynth.appex */,
+				FD691BF91DF2C1AF00C37059 /* STSynth.app */,
+				FD691BFB1DF2C1AF00C37059 /* libSTSynth.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -573,6 +606,12 @@
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
 			productRefGroup = 84651FEA6809F851B0B25C06C3C38AEC /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = FD691BE31DF2C1AF00C37059 /* Products */;
+					ProjectRef = FD691BE21DF2C1AF00C37059 /* STSynth.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1C3436CEA5C3D39764C5F54374794ECB /* AFNetworking */,
@@ -582,6 +621,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		FD691BF71DF2C1AF00C37059 /* STSynth.appex */ = {
+			isa = PBXReferenceProxy;
+			fileType = "wrapper.app-extension";
+			path = STSynth.appex;
+			remoteRef = FD691BF61DF2C1AF00C37059 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FD691BF91DF2C1AF00C37059 /* STSynth.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = STSynth.app;
+			remoteRef = FD691BF81DF2C1AF00C37059 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FD691BFB1DF2C1AF00C37059 /* libSTSynth.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSTSynth.a;
+			remoteRef = FD691BFA1DF2C1AF00C37059 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1F17F426378DF5EC8DFB10304B8C4BA4 /* Sources */ = {
