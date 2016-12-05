@@ -373,174 +373,47 @@ class MusicBlock: MIDIParser {
 }
 
 
-class Player: NSObject ,CsoundObjListener {
-    var csound = [CsoundObj]()
+class Player: NSObject {
     var sequencer: MusicSequence?
+    var processGraph: AUGraph?
     var tracks = [MusicTrack]()
+    var ioNode = AUNode()
+    var ioUnit: AudioUnit?
+    var outIsInitialized:DarwinBoolean = false
+    var isRunning:DarwinBoolean = false
+    var isPlaying:DarwinBoolean = false
     private var musicPlayer: MusicPlayer?
-    private var midiClient = MIDIClientRef()
-    private var virtualSourceEndpointRef = MIDIEndpointRef()
-    private var notifyBlock: MIDINotifyBlock?
-    private var readBlock: MIDIReadBlock!
     override init() {
         
     }
     init(sequence: MusicBlock) {
         super.init()
-        readBlock = self.myReadBlock
-        notifyBlock = self.myNotifyCallback
         self.sequencer = sequence.getSequencer()
         self.tracks = sequence.tracks
-        for i in tracks {
-            self.csound.append(CsoundObj())
-            outputToCsound(track: i)
-        }
+        processGraphSetUp()
+        MusicSequenceSetAUGraph(self.sequencer!, self.processGraph!)
         let status = NewMusicPlayer(&musicPlayer)
         if status != OSStatus(noErr) {
             print("\(#line) bad status \(status) creating music player")
         } else {
             print("music player created")
         }
+        
+        for i in tracks {
+            // plug Audio Unit
+        }
         MusicPlayerSetSequence(musicPlayer!, self.sequencer)
-        loadCSD()
         
-    }
-    func outputToCsound(track: MusicTrack) {
-        var status = MIDIClientCreateWithBlock("myClient \(Date().timeIntervalSinceReferenceDate)" as CFString, &midiClient, notifyBlock)
-        if status != OSStatus(noErr) {
-            print("error creating midi client \(status)")
-        } else {
-            print("midi client created")
-        }
-        status = MIDIDestinationCreateWithBlock(midiClient, "VirtualDest \(Date().timeIntervalSinceReferenceDate)" as CFString, &virtualSourceEndpointRef, readBlock!)
-        if status != OSStatus(noErr) {
-            print("error creating midi destination \(status)")
-        } else {
-            print("midi destination created")
-        }
-            status = MusicTrackSetDestMIDIEndpoint(track, virtualSourceEndpointRef)
-        if status != OSStatus(noErr) {
-            print("error setting midi endpoint \(status)")
-        } else {
-            print("midi endpoint set")
-        }
-        
-        status = MIDISourceCreate(midiClient,
-                                  "virtualSource \(Date().timeIntervalSinceReferenceDate)" as CFString,
-                                  &virtualSourceEndpointRef)
-        if status != OSStatus(noErr) {
-            print("error creating midi source \(status)")
-        } else {
-            print("midi source created")
-        }
-        print("Number of Source: \(MIDIGetNumberOfSources())")
-    }
-    
-    private func myNotifyCallback(message:UnsafePointer<MIDINotification>) -> Void {
-        let notification = message.pointee
-        print("MIDI Notify, messageId= \(notification.messageID)")
-        
-        switch (notification.messageID) {
-        case MIDINotificationMessageID.msgSetupChanged:
-            NSLog("MIDI setup changed")
-            break
-            
-        case MIDINotificationMessageID.msgObjectAdded:
-            NSLog("added")
-            message.withMemoryRebound(to: MIDIObjectAddRemoveNotification.self, capacity: 1) {
-                let m = $0.pointee
-                print("id \(m.messageID)")
-                print("size \(m.messageSize)")
-                print("child \(m.child)")
-                print("child type \(m.childType)")
-                print("parent \(m.parent)")
-                print("parentType \(m.parentType)")
-            }
-            break
-            
-        case MIDINotificationMessageID.msgObjectRemoved:
-            NSLog("kMIDIMsgObjectRemoved")
-            message.withMemoryRebound(to: MIDIObjectAddRemoveNotification.self, capacity: 1) {
-                let m = $0.pointee
-                print("id \(m.messageID)")
-                print("size \(m.messageSize)")
-                print("child \(m.child)")
-                print("child type \(m.childType)")
-                print("parent \(m.parent)")
-                print("parentType \(m.parentType)")
-            }
-            break
-            
-        case MIDINotificationMessageID.msgPropertyChanged :
-            NSLog("kMIDIMsgPropertyChanged")
-            message.withMemoryRebound(to: MIDIObjectPropertyChangeNotification.self, capacity: 1) {
-                let m = $0.pointee
-                print("id \(m.messageID)")
-                print("size \(m.messageSize)")
-                print("property name \(m.propertyName)")
-                print("object type \(m.objectType)")
-                print("object \(m.object)")
-            }
-            break
-            
-        case MIDINotificationMessageID.msgThruConnectionsChanged :
-            NSLog("MIDI thru connections changed.")
-            break
-            
-        case MIDINotificationMessageID.msgSerialPortOwnerChanged :
-            NSLog("MIDI serial port owner changed.")
-            break
-            
-        case MIDINotificationMessageID.msgIOError :
-            NSLog("MIDI I/O error.")
-            break
-            
-        }
-        
-    }
-    
-    
-    private func myReadBlock(packetList: UnsafePointer<MIDIPacketList>, srcConnRefCon: UnsafeMutableRawPointer?) -> Swift.Void {
-//        print("sending packets to source \(packetList)")
-        MIDIReceived(virtualSourceEndpointRef, packetList)
-        
-//            dumpPacketList(packetlist: packetList.pointee)
-    }
-    
-    private func dumpPacketList(packetlist:MIDIPacketList) {
-        let packet = packetlist.packet
-        var ap = UnsafeMutablePointer<MIDIPacket>.allocate(capacity: 1)
-        ap.initialize(to: packet)
-        for _ in 0 ..< packetlist.numPackets {
-            let p = ap.pointee
-            dump(p)
-            ap = MIDIPacketNext(ap)
-        }
     }
     
     func start() {
-        
         MusicPlayerStart(musicPlayer!)
-        
+        MusicPlayerIsPlaying(self.musicPlayer!, &self.isPlaying)
     }
     
     func stop() {
         MusicPlayerStop(musicPlayer!)
-    }
-    
-    // for test!!!
-    func loadCSD() {
-        
-        let path = Bundle.main.url(forResource: "csoundTest", withExtension: "csd")
-        if path != nil {
-            for i in csound {
-                i.midiInEnabled = true
-                i.play(path!.path)
-            }
-        } else {
-            print("File Not Found!")
-        }
-        
+        MusicPlayerIsPlaying(self.musicPlayer!, &self.isPlaying)
     }
     
     /*
@@ -593,6 +466,47 @@ class Player: NSObject ,CsoundObjListener {
         }
     }
     
+    private func processGraphSetUp() {
+        var status = NewAUGraph(&self.processGraph)
+        if status != OSStatus(noErr) {
+            print("\(#line) bad status \(status) creating AUGraph")
+        } else {
+            print("AUGraph created")
+        }
+        
+        var ioUnitDescription = AudioComponentDescription(componentType: kAudioUnitType_Output, componentSubType: kAudioUnitSubType_RemoteIO, componentManufacturer: kAudioUnitManufacturer_Apple, componentFlags: 0, componentFlagsMask: 0)
+        status = AUGraphAddNode(self.processGraph!, &ioUnitDescription, &ioNode)
+        status = AUGraphOpen(self.processGraph!)
+        status = AUGraphNodeInfo(self.processGraph!, ioNode, nil, &ioUnit)
+        
+    }
+    
+    func addNode(auComponent: AVAudioUnitComponent, completionHandler: @escaping ((Void) -> Void)) {
+        var node = AUNode()
+        var audiounit: AudioUnit?
+        let type = auComponent.typeName
+        if type == "Music Device" && isPlaying == true {
+            MusicPlayerStop(self.musicPlayer!)
+        }
+        var des = auComponent.audioComponentDescription
+        var status = AUGraphAddNode(self.processGraph!, &des, &node)
+
+//        status = AUGraphNodeInfo(self.processGraph!, node, nil, &audiounit)
+//        status = AUGraphConnectNodeInput(self.processGraph!, node, 0, self.ioNode, 0)
+        completionHandler()
+    }
+    
+    func startGraph() {
+        AUGraphIsInitialized(self.processGraph!, &outIsInitialized)
+        if outIsInitialized == false {
+            AUGraphInitialize(self.processGraph!)
+        }
+        AUGraphIsRunning(self.processGraph!, &isRunning)
+        if isRunning == false {
+            AUGraphStart(self.processGraph!)
+        }
+    }
+    
     static func getAvailableAUList(type: auType) -> [AVAudioUnitComponent] {
         var componentDescription = AudioComponentDescription()
         componentDescription.componentType = type.getType()
@@ -600,10 +514,8 @@ class Player: NSObject ,CsoundObjListener {
         componentDescription.componentManufacturer = 0
         componentDescription.componentFlags = 0
         componentDescription.componentFlagsMask = 0
-        
         return AVAudioUnitComponentManager.shared().components(matching: componentDescription)
     }
-    
     
 }
 

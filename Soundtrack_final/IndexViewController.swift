@@ -8,6 +8,7 @@
 
 import UIKit
 import Lockbox
+import AudioToolbox
 
 class IndexViewController: UIViewController {
 
@@ -42,12 +43,13 @@ class IndexViewController: UIViewController {
 //        player = Player(sequence: block)
 //        player.csound.setMessageCallback(#selector(messageCallback), withListener: self)
         // Do any additional setup after loading the view.
-        for i in Player.getAvailableAUList(type: .instrument) {
-            print("instruments! \(i.name)\n")
-        }
-        for i in Player.getAvailableAUList(type: .effect) {
-            print("effects! \(i.name)\n")
-        }
+//        print(Player.getAvailableAUList(type: .instrument)[0].audioComponentDescription)
+        
+        
+        player.addNode(auComponent: Player.getAvailableAUList(type: .instrument)[0], completionHandler: {})
+        player.startGraph()
+        player.start()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,25 +62,7 @@ class IndexViewController: UIViewController {
         self.performSegue(withIdentifier: "logout", sender: self)
     }
 
-    func updateUIWithNewMessage(newMessage: String) {
-        let oldText = csoundConsole.text
-        let fullText = oldText?.appending(newMessage)
-        csoundConsole.text = fullText
-        csoundConsole.scrollRangeToVisible(csoundConsole.selectedRange)
-    }
     
-    
-    func messageCallback (infoObj: NSValue) {
-        var info = Message()
-        infoObj.getValue(&info)
-        let message = UnsafeMutablePointer<Int8>.allocate(capacity: 1024)
-        vsnprintf(message, 1024, info.format, info.valist)
-        let messageStr = String.init(format: "%s", message)
-        DispatchQueue.main.async {
-            self.updateUIWithNewMessage(newMessage: messageStr)
-        }
-        
-    }
     @IBAction func play(_ sender: UIButton) {
         player.loopTrack()
         player.start()

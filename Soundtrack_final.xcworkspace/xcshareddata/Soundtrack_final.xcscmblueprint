@@ -1,15 +1,18 @@
 {
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "43307C8D19B83DEFC23CECC9A60C2C82005E9354",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "CF62AFF489EC5CAA44EC939D83D4F00113564430" : 9223372036854775807,
-    "40AC036064B28DF7BC3421AE354DC24FA9B45847" : 9223372036854775807
+    "40AC036064B28DF7BC3421AE354DC24FA9B45847" : 9223372036854775807,
+    "43307C8D19B83DEFC23CECC9A60C2C82005E9354" : 9223372036854775807,
+    "CF62AFF489EC5CAA44EC939D83D4F00113564430" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5AD5A062-EF45-482E-B159-C1E36E4C33F9",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "CF62AFF489EC5CAA44EC939D83D4F00113564430" : "..\/Applications\/JUCE\/modules\/stk_wrapper\/stk",
-    "40AC036064B28DF7BC3421AE354DC24FA9B45847" : "..\/Applications\/JUCE\/modules\/stk_wrapper"
+    "40AC036064B28DF7BC3421AE354DC24FA9B45847" : "..\/..\/..\/Applications\/JUCE\/modules\/stk_wrapper",
+    "43307C8D19B83DEFC23CECC9A60C2C82005E9354" : "soundtrack\/",
+    "CF62AFF489EC5CAA44EC939D83D4F00113564430" : "..\/Applications\/JUCE\/modules\/stk_wrapper\/stk"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Soundtrack_final",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -19,6 +22,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/adamski\/stk_wrapper.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "40AC036064B28DF7BC3421AE354DC24FA9B45847"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Rexhits\/soundtrack.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "43307C8D19B83DEFC23CECC9A60C2C82005E9354"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:adamski\/stk.git",
