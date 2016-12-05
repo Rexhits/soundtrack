@@ -375,12 +375,14 @@ class MusicBlock: MIDIParser {
 
 class Player: NSObject {
     var sequencer: MusicSequence?
+    var processGraph: AUGraph?
     var tracks = [MusicTrack]()
-    
+    var ioNode = AUNode()
+    var ioUnit: AudioUnit?
+    var outIsInitialized:DarwinBoolean = false
+    var isRunning:DarwinBoolean = false
+    var isPlaying:DarwinBoolean = false
     private var musicPlayer: MusicPlayer?
-    private let engine = AVAudioEngine()
-    
-    
     override init() {
         
     }
@@ -388,8 +390,8 @@ class Player: NSObject {
         super.init()
         self.sequencer = sequence.getSequencer()
         self.tracks = sequence.tracks
-        audioEngineSetUp()
-        
+        processGraphSetUp()
+        MusicSequenceSetAUGraph(self.sequencer!, self.processGraph!)
         let status = NewMusicPlayer(&musicPlayer)
         if status != OSStatus(noErr) {
             print("\(#line) bad status \(status) creating music player")
@@ -406,10 +408,12 @@ class Player: NSObject {
     
     func start() {
         MusicPlayerStart(musicPlayer!)
+        MusicPlayerIsPlaying(self.musicPlayer!, &self.isPlaying)
     }
     
     func stop() {
         MusicPlayerStop(musicPlayer!)
+        MusicPlayerIsPlaying(self.musicPlayer!, &self.isPlaying)
     }
     
     /*
@@ -462,25 +466,46 @@ class Player: NSObject {
         }
     }
     
-    private func audioEngineSetUp() {
+    private func processGraphSetUp() {
+        var status = NewAUGraph(&self.processGraph)
+        if status != OSStatus(noErr) {
+            print("\(#line) bad status \(status) creating AUGraph")
+        } else {
+            print("AUGraph created")
+        }
         
+        var ioUnitDescription = AudioComponentDescription(componentType: kAudioUnitType_Output, componentSubType: kAudioUnitSubType_RemoteIO, componentManufacturer: kAudioUnitManufacturer_Apple, componentFlags: 0, componentFlagsMask: 0)
+        status = AUGraphAddNode(self.processGraph!, &ioUnitDescription, &ioNode)
+        status = AUGraphOpen(self.processGraph!)
+        status = AUGraphNodeInfo(self.processGraph!, ioNode, nil, &ioUnit)
         
     }
     
     func addNode(auComponent: AVAudioUnitComponent, completionHandler: @escaping ((Void) -> Void)) {
-        AVAudioUnit.instantiate(with: auComponent.audioComponentDescription, options: []) { component, err in
-            guard let avAudioUnit = component else {return}
-            self.engine.attach(avAudioUnit)
-            let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
-            self.engine.connect(self.engine.mainMixerNode, to: self.engine.outputNode, format: format)
-            self.engine.connect(avAudioUnit, to: self.engine.mainMixerNode, format: format)
-            self.engine.musicSequence = self.sequencer!
-            try! self.engine.start()
-            completionHandler()
+        var node = AUNode()
+        var audiounit: AudioUnit?
+        let type = auComponent.typeName
+        if type == "Music Device" && isPlaying == true {
+            MusicPlayerStop(self.musicPlayer!)
         }
-        
+        var des = auComponent.audioComponentDescription
+        var status = AUGraphAddNode(self.processGraph!, &des, &node)
+
+//        status = AUGraphNodeInfo(self.processGraph!, node, nil, &audiounit)
+//        status = AUGraphConnectNodeInput(self.processGraph!, node, 0, self.ioNode, 0)
+        completionHandler()
     }
     
+    func startGraph() {
+        AUGraphIsInitialized(self.processGraph!, &outIsInitialized)
+        if outIsInitialized == false {
+            AUGraphInitialize(self.processGraph!)
+        }
+        AUGraphIsRunning(self.processGraph!, &isRunning)
+        if isRunning == false {
+            AUGraphStart(self.processGraph!)
+        }
+    }
     
     static func getAvailableAUList(type: auType) -> [AVAudioUnitComponent] {
         var componentDescription = AudioComponentDescription()
