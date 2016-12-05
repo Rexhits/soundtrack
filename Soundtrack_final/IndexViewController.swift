@@ -47,7 +47,6 @@ class IndexViewController: UIViewController {
         
         
         player.addNode(auComponent: Player.getAvailableAUList(type: .instrument)[0], completionHandler: {})
-        player.startGraph()
         player.start()
 
     }
