@@ -142,22 +142,11 @@ public class SimplePlayEngine : NSObject {
 
         engine.attach(player)
 
-		if isEffect() {
-			guard let fileURL = Bundle.main.url(forResource: "drumLoop", withExtension: "caf") else {
-				fatalError("\"drumLoop.caf\" file not found.")
-			}
-
-			setPlayerFile(fileURL)
-		}
 		
 		if componentsFoundCallback != nil {
 			// Only bother to look up components if the client provided a callback.
 			updateAudioUnitList()
 			
-			// Sign up for a notification when the list of available components changes.
-			NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: kAudioComponentRegistrationsChangedNotification as String as String), object: nil, queue: nil) { [weak self] _ in
-				self?.updateAudioUnitList()
-			}
 		}
 
         #if os(iOS)
@@ -396,6 +385,7 @@ public class SimplePlayEngine : NSObject {
 			testUnitNode = nil
 			testAudioUnit = nil
 			presetList = [AUAudioUnitPreset]()
+            
 		}
 
 		// Insert the audio unit, if any.
