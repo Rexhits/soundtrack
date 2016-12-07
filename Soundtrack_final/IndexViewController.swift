@@ -11,10 +11,9 @@ import Lockbox
 import AudioToolbox
 
 class IndexViewController: UIViewController {
-
+    var sequence = Measure()
 
     @IBOutlet var csoundConsole: UITextView!
-    var player = Player()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,12 +21,12 @@ class IndexViewController: UIViewController {
         let url = Bundle.main.path(forResource: "test", ofType: "mid")
         let fileURL = NSURL(string: url!)
         let parser = MusicBlock(name: "test", composedBy: "ZZW", midiFile: fileURL!)
-        var sequence = Measure()
+        
         sequence.addNote(note: NoteEvent(note: 60, velocity: 80, timeStamp: 0, duration: 1))
         sequence.addNote(note: NoteEvent(note: 64, velocity: 90, timeStamp: 0, duration: 2))
         print(sequence.getNoteMatrix())
         parser.parsedTracks[0].appendSequence(inputSequence: sequence)
-        player = Player(sequence: parser)
+
         //        player.csound.setMessageCallback(#selector(messageCallback), withListener: self)
 //        parser.parse()
 //        let parsedTracks = parser.parsedTracks
@@ -46,9 +45,6 @@ class IndexViewController: UIViewController {
 //        print(Player.getAvailableAUList(type: .instrument)[0].audioComponentDescription)
         
         
-        player.addNode(auComponent: Player.getAvailableAUList(type: .instrument)[0], completionHandler: {})
-        player.startGraph()
-        player.start()
 
     }
 
@@ -64,11 +60,9 @@ class IndexViewController: UIViewController {
 
     
     @IBAction func play(_ sender: UIButton) {
-        player.loopTrack()
-        player.start()
+        
     }
     @IBAction func stop(_ sender: UIButton) {
-        player.stop()
 //        player.csound.stop()
     }
     

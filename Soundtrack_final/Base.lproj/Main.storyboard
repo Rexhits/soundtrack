@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eZK-Rk-4sa">
-=======
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="a1k-Cz-utr">
->>>>>>> parent of 02aa26e... Implemented au host on iOS
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -328,44 +324,17 @@
             </objects>
             <point key="canvasLocation" x="1516" y="-76.011994002998506"/>
         </scene>
-<<<<<<< HEAD
         <!--AUListViewController-->
         <scene sceneID="zQh-cz-VEy">
             <objects>
                 <viewController id="gYV-aP-0Hw" userLabel="AUListViewController" customClass="AUListViewController" customModule="Soundtrack_final" customModuleProvider="target" sceneMemberID="viewController">
-=======
-        <!--Item 2-->
-        <scene sceneID="18O-C9-e37">
-            <objects>
-                <viewController id="9H3-Bk-KVz" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="WQG-OR-u4b"/>
-                        <viewControllerLayoutGuide type="bottom" id="xHP-3C-vU5"/>
+                        <viewControllerLayoutGuide type="top" id="qBF-G3-nLq"/>
+                        <viewControllerLayoutGuide type="bottom" id="J8G-9x-vz2"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="qny-hc-vHt">
+                    <view key="view" contentMode="scaleToFill" id="7Yq-S6-xth">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="P4R-Z2-MAk"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lXU-Eh-ILT" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2530" y="491"/>
-        </scene>
-        <!--Item 1-->
-        <scene sceneID="9LV-eR-NAo">
-            <objects>
-                <viewController id="1fN-wC-0QR" sceneMemberID="viewController">
->>>>>>> parent of 02aa26e... Implemented au host on iOS
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Pkq-bE-jK4"/>
-                        <viewControllerLayoutGuide type="bottom" id="kBy-TM-9DR"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="0XB-I7-wcf">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-<<<<<<< HEAD
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ALK-nc-ZcH">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
@@ -469,15 +438,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uRx-od-jgl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2465" y="-76"/>
-=======
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item 1" id="YaJ-S2-ExQ"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2Zz-W8-CCZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2530" y="-163"/>
->>>>>>> parent of 02aa26e... Implemented au host on iOS
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
