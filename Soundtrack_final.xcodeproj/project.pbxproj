@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C895D1599E6CEEFA17989BE7 /* Pods_Soundtrack_final.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */; };
+		FD0979B21DF38DC9003B5157 /* STSynth.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FD0979AD1DF38DBF003B5157 /* STSynth.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FD1C99571DBA8B1A0049EBAD /* test.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD1C99561DBA8B1A0049EBAD /* test.mid */; };
 		FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */; };
 		FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4394FF1DA4D5B00089F7CF /* LoginViewController.swift */; };
@@ -32,13 +33,7 @@
 		FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */; };
 		FDA9DC7B1DA617A7004406D4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDA9DC7A1DA617A7004406D4 /* Security.framework */; };
 		FDA9DC7E1DA619EB004406D4 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC7D1DA619EB004406D4 /* Global.swift */; };
-		FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */; };
-		FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */; };
-		FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */; };
 		FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */; };
-		FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */; };
-		FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */; };
-		FDF0CCF21DF7769400D0B8DC /* STSynth.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FD0979AD1DF38DBF003B5157 /* STSynth.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FDFEC9EB1DF2C3270019EB86 /* SimplePlayEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,7 +68,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FDF0CCF21DF7769400D0B8DC /* STSynth.appex in Embed App Extensions */,
+				FD0979B21DF38DC9003B5157 /* STSynth.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -122,12 +117,7 @@
 		FDA9DC7A1DA617A7004406D4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FDA9DC7C1DA617D8004406D4 /* Soundtrack_final.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Soundtrack_final.entitlements; sourceTree = "<group>"; };
 		FDA9DC7D1DA619EB004406D4 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicBlock.swift; sourceTree = "<group>"; };
-		FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicalSequence.swift; sourceTree = "<group>"; };
-		FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManager.swift; sourceTree = "<group>"; };
 		FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneticAlgorithms.swift; sourceTree = "<group>"; };
-		FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackEngine.swift; sourceTree = "<group>"; };
-		FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUListViewController.swift; sourceTree = "<group>"; };
 		FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplePlayEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -196,8 +186,11 @@
 				FD4394FF1DA4D5B00089F7CF /* LoginViewController.swift */,
 				FDA9DC741DA605F3004406D4 /* SignupViewController.swift */,
 				FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */,
+<<<<<<< HEAD
 				FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */,
 				FD5379601DF7CE68006991FD /* PluginViewController.swift */,
+=======
+>>>>>>> parent of 02aa26e... Implemented au host on iOS
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -207,11 +200,7 @@
 			children = (
 				FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */,
 				FDA9DC7D1DA619EB004406D4 /* Global.swift */,
-				FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */,
 				FD89AD641DB60C240009815A /* MIDIParser.swift */,
-				FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */,
-				FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */,
-				FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */,
 				FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */,
 				FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */,
 			);
@@ -305,12 +294,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
-							};
-							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
-							com.apple.InterAppAudio = {
+							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
 							com.apple.Keychain = {
@@ -436,8 +422,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */,
-				FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */,
 				FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */,
 				FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */,
 				FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */,
@@ -445,12 +429,9 @@
 				FD5379611DF7CE68006991FD /* PluginViewController.swift in Sources */,
 				FDA9DC751DA605F3004406D4 /* SignupViewController.swift in Sources */,
 				FD7B6A521DCAD02300B963F4 /* MIDIParser.swift in Sources */,
-				FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */,
 				FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */,
-				FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */,
 				FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */,
 				FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */,
-				FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */,
 				FDFEC9EB1DF2C3270019EB86 /* SimplePlayEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
