@@ -14,8 +14,9 @@ class PlaybackEngine: NSObject {
     private let engine = AVAudioEngine()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
     var instrumentsNodes = [AVAudioUnitMIDIInstrument]()
-    var effectNodes = [AVAudioNode]()
+    var effectNodes = [AVAudioUnitEffect]()
     private var sequencer: AVAudioSequencer!
+    private var data: Data?
     public enum trackType {
         case instrument, audio
     }
@@ -46,9 +47,10 @@ class PlaybackEngine: NSObject {
     
     func addMusicBlock (musicBlock: MusicBlock) {
         sequencer = AVAudioSequencer(audioEngine: engine)
-        if let midiData = musicBlock.getSequenceData() {
+        self.data = musicBlock.getSequenceData()
+        if let data = self.data {
             do {
-                try sequencer.load(from: midiData, options: .init(rawValue: 1))
+                try sequencer.load(from: data, options: .init(rawValue: 1))
             } catch {
                 print("Failed load midiData! \(error)")
             }
@@ -70,7 +72,10 @@ class PlaybackEngine: NSObject {
             engine.connect(instumentNode, to: engine.mainMixerNode, format: audioFormat)
             self.instrumentsNodes.append(instumentNode)
         default:
-            break
+            let instumentNode = component as! AVAudioUnitEffect
+            engine.attach(instumentNode)
+            engine.connect(instumentNode, to: engine.mainMixerNode, format: audioFormat)
+            self.effectNodes.append(instumentNode)
         }
     }
     

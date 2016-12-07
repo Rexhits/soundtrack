@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="4z2-eq-qJQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="eZK-Rk-4sa">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -324,29 +324,10 @@
             </objects>
             <point key="canvasLocation" x="1516" y="-76.011994002998506"/>
         </scene>
-        <!--EffectPlugin-->
-        <scene sceneID="Lek-0G-c0G">
-            <objects>
-                <viewController id="wV7-JE-QeV" userLabel="EffectPlugin" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="HZk-vu-cS2"/>
-                        <viewControllerLayoutGuide type="bottom" id="Bdi-5Q-FGq"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Rvs-N8-oXQ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Effect" id="huj-O8-Uon"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zJe-gs-whL" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3539" y="274"/>
-        </scene>
-        <!--InstrumentPlugin-->
+        <!--AUListViewController-->
         <scene sceneID="zQh-cz-VEy">
             <objects>
-                <viewController id="gYV-aP-0Hw" userLabel="InstrumentPlugin" customClass="AUListViewController" customModule="Soundtrack_final" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="gYV-aP-0Hw" userLabel="AUListViewController" customClass="AUListViewController" customModule="Soundtrack_final" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qBF-G3-nLq"/>
                         <viewControllerLayoutGuide type="bottom" id="J8G-9x-vz2"/>
@@ -356,7 +337,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="ALK-nc-ZcH">
-                                <rect key="frame" x="0.0" y="38" width="375" height="590"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -389,37 +370,74 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="ldA-Dx-H4x" appends="YES" id="gN7-fB-UnS"/>
-                        </connections>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Instrument" id="BrC-G6-aGX"/>
+                    <navigationItem key="navigationItem" id="EGC-t2-UhB"/>
                     <connections>
                         <outlet property="auTable" destination="ALK-nc-ZcH" id="pDi-I8-5iF"/>
+                        <segue destination="yqX-wA-sbw" kind="show" identifier="showPluginView" id="leQ-Gx-FyD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZKt-lG-fFx" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pinchGestureRecognizer id="ldA-Dx-H4x"/>
             </objects>
-            <point key="canvasLocation" x="3539" y="-379"/>
+            <point key="canvasLocation" x="3306" y="-76"/>
         </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="Qch-Be-dPF">
+        <!--Plugin View Controller-->
+        <scene sceneID="gwp-fw-3DY">
             <objects>
-                <tabBarController id="4z2-eq-qJQ" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="vOD-zA-frZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </tabBar>
+                <viewController id="yqX-wA-sbw" customClass="PluginViewController" customModule="Soundtrack_final" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uTQ-zN-gTb"/>
+                        <viewControllerLayoutGuide type="bottom" id="yac-ql-2UP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7Pj-fJ-IJT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3EO-UV-Tf0">
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <tabBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3eS-Hg-J02">
+                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem title="Interface" id="V5H-fr-ag0"/>
+                                    <tabBarItem title="Preset" id="by9-WT-acn"/>
+                                </items>
+                            </tabBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
                     <connections>
-                        <segue destination="gYV-aP-0Hw" kind="relationship" relationship="viewControllers" id="bNv-fD-AoZ"/>
-                        <segue destination="wV7-JE-QeV" kind="relationship" relationship="viewControllers" id="7rW-Iw-o8F"/>
+                        <outlet property="containerView" destination="3EO-UV-Tf0" id="BgS-JX-sbb"/>
+                        <outlet property="interfaceItem" destination="V5H-fr-ag0" id="San-71-txX"/>
+                        <outlet property="presetItem" destination="by9-WT-acn" id="E52-zM-dFi"/>
+                        <outlet property="tabbar" destination="3eS-Hg-J02" id="OrN-jd-wsV"/>
                     </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4jq-CA-hav" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MDI-tg-wPk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2583" y="-54"/>
+            <point key="canvasLocation" x="4140" y="-76.011994002998506"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Upo-RR-v9P">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eZK-Rk-4sa" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZCQ-83-3Q0">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="gYV-aP-0Hw" kind="relationship" relationship="rootViewController" id="1GN-jo-Tw5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uRx-od-jgl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2465" y="-76"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

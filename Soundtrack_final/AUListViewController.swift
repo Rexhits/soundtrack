@@ -23,29 +23,50 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return lhs.cd.componentType == rhs.cd.componentType && lhs.cd.componentSubType == rhs.cd.componentSubType && lhs.cd.componentFlags == rhs.cd.componentFlags && lhs.cd.componentFlagsMask == rhs.cd.componentFlagsMask
         }
     }
+    
     @IBOutlet var auTable: UITableView!
-    var childViewController: UIViewController?
-    var block: MusicBlock!
+    var pluginView: UIView!
+    var pluginPreset: [AUAudioUnitPreset]!
+    var pluginName: String!
+    public var pluginType = 0 {
+        didSet {
+            self.auTable.reloadData()
+        }
+    }
     private var pluginManager: PluginManager!
     private var plugins = [String: [componentDecription]]()
+    
     override func viewDidLoad() {
-        
-        let url = Bundle.main.path(forResource: "test", ofType: "mid")
-        let fileURL = NSURL(string: url!)
-        block = MusicBlock(name: "test", composedBy: "zzw", midiFile: fileURL!)
+        self.title = "Instrument"
         auTable.delegate = self
         auTable.dataSource = self
         pluginManager = PluginManager() {
-            self.plugins = [String: [componentDecription]]()
-            for i in self.pluginManager._availableInstruments {
-                if self.plugins[i.manufacturerName] == nil {
-                    self.plugins[i.manufacturerName] = [componentDecription]()
+            if self.pluginType == 0 {
+                self.plugins = [String: [componentDecription]]()
+                for i in self.pluginManager._availableInstruments {
+                    if self.plugins[i.manufacturerName] == nil {
+                        if i.manufacturerName != "Apple" {
+                            self.plugins[i.manufacturerName] = [componentDecription]()
+                        }
+                    }
+                    if i.manufacturerName != "Apple" {
+                        self.plugins[i.manufacturerName]!.append(componentDecription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
+                    }
                 }
-                self.plugins[i.manufacturerName]!.append(componentDecription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
+            } else {
+                self.plugins = [String: [componentDecription]]()
+                for i in self.pluginManager._availableEffects {
+                    if self.plugins[i.manufacturerName] == nil {
+                        self.plugins[i.manufacturerName] = [componentDecription]()
+                    }
+                        self.plugins[i.manufacturerName]!.append(componentDecription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
+                }
             }
             self.auTable.reloadData()
         }
     }
+    
+    
     
     override func didReceiveMemoryWarning() {
         
@@ -57,7 +78,7 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if plugins.isEmpty {
-            return nil
+            return ""
         } else {
             return [String](plugins.keys)[section]
         }
@@ -78,22 +99,25 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        pluginView = nil
+        pluginPreset = nil
+        pluginName = nil
         let key = [String](plugins.keys)[indexPath.section]
         let values = plugins[key]!
         let value = values[indexPath.row]
         pluginManager.selectAudioUnitWithComponentDescription(value.cd, completionHandler: { unit, node, preset in
-            print(node)
-            PlaybackEngine.shared.newNode(type: .instrument, component: node)
-            PlaybackEngine.shared.addMusicBlock(musicBlock: self.block)
-            PlaybackEngine.shared.playSequence()
-            print(PlaybackEngine.shared.getEngine())
+//            PlaybackEngine.shared.newNode(type: .instrument, component: node)
+//            PlaybackEngine.shared.addMusicBlock(musicBlock: self.block)
+//            PlaybackEngine.shared.playSequence()
+            self.pluginName = node.name
+            self.pluginPreset = preset
+            self.showPluginView(unit: unit)
             self.auTable.reloadData()
         })
     }
     
-    private func showChildView(unit: AUAudioUnit) {
+    private func showPluginView(unit: AUAudioUnit) {
         unit.requestViewController { [weak self] viewController in
-            guard let strongSelf = self else {return}
             guard let vc = viewController, let view = vc.view else {
                 /*
                  Show placeholder text that tells the user the audio unit has
@@ -101,11 +125,18 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
                  */
                 return
             }
-            strongSelf.childViewController = vc
-            strongSelf.addChildViewController(vc)
-            view.frame = strongSelf.view.bounds
-            strongSelf.view.addSubview(view)
-            vc.didMove(toParentViewController: self)
+            self?.pluginView = view
+            
+        }
+        self.performSegue(withIdentifier: "showPluginView", sender: self)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showPluginView" {
+            let destination = segue.destination as! PluginViewController
+            destination.pluginView = self.pluginView
+            destination.preset = self.pluginPreset
+            destination.name = self.pluginName
         }
     }
+    
 }
