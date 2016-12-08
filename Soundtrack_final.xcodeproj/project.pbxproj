@@ -20,7 +20,6 @@
 		FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */; };
 		FD7B6A521DCAD02300B963F4 /* MIDIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD89AD641DB60C240009815A /* MIDIParser.swift */; };
 		FD90E5241DB5F404008B0881 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5231DB5F404008B0881 /* CoreMIDI.framework */; };
-		FD90E5261DB5F413008B0881 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5251DB5F413008B0881 /* AudioToolbox.framework */; };
 		FD90E5281DB5F426008B0881 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5271DB5F426008B0881 /* CoreAudio.framework */; };
 		FD90E52A1DB5F42B008B0881 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5291DB5F42B008B0881 /* AVFoundation.framework */; };
 		FD90E52D1DB5F570008B0881 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E52C1DB5F570008B0881 /* UIKit.framework */; };
@@ -36,30 +35,31 @@
 		FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */; };
 		FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */; };
 		FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */; };
+		FDF042131DF80AA700FF5D5F /* STSynth.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FDF0420E1DF80A6E00FF5D5F /* STSynth.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */; };
 		FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */; };
-		FDF0CCF21DF7769400D0B8DC /* STSynth.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FD0979AD1DF38DBF003B5157 /* STSynth.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FDF3AF741DF80124002793F4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF3AF731DF80124002793F4 /* AudioToolbox.framework */; };
 		FDFEC9EB1DF2C3270019EB86 /* SimplePlayEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		FD0979AC1DF38DBF003B5157 /* PBXContainerItemProxy */ = {
+		FDF0420D1DF80A6E00FF5D5F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = FD0979A51DF38DBF003B5157 /* STSynth.xcodeproj */;
+			containerPortal = FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = E6A4939607C568111B5FE0AF;
 			remoteInfo = "STSynth (AUv3 AppExtension)";
 		};
-		FD0979AE1DF38DBF003B5157 /* PBXContainerItemProxy */ = {
+		FDF0420F1DF80A6E00FF5D5F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = FD0979A51DF38DBF003B5157 /* STSynth.xcodeproj */;
+			containerPortal = FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 2BD72EA9BEE032722B09382A;
 			remoteInfo = "STSynth (AUv3 Standalone)";
 		};
-		FD0979B01DF38DBF003B5157 /* PBXContainerItemProxy */ = {
+		FDF042111DF80A6E00FF5D5F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = FD0979A51DF38DBF003B5157 /* STSynth.xcodeproj */;
+			containerPortal = FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 44F6F46B959AD47E8F3923BE;
 			remoteInfo = "STSynth (Shared Code)";
@@ -73,7 +73,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FDF0CCF21DF7769400D0B8DC /* STSynth.appex in Embed App Extensions */,
+				FDF042131DF80AA700FF5D5F /* STSynth.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,7 +94,6 @@
 		3C9590362E7B7966EEADB891 /* Pods-Soundtrack_final.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Soundtrack_final.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Soundtrack_final/Pods-Soundtrack_final.debug.xcconfig"; sourceTree = "<group>"; };
 		40AAE7650D7E32EBCD0457EC /* Pods-Soundtrack_final.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Soundtrack_final.release.xcconfig"; path = "Pods/Target Support Files/Pods-Soundtrack_final/Pods-Soundtrack_final.release.xcconfig"; sourceTree = "<group>"; };
 		7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Soundtrack_final.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD0979A51DF38DBF003B5157 /* STSynth.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = STSynth.xcodeproj; path = ../../Documents/Programming/Juce/STSynth/Builds/iOS/STSynth.xcodeproj; sourceTree = "<group>"; };
 		FD1C99561DBA8B1A0049EBAD /* test.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = test.mid; sourceTree = "<group>"; };
 		FD4394FA1DA4D5B00089F7CF /* Soundtrack_final.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundtrack_final.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,7 +108,6 @@
 		FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTheory.swift; sourceTree = "<group>"; };
 		FD89AD641DB60C240009815A /* MIDIParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIDIParser.swift; sourceTree = "<group>"; };
 		FD90E5231DB5F404008B0881 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
-		FD90E5251DB5F413008B0881 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FD90E5271DB5F426008B0881 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		FD90E5291DB5F42B008B0881 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FD90E52C1DB5F570008B0881 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -126,8 +124,10 @@
 		FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicalSequence.swift; sourceTree = "<group>"; };
 		FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManager.swift; sourceTree = "<group>"; };
 		FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneticAlgorithms.swift; sourceTree = "<group>"; };
+		FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = STSynth.xcodeproj; path = ../../Documents/Programming/Juce/STSynth/Builds/iOS/STSynth.xcodeproj; sourceTree = "<group>"; };
 		FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackEngine.swift; sourceTree = "<group>"; };
 		FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUListViewController.swift; sourceTree = "<group>"; };
+		FDF3AF731DF80124002793F4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplePlayEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,11 +139,11 @@
 				FD90E5371DB5F63C008B0881 /* QuartzCore.framework in Frameworks */,
 				FD90E5351DB5F62F008B0881 /* CoreMotion.framework in Frameworks */,
 				FD90E5331DB5F62B008B0881 /* CoreGraphics.framework in Frameworks */,
+				FDF3AF741DF80124002793F4 /* AudioToolbox.framework in Frameworks */,
 				FD90E5311DB5F625008B0881 /* Foundation.framework in Frameworks */,
 				FD90E52D1DB5F570008B0881 /* UIKit.framework in Frameworks */,
 				FD90E52A1DB5F42B008B0881 /* AVFoundation.framework in Frameworks */,
 				FD90E5281DB5F426008B0881 /* CoreAudio.framework in Frameworks */,
-				FD90E5261DB5F413008B0881 /* AudioToolbox.framework in Frameworks */,
 				FD90E5241DB5F404008B0881 /* CoreMIDI.framework in Frameworks */,
 				FDA9DC7B1DA617A7004406D4 /* Security.framework in Frameworks */,
 				C895D1599E6CEEFA17989BE7 /* Pods_Soundtrack_final.framework in Frameworks */,
@@ -156,6 +156,7 @@
 		AA50247B1C520F865D7FA192 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FDF3AF731DF80124002793F4 /* AudioToolbox.framework */,
 				FD90E5361DB5F63C008B0881 /* QuartzCore.framework */,
 				FD90E5341DB5F62F008B0881 /* CoreMotion.framework */,
 				FD90E5321DB5F62B008B0881 /* CoreGraphics.framework */,
@@ -163,7 +164,6 @@
 				FD90E52C1DB5F570008B0881 /* UIKit.framework */,
 				FD90E5291DB5F42B008B0881 /* AVFoundation.framework */,
 				FD90E5271DB5F426008B0881 /* CoreAudio.framework */,
-				FD90E5251DB5F413008B0881 /* AudioToolbox.framework */,
 				FD90E5231DB5F404008B0881 /* CoreMIDI.framework */,
 				FDA9DC7A1DA617A7004406D4 /* Security.framework */,
 				7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */,
@@ -178,16 +178,6 @@
 				40AAE7650D7E32EBCD0457EC /* Pods-Soundtrack_final.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		FD0979A61DF38DBF003B5157 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FD0979AD1DF38DBF003B5157 /* STSynth.appex */,
-				FD0979AF1DF38DBF003B5157 /* STSynth.app */,
-				FD0979B11DF38DBF003B5157 /* libSTSynth.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		FD1308091DCB27A60040EF07 /* ViewControllers */ = {
@@ -230,7 +220,7 @@
 		FD4394F11DA4D5B00089F7CF = {
 			isa = PBXGroup;
 			children = (
-				FD0979A51DF38DBF003B5157 /* STSynth.xcodeproj */,
+				FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */,
 				FD4394FC1DA4D5B00089F7CF /* Soundtrack_final */,
 				FD4394FB1DA4D5B00089F7CF /* Products */,
 				F2C60AA82E93CB388793218C /* Pods */,
@@ -261,6 +251,16 @@
 				FD13080B1DCB28120040EF07 /* Resources */,
 			);
 			path = Soundtrack_final;
+			sourceTree = "<group>";
+		};
+		FDF042071DF80A6E00FF5D5F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FDF0420E1DF80A6E00FF5D5F /* STSynth.appex */,
+				FDF042101DF80A6E00FF5D5F /* STSynth.app */,
+				FDF042121DF80A6E00FF5D5F /* libSTSynth.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,8 +333,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = FD0979A61DF38DBF003B5157 /* Products */;
-					ProjectRef = FD0979A51DF38DBF003B5157 /* STSynth.xcodeproj */;
+					ProductGroup = FDF042071DF80A6E00FF5D5F /* Products */;
+					ProjectRef = FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -345,25 +345,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		FD0979AD1DF38DBF003B5157 /* STSynth.appex */ = {
+		FDF0420E1DF80A6E00FF5D5F /* STSynth.appex */ = {
 			isa = PBXReferenceProxy;
 			fileType = "wrapper.app-extension";
 			path = STSynth.appex;
-			remoteRef = FD0979AC1DF38DBF003B5157 /* PBXContainerItemProxy */;
+			remoteRef = FDF0420D1DF80A6E00FF5D5F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FD0979AF1DF38DBF003B5157 /* STSynth.app */ = {
+		FDF042101DF80A6E00FF5D5F /* STSynth.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = STSynth.app;
-			remoteRef = FD0979AE1DF38DBF003B5157 /* PBXContainerItemProxy */;
+			remoteRef = FDF0420F1DF80A6E00FF5D5F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		FD0979B11DF38DBF003B5157 /* libSTSynth.a */ = {
+		FDF042121DF80A6E00FF5D5F /* libSTSynth.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libSTSynth.a;
-			remoteRef = FD0979B01DF38DBF003B5157 /* PBXContainerItemProxy */;
+			remoteRef = FDF042111DF80A6E00FF5D5F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

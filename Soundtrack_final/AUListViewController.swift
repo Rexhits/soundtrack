@@ -12,61 +12,53 @@ import CoreAudioKit
 
 class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    struct componentDecription: CustomStringConvertible, Equatable {
-        var name: String!
-        var version: String!
-        var cd: AudioComponentDescription!
-        var description: String {
-            return name
-        }
-        static func ==(lhs: componentDecription, rhs: componentDecription) -> Bool {
-            return lhs.cd.componentType == rhs.cd.componentType && lhs.cd.componentSubType == rhs.cd.componentSubType && lhs.cd.componentFlags == rhs.cd.componentFlags && lhs.cd.componentFlagsMask == rhs.cd.componentFlagsMask
-        }
-    }
     
+    var titleStr: String!
     @IBOutlet var auTable: UITableView!
-    var pluginView: UIView!
-    var pluginPreset: [AUAudioUnitPreset]!
-    var pluginName: String!
     public var pluginType = 0 {
         didSet {
+            if pluginType == 0 {
+                self.titleStr = "Instrument"
+            } else {
+                self.titleStr = "Effect"
+            }
             self.auTable.reloadData()
         }
     }
     private var pluginManager: PluginManager!
-    private var plugins = [String: [componentDecription]]()
-    
+    private var plugins = [String: [componentDescription]]()
     override func viewDidLoad() {
-        self.title = "Instrument"
         auTable.delegate = self
         auTable.dataSource = self
+        getAUList()
+    }
+    
+    func getAUList() {
         pluginManager = PluginManager() {
             if self.pluginType == 0 {
-                self.plugins = [String: [componentDecription]]()
+                self.plugins = [String: [componentDescription]]()
                 for i in self.pluginManager._availableInstruments {
                     if self.plugins[i.manufacturerName] == nil {
                         if i.manufacturerName != "Apple" {
-                            self.plugins[i.manufacturerName] = [componentDecription]()
+                            self.plugins[i.manufacturerName] = [componentDescription]()
                         }
                     }
                     if i.manufacturerName != "Apple" {
-                        self.plugins[i.manufacturerName]!.append(componentDecription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
+                        self.plugins[i.manufacturerName]!.append(componentDescription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
                     }
                 }
             } else {
-                self.plugins = [String: [componentDecription]]()
+                self.plugins = [String: [componentDescription]]()
                 for i in self.pluginManager._availableEffects {
                     if self.plugins[i.manufacturerName] == nil {
-                        self.plugins[i.manufacturerName] = [componentDecription]()
+                        self.plugins[i.manufacturerName] = [componentDescription]()
                     }
-                        self.plugins[i.manufacturerName]!.append(componentDecription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
+                    self.plugins[i.manufacturerName]!.append(componentDescription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
                 }
             }
             self.auTable.reloadData()
         }
     }
-    
-    
     
     override func didReceiveMemoryWarning() {
         
@@ -88,55 +80,57 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let values = plugins[key]!
         return values.count
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = auTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.selectionStyle = UITableViewCellSelectionStyle.default
+        let selView = UIView()
+        selView.backgroundColor = UIColor.orange
+        selView.layer.cornerRadius = 10
+        cell.selectedBackgroundView = selView
+        cell.textLabel?.highlightedTextColor = UIColor.white
+        cell.detailTextLabel?.highlightedTextColor = UIColor.white
+        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+        tap.numberOfTapsRequired = 2
+        cell.addGestureRecognizer(tap)
         let key = [String](plugins.keys)[indexPath.section]
         let values = plugins[key]!
         let value = values[indexPath.row]
         cell.textLabel!.text = value.name
         cell.detailTextLabel!.text = value.version
+        
         return cell
     }
     
+    func doubleTapped() {
+        self.performSegue(withIdentifier: "showPluginView", sender: self)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        pluginView = nil
-        pluginPreset = nil
-        pluginName = nil
         let key = [String](plugins.keys)[indexPath.section]
         let values = plugins[key]!
         let value = values[indexPath.row]
-        pluginManager.selectAudioUnitWithComponentDescription(value.cd, completionHandler: { unit, node, preset in
-//            PlaybackEngine.shared.newNode(type: .instrument, component: node)
-//            PlaybackEngine.shared.addMusicBlock(musicBlock: self.block)
-//            PlaybackEngine.shared.playSequence()
-            self.pluginName = node.name
-            self.pluginPreset = preset
-            self.showPluginView(unit: unit)
-            self.auTable.reloadData()
-        })
+        PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, value.cd, completionHandler: {})
     }
     
-    private func showPluginView(unit: AUAudioUnit) {
-        unit.requestViewController { [weak self] viewController in
-            guard let vc = viewController, let view = vc.view else {
-                /*
-                 Show placeholder text that tells the user the audio unit has
-                 no view.
-                 */
-                return
-            }
-            self?.pluginView = view
-            
-        }
-        self.performSegue(withIdentifier: "showPluginView", sender: self)
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showPluginView" {
-            let destination = segue.destination as! PluginViewController
-            destination.pluginView = self.pluginView
-            destination.preset = self.pluginPreset
-            destination.name = self.pluginName
-        }
-    }
     
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let cell = auTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        if !cell.isSelected {
+            self.auTable.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
+        let editAction = UITableViewRowAction(style: .normal, title: "Show") {_,_ in
+            self.performSegue(withIdentifier: "showPluginView", sender: self)
+        }
+        editAction.backgroundColor = UIColor.blue
+        return [editAction]
+    }
+
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let t = titleStr {
+            self.title = t
+        }
+        getAUList()
+    }
 }

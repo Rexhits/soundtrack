@@ -14,17 +14,26 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     @IBOutlet var tabbar: UITabBar!
     @IBOutlet var interfaceItem: UITabBarItem!
     @IBOutlet var presetItem: UITabBarItem!
-    @IBOutlet var containerView: UIView!
-    let cell = UITableViewCell(style: .default, reuseIdentifier: "presetCell")
+    @IBOutlet weak var presetView: UITableView!
     public var pluginView: UIView?
-    public var presetView = UITableView()
+
     public var preset: [AUAudioUnitPreset]!
     public var name: String!
+    var rect: CGRect!
     override func viewDidLoad() {
+        self.name = PlaybackEngine.shared.selectedNode?.name
+        self.preset = PlaybackEngine.shared.selectedUnitPreset
+        if let unit = PlaybackEngine.shared.selectedUnit {
+            self.showPluginView(unit: unit)
+        }
         tabbar.delegate = self
         presetView.delegate = self
         presetView.dataSource = self
-        presetView.frame = self.containerView.bounds
+        let topbarHeight = self.navigationController?.navigationBar.frame.height
+        let toolbarHeight = tabbar.frame.height
+        rect = CGRect(x: 0, y: topbarHeight!, width: self.view.frame.width, height: self.view.frame.height - topbarHeight! - toolbarHeight)
+        tabbar.frame = CGRect(x: 0, y: self.view.frame.height - toolbarHeight, width: self.view.frame.width, height: toolbarHeight)
+        presetView.frame = rect
         if pluginView == nil {
             interfaceItem.isEnabled = false
             tabbar.selectedItem = presetItem
@@ -38,17 +47,17 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if item == interfaceItem {
             if let pView = pluginView {
-                presetView.removeFromSuperview()
-                pView.frame = self.containerView.bounds
-                containerView.addSubview(pView)
+                pView.frame = rect
+                view.addSubview(pView)
                 self.title = name
             }
         } else {
             presetView.reloadData()
             pluginView?.removeFromSuperview()
-            containerView.addSubview(presetView)
             if preset.isEmpty || preset[0].name.isEmpty {
                 self.title = "Preset Not Found"
+            } else {
+                self.title = name
             }
         }
     }
@@ -58,7 +67,31 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = presetView.dequeueReusableCell(withIdentifier: "presetCell", for: indexPath)
+        cell.selectionStyle = UITableViewCellSelectionStyle.default
+        let selView = UIView()
+        selView.backgroundColor = UIColor.orange
+        selView.layer.cornerRadius = 10
+        cell.selectedBackgroundView = selView
+        cell.textLabel?.highlightedTextColor = UIColor.white
+        cell.detailTextLabel?.highlightedTextColor = UIColor.white
         cell.textLabel?.text = preset[indexPath.row].name
         return cell
+    }
+    
+    private func showPluginView(unit: AUAudioUnit) {
+        unit.requestViewController { [weak self] viewController in
+            guard let strongSelf = self else {return}
+            guard let vc = viewController, let view = vc.view else {
+                /*
+                 Show placeholder text that tells the user the audio unit has
+                 no view.
+                 */
+                return
+                
+            }
+            strongSelf.pluginView = view
+        }
+        print(PlaybackEngine.shared.getEngine())
     }
 }

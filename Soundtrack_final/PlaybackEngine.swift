@@ -17,8 +17,13 @@ class PlaybackEngine: NSObject {
     var effectNodes = [AVAudioUnitEffect]()
     private var sequencer: AVAudioSequencer!
     private var data: Data?
-    public enum trackType {
-        case instrument, audio
+    private var isPlaying = false
+    public var selectedUnit: AUAudioUnit?
+    public var selectedNode: AVAudioUnit?
+    public var selectedNodeDescription: componentDescription?
+    var selectedUnitPreset = [AUAudioUnitPreset]()
+    public enum trackType: Int {
+        case instrument = 0, audio
     }
     
     override init() {
@@ -64,18 +69,41 @@ class PlaybackEngine: NSObject {
         startEngine()
     }
     
-    func newNode(type: trackType, component: AVAudioUnit) {
-        switch type {
-        case .instrument:
-            let instumentNode = component as! AVAudioUnitMIDIInstrument
-            engine.attach(instumentNode)
-            engine.connect(instumentNode, to: engine.mainMixerNode, format: audioFormat)
-            self.instrumentsNodes.append(instumentNode)
-        default:
-            let instumentNode = component as! AVAudioUnitEffect
-            engine.attach(instumentNode)
-            engine.connect(instumentNode, to: engine.mainMixerNode, format: audioFormat)
-            self.effectNodes.append(instumentNode)
+    func addNode(type: trackType, _ cd: AudioComponentDescription?, completionHandler: @escaping ((Void) -> Void)) {
+        func done() {
+            if type == .instrument {
+                if sequencer != nil && isPlaying {
+                    try! sequencer.start()
+                }
+            }
+            completionHandler()
+        }
+        self.engine.connect(self.engine.mainMixerNode, to: self.engine.outputNode, format: audioFormat)
+        if isPlaying {
+            sequencer.stop()
+        }
+        if selectedNode != nil {
+            engine.disconnectNodeInput(engine.mainMixerNode)
+            engine.detach(selectedNode!)
+            selectedNode = nil
+        }
+        if let componentDescription = cd {
+            AVAudioUnit.instantiate(with: componentDescription, options: []) { avAudioUnit, error in
+                guard let avAudioUnit = avAudioUnit else { return }
+                self.selectedNode = avAudioUnit
+                self.engine.attach(avAudioUnit)
+                if type == .instrument {
+                    self.engine.connect(avAudioUnit, to: self.engine.mainMixerNode, format: self.audioFormat)
+                    self.instrumentsNodes.append(avAudioUnit as! AVAudioUnitMIDIInstrument)
+                } else {
+                    // code for effect node
+                }
+                self.selectedUnit = avAudioUnit.auAudioUnit
+                self.selectedUnitPreset = avAudioUnit.auAudioUnit.factoryPresets ?? []
+                done()
+            }
+        } else {
+            done()
         }
     }
     
