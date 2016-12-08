@@ -12,6 +12,14 @@ import CoreAudioKit
 
 class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    struct componentDescription: CustomStringConvertible {
+        var name: String!
+        var version: String!
+        var cd: AudioComponentDescription!
+        var description: String {
+            return name
+        }
+    }
     
     var titleStr: String!
     @IBOutlet var auTable: UITableView!
@@ -57,6 +65,16 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
             self.auTable.reloadData()
+            if let des = PlaybackEngine.shared.selectedNodeDescription {
+                for (index, value) in self.plugins.enumerated() {
+                    for (i,v) in value.value.enumerated() {
+                        if v.cd == des {
+                            let indexPath = IndexPath(row: i, section: index)
+                            self.auTable.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                        }
+                    }
+                }
+            }
         }
     }
     

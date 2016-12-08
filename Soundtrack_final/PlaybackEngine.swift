@@ -18,15 +18,19 @@ class PlaybackEngine: NSObject {
     private var sequencer: AVAudioSequencer!
     private var data: Data?
     private var isPlaying = false
+    public var mainMixerNode: AVAudioMixerNode!
     public var selectedUnit: AUAudioUnit?
     public var selectedNode: AVAudioUnit?
-    public var selectedNodeDescription: componentDescription?
+    public var selectedNodeDescription: AudioComponentDescription?
     var selectedUnitPreset = [AUAudioUnitPreset]()
     public enum trackType: Int {
         case instrument = 0, audio
     }
     
+    
+    
     override init() {
+        mainMixerNode = engine.mainMixerNode
         #if os(iOS)
             do {
                 try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
@@ -100,6 +104,7 @@ class PlaybackEngine: NSObject {
                 }
                 self.selectedUnit = avAudioUnit.auAudioUnit
                 self.selectedUnitPreset = avAudioUnit.auAudioUnit.factoryPresets ?? []
+                self.selectedNodeDescription = cd
                 done()
             }
         } else {

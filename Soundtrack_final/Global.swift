@@ -121,15 +121,11 @@ public extension Sequence where Iterator.Element: Equatable {
     }
 }
 
-struct componentDescription: CustomStringConvertible, Equatable {
-    var name: String!
-    var version: String!
-    var cd: AudioComponentDescription!
-    var description: String {
-        return name
-    }
-    static func ==(lhs: componentDescription, rhs: componentDescription) -> Bool {
-        return lhs.cd.componentType == rhs.cd.componentType && lhs.cd.componentSubType == rhs.cd.componentSubType && lhs.cd.componentFlags == rhs.cd.componentFlags && lhs.cd.componentFlagsMask == rhs.cd.componentFlagsMask
+
+
+extension AudioComponentDescription: Equatable {
+    public static func ==(lhs: AudioComponentDescription, rhs: AudioComponentDescription) -> Bool {
+        return lhs.componentType == rhs.componentType && lhs.componentSubType == rhs.componentSubType && lhs.componentFlags == rhs.componentFlags && lhs.componentFlagsMask == rhs.componentFlagsMask
     }
 }
 
