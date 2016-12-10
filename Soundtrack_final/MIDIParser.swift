@@ -24,11 +24,11 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         NewMusicSequence(&sequencer)
     }
     
-    init(url: NSURL) {
+    init(url: URL) {
         super.init()
         var trackCount: UInt32 = 0
         NewMusicSequence(&sequencer)
-        MusicSequenceFileLoad(sequencer!, url, .midiType, .smf_PreserveTracks)
+        MusicSequenceFileLoad(sequencer!, url as CFURL, .midiType, .smf_PreserveTracks)
         MusicSequenceGetTrackCount(sequencer!, &trackCount)
         MusicSequenceGetTempoTrack(sequencer!, &tempoTrack)
         for i in 1 ..< trackCount {

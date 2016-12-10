@@ -20,11 +20,11 @@ func iteratorForTuple(tuple: Any) -> AnyIterator<Any> {
 }
 
 
-func getURLInDocumentDirectoryWithFilename (filename: String) -> NSURL {
+func getURLInDocumentDirectoryWithFilename (filename: String) -> URL {
     let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
     let documentDirectory = path[0] as String
     let fullpath = "\(documentDirectory)/\(filename)"
-    return NSURL(fileURLWithPath: fullpath)
+    return URL(fileURLWithPath: fullpath)
 }
 
 enum auType: UInt32 {

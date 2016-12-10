@@ -20,25 +20,30 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return name
         }
     }
+    @IBOutlet weak var actionIndicator: UIActivityIndicatorView!
     
     var titleStr: String!
     @IBOutlet var auTable: UITableView!
     public var pluginType = 0 {
         didSet {
-            if pluginType == 0 {
-                self.titleStr = "Instrument"
-            } else {
-                self.titleStr = "Effect"
-            }
+            self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
             self.auTable.reloadData()
         }
     }
+    private var pluginLoaded = false
+    private var selectedIndexPath: IndexPath?
     private var pluginManager: PluginManager!
     private var plugins = [String: [componentDescription]]()
     override func viewDidLoad() {
+        if PlaybackEngine.shared.selectedTrack.type == .instrument {
+            pluginType = 0
+        } else {
+            pluginType = 1
+        }
         auTable.delegate = self
         auTable.dataSource = self
         getAUList()
+        actionIndicator.color = UIColor.red
     }
     
     func getAUList() {
@@ -65,7 +70,7 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
             self.auTable.reloadData()
-            if let des = PlaybackEngine.shared.selectedNodeDescription {
+            if let des = PlaybackEngine.shared.selectedTrack.selectedUnitDescription {
                 for (index, value) in self.plugins.enumerated() {
                     for (i,v) in value.value.enumerated() {
                         if v.cd == des {
@@ -121,29 +126,45 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func doubleTapped() {
-        self.performSegue(withIdentifier: "showPluginView", sender: self)
+        showPluginView()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let key = [String](plugins.keys)[indexPath.section]
-        let values = plugins[key]!
-        let value = values[indexPath.row]
-        PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, value.cd, completionHandler: {})
+        if selectedIndexPath != indexPath {
+            let key = [String](plugins.keys)[indexPath.section]
+            let values = plugins[key]!
+            let value = values[indexPath.row]
+            actionIndicator.startAnimating()
+            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, value.cd, completionHandler: {
+                self.actionIndicator.stopAnimating()
+                self.pluginLoaded = true
+            })
+        }
+        selectedIndexPath = indexPath
     }
     
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        self.pluginLoaded = false
+    }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let cell = auTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        if !cell.isSelected {
-            self.auTable.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        }
-        let editAction = UITableViewRowAction(style: .normal, title: "Show") {_,_ in
+
+    
+    func showPluginView() {
+        var timer: Timer?
+        if !pluginLoaded {
+            actionIndicator.startAnimating()
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {_ in
+                if self.pluginLoaded {
+                    self.performSegue(withIdentifier: "showPluginView", sender: self)
+                    timer!.invalidate()
+                    timer = nil
+                    self.actionIndicator.stopAnimating()
+                }
+            }
+        } else {
             self.performSegue(withIdentifier: "showPluginView", sender: self)
         }
-        editAction.backgroundColor = UIColor.blue
-        return [editAction]
     }
-
     
     override func viewWillAppear(_ animated: Bool) {
         if let t = titleStr {

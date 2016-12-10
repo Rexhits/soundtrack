@@ -21,14 +21,18 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     public var name: String!
     var rect: CGRect!
     override func viewDidLoad() {
-        self.name = PlaybackEngine.shared.selectedNode?.name
-        self.preset = PlaybackEngine.shared.selectedUnitPreset
-        if let unit = PlaybackEngine.shared.selectedUnit {
+        self.name = PlaybackEngine.shared.selectedTrack.instrument?.name
+        self.preset = PlaybackEngine.shared.selectedTrack.selectedUnitPreset
+        if let unit = PlaybackEngine.shared.selectedTrack.selectedUnit {
             self.showPluginView(unit: unit)
         }
         tabbar.delegate = self
         presetView.delegate = self
         presetView.dataSource = self
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         let topbarHeight = self.navigationController?.navigationBar.frame.height
         let toolbarHeight = tabbar.frame.height
         rect = CGRect(x: 0, y: topbarHeight!, width: self.view.frame.width, height: self.view.frame.height - topbarHeight! - toolbarHeight)
@@ -43,7 +47,6 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
             tabBar(tabbar, didSelect: interfaceItem)
         }
     }
-    
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if item == interfaceItem {
             if let pView = pluginView {
@@ -92,6 +95,5 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
             }
             strongSelf.pluginView = view
         }
-        print(PlaybackEngine.shared.getEngine())
     }
 }

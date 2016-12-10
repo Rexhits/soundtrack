@@ -21,7 +21,7 @@ class MusicBlock: MIDIParser {
         self.composedBy = composedBy
         super.init()
     }
-    init(name: String, composedBy: String, midiFile: NSURL) {
+    init(name: String, composedBy: String, midiFile: URL) {
         self.name = name
         self.composedBy = composedBy
         super.init(url: midiFile)
@@ -160,11 +160,11 @@ class MusicBlock: MIDIParser {
     
     
     // Save the midifile to somewhere
-    func saveMIDIFile (fileURL: NSURL) {
+    func saveMIDIFile (fileURL: URL) {
         let typeId = MusicSequenceFileTypeID.init(rawValue: 1835623529)
         
         let fileFlag = MusicSequenceFileFlags.init(rawValue: 1)
-        let status = MusicSequenceFileCreate(sequencer!, fileURL, typeId!, fileFlag, 0)
+        let status = MusicSequenceFileCreate(sequencer!, fileURL as CFURL, typeId!, fileFlag, 0)
         if status != OSStatus(noErr) {
             print("error saving midi file \(status)")
         } else {

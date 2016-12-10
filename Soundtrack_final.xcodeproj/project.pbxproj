@@ -15,6 +15,8 @@
 		FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FD4395041DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld */; };
 		FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD4395071DA4D5B00089F7CF /* Assets.xcassets */; };
 		FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD4395091DA4D5B00089F7CF /* LaunchScreen.storyboard */; };
+		FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */; };
+		FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */; };
 		FD5379611DF7CE68006991FD /* PluginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5379601DF7CE68006991FD /* PluginViewController.swift */; };
 		FD5EF1981DD448FF004E2EAA /* Untitled.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD5EF1971DD448FF004E2EAA /* Untitled.mid */; };
 		FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */; };
@@ -103,6 +105,8 @@
 		FD4395071DA4D5B00089F7CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD43950A1DA4D5B00089F7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FD43950C1DA4D5B00089F7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerViewController.swift; sourceTree = "<group>"; };
+		FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicListViewController.swift; sourceTree = "<group>"; };
 		FD5379601DF7CE68006991FD /* PluginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginViewController.swift; sourceTree = "<group>"; };
 		FD5EF1971DD448FF004E2EAA /* Untitled.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = Untitled.mid; sourceTree = "<group>"; };
 		FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTheory.swift; sourceTree = "<group>"; };
@@ -188,6 +192,8 @@
 				FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */,
 				FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */,
 				FD5379601DF7CE68006991FD /* PluginViewController.swift */,
+				FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */,
+				FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -200,8 +206,8 @@
 				FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */,
 				FD89AD641DB60C240009815A /* MIDIParser.swift */,
 				FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */,
-				FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */,
 				FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */,
+				FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */,
 				FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */,
 				FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */,
 			);
@@ -436,7 +442,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */,
 				FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */,
+				FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */,
 				FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */,
 				FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */,
 				FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */,

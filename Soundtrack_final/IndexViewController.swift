@@ -18,14 +18,14 @@ class IndexViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let url = Bundle.main.path(forResource: "test", ofType: "mid")
-        let fileURL = NSURL(string: url!)
-        let parser = MusicBlock(name: "test", composedBy: "ZZW", midiFile: fileURL!)
+//        let url = Bundle.main.path(forResource: "test", ofType: "mid")
+//        let fileURL = NSURL(string: url!)
+//        let parser = MusicBlock(name: "test", composedBy: "ZZW", midiFile: fileURL!)
         
         sequence.addNote(note: NoteEvent(note: 60, velocity: 80, timeStamp: 0, duration: 1))
         sequence.addNote(note: NoteEvent(note: 64, velocity: 90, timeStamp: 0, duration: 2))
         print(sequence.getNoteMatrix())
-        parser.parsedTracks[0].appendSequence(inputSequence: sequence)
+//        parser.parsedTracks[0].appendSequence(inputSequence: sequence)
 
         //        player.csound.setMessageCallback(#selector(messageCallback), withListener: self)
 //        parser.parse()
