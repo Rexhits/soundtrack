@@ -17,6 +17,7 @@
 		FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD4395091DA4D5B00089F7CF /* LaunchScreen.storyboard */; };
 		FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */; };
 		FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */; };
+		FD4E2E7B1DFDE621002EC24A /* MixerSubviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E7A1DFDE621002EC24A /* MixerSubviewController.swift */; };
 		FD5379611DF7CE68006991FD /* PluginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5379601DF7CE68006991FD /* PluginViewController.swift */; };
 		FD5EF1981DD448FF004E2EAA /* Untitled.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD5EF1971DD448FF004E2EAA /* Untitled.mid */; };
 		FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */; };
@@ -107,6 +108,7 @@
 		FD43950C1DA4D5B00089F7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerViewController.swift; sourceTree = "<group>"; };
 		FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicListViewController.swift; sourceTree = "<group>"; };
+		FD4E2E7A1DFDE621002EC24A /* MixerSubviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerSubviewController.swift; sourceTree = "<group>"; };
 		FD5379601DF7CE68006991FD /* PluginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginViewController.swift; sourceTree = "<group>"; };
 		FD5EF1971DD448FF004E2EAA /* Untitled.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = Untitled.mid; sourceTree = "<group>"; };
 		FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTheory.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */,
 				FD5379601DF7CE68006991FD /* PluginViewController.swift */,
 				FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */,
+				FD4E2E7A1DFDE621002EC24A /* MixerSubviewController.swift */,
 				FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */,
 			);
 			name = ViewControllers;
@@ -442,6 +445,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD4E2E7B1DFDE621002EC24A /* MixerSubviewController.swift in Sources */,
 				FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */,
 				FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */,
 				FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */,

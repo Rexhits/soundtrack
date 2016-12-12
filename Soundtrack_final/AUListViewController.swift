@@ -22,12 +22,17 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     @IBOutlet weak var actionIndicator: UIActivityIndicatorView!
     
-    var titleStr: String!
+    
+    var titleStr: String! {
+        didSet {
+            self.title = titleStr
+        }
+    }
     @IBOutlet var auTable: UITableView!
     public var pluginType = 0 {
         didSet {
             self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
-            self.auTable.reloadData()
+//            getAUList()
         }
     }
     private var pluginLoaded = false
@@ -35,11 +40,6 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private var pluginManager: PluginManager!
     private var plugins = [String: [componentDescription]]()
     override func viewDidLoad() {
-        if PlaybackEngine.shared.selectedTrack.type == .instrument {
-            pluginType = 0
-        } else {
-            pluginType = 1
-        }
         auTable.delegate = self
         auTable.dataSource = self
         getAUList()
@@ -131,6 +131,9 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedIndexPath != indexPath {
+            if let node = PlaybackEngine.shared.selectedTrack.selectedNode {
+                PlaybackEngine.shared.removeEffect(unit: node)
+            }
             let key = [String](plugins.keys)[indexPath.section]
             let values = plugins[key]!
             let value = values[indexPath.row]
@@ -138,6 +141,7 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
             PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, value.cd, completionHandler: {
                 self.actionIndicator.stopAnimating()
                 self.pluginLoaded = true
+                self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
             })
         }
         selectedIndexPath = indexPath

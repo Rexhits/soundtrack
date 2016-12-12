@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreAudioKit
+import AudioToolbox
 
 class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDelegate, UITableViewDataSource {
     
@@ -52,15 +53,12 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
             if let pView = pluginView {
                 pView.frame = rect
                 view.addSubview(pView)
-                self.title = name
             }
         } else {
             presetView.reloadData()
             pluginView?.removeFromSuperview()
             if preset.isEmpty || preset[0].name.isEmpty {
-                self.title = "Preset Not Found"
             } else {
-                self.title = name
             }
         }
     }
@@ -80,6 +78,11 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         cell.detailTextLabel?.highlightedTextColor = UIColor.white
         cell.textLabel?.text = preset[indexPath.row].name
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        PlaybackEngine.shared.selectedTrack.selectedUnit!.currentPreset = preset[indexPath.row]
     }
     
     private func showPluginView(unit: AUAudioUnit) {
