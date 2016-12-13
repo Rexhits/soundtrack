@@ -15,6 +15,7 @@ class MixerSubviewController: UIViewController {
     @IBOutlet weak var targetChooser: UISegmentedControl!
     var titleStr = "Mixer Control"
     var target = 0
+    var trackNum = 0
     
     override func viewWillAppear(_ animated: Bool) {
         titleLabel.text = titleStr
@@ -23,6 +24,8 @@ class MixerSubviewController: UIViewController {
     override func viewDidLoad() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         tap.numberOfTapsRequired = 2
+        slider.maximumValue = 1.0
+        slider.minimumValue = 0.0
         slider.addGestureRecognizer(tap)
     }
     func doubleTapped() {
@@ -39,17 +42,21 @@ class MixerSubviewController: UIViewController {
         target = targetChooser.selectedSegmentIndex
         if target == 0 {
             slider.maximumTrackTintColor = UIColor.clear
-            slider.value = PlaybackEngine.shared.selectedTrack.mixer.volume
+            slider.maximumValue = 1.0
+            slider.minimumValue = 0.0
+            slider.value = PlaybackEngine.shared.tracks[trackNum].mixer.volume
         } else {
             slider.maximumTrackTintColor = UIColor.orange
-            slider.value = PlaybackEngine.shared.selectedTrack.mixer.pan
+            slider.minimumValue = -1.0
+            slider.maximumValue = 1.0
+            slider.value = PlaybackEngine.shared.tracks[trackNum].mixer.pan
         }
     }
     @IBAction func sliderMoved(_ sender: UISlider) {
         if target == 0 {
-            PlaybackEngine.shared.selectedTrack.mixer.volume = slider.value
+            PlaybackEngine.shared.tracks[trackNum].mixer.volume = slider.value
         } else {
-            PlaybackEngine.shared.selectedTrack.mixer.pan = slider.value
+            PlaybackEngine.shared.tracks[trackNum].mixer.pan = slider.value
         }
     }
 }

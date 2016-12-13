@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import AVFoundation
 
 class PlaybackEngine: NSObject {
@@ -15,19 +16,26 @@ class PlaybackEngine: NSObject {
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
     
 
-    
-    
+    public var loadedBlock: MusicBlock? {
+        didSet {
+            delegate?.didLoadBlock(block: loadedBlock!)
+        }
+    }
+    public var delegate: PlaybackEngineDelegate?
+    private var timer: Timer?
     private var sequencer: AVAudioSequencer!
     private var data: Data?
-    private var isPlaying = false
+    public var isPlaying = false
+    public var isLooping = false
     private var mainMixerNode: AVAudioMixerNode!
-    
+    public var blockLength: AVMusicTimeStamp = 0
     public var tracks = [track]()
     public var selectedTrack: track!
     
     public enum trackType: Int {
         case instrument = 0, audio
     }
+    
     
     class track {
         var name: String!
@@ -45,6 +53,7 @@ class PlaybackEngine: NSObject {
         var selectedNode: AVAudioUnit?
         var selectedUnit: AUAudioUnit?
         var selectedUnitDescription: AudioComponentDescription?
+        var trackColor: UIColor?
         var selectedUnitPreset = [AUAudioUnitPreset]()
         var effects = [AVAudioUnitEffect]()
         let mixer = AVAudioMixerNode()
@@ -100,6 +109,7 @@ class PlaybackEngine: NSObject {
         if isPlaying == true {
             stopSequence()
         }
+        self.loadedBlock = musicBlock
         sequencer = nil
         sequencer = AVAudioSequencer(audioEngine: engine)
         selectedTrack = nil
@@ -120,6 +130,9 @@ class PlaybackEngine: NSObject {
                     newTrack.trackRef = i
                     tracks.append(newTrack)
                     selectedTrack = newTrack
+                    if i.lengthInBeats > blockLength {
+                        blockLength = i.lengthInBeats
+                    }
                 }
             }
             updateEngineForAllTracks()
@@ -220,7 +233,9 @@ class PlaybackEngine: NSObject {
             }
         }
         if let seq = sequencer {
-            try! seq.start()
+            if isPlaying {
+                try! seq.start()
+            }
         }
         
     }
@@ -288,17 +303,67 @@ class PlaybackEngine: NSObject {
     }
     
     public func playSequence() {
-        try! self.sequencer.start()
-        isPlaying = true
+        if let sequencer = self.sequencer {
+            try! sequencer.start()
+            isPlaying = true
+            delegate?.didStartPlaying()
+            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(playtimeObserver), userInfo: nil, repeats: true)
+        }
         
     }
     public func stopSequence() {
-        self.sequencer.stop()
-        isPlaying = false
+        if let sequencer = self.sequencer {
+            sequencer.stop()
+            isPlaying = false
+            delegate?.didFinishPlaying()
+        }
+    }
+    
+    public func startLoop() {
+        if let sequencer = self.sequencer {
+            for i in sequencer.tracks {
+                i.isLoopingEnabled = true
+                i.numberOfLoops = -1
+                isLooping = true
+                delegate?.didStartLoop()
+            }
+        }
+    }
+    public func stopLoop() {
+        if let sequencer = self.sequencer {
+            for i in sequencer.tracks {
+                i.isLoopingEnabled = false
+                isLooping = false
+                delegate?.didFinishLoop()
+            }
+        }
     }
     
     func getEngine() -> AVAudioEngine {
         return self.engine
     }
     
+    func playtimeObserver() {
+        let currentTime = sequencer.currentPositionInBeats
+        delegate?.updateTime(currentTime: currentTime)
+        if currentTime >= blockLength {
+            self.timer!.invalidate()
+            self.timer = nil
+            isPlaying = false
+            delegate?.didFinishPlaying()
+            self.sequencer.stop()
+            self.sequencer.currentPositionInBeats = AVMusicTimeStamp(0)
+        }
+    }
+    
+}
+
+
+protocol PlaybackEngineDelegate {
+    func didFinishPlaying()
+    func didStartPlaying()
+    func updateTime(currentTime: AVMusicTimeStamp)
+    func didLoadBlock(block: MusicBlock)
+    func didStartLoop()
+    func didFinishLoop()
 }

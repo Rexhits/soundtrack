@@ -9,214 +9,115 @@
 import UIKit
 import AVFoundation
 
-class MixerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
+class MixerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MixerCellDelegate {
     
-    let pickerView = UIPickerView()
     
-    @IBOutlet weak var mixerTable: UITableView!
+    @IBOutlet weak var mixerTable: UICollectionView!
+    
+    
+    @IBOutlet weak var playControlBar: PlayControlBarView!
+    
+    
     let engine = PlaybackEngine.shared
-    var subVC: MixerSubviewController!
     override func viewDidLoad() {
         mixerTable.delegate = self
         mixerTable.dataSource = self
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        getEffectList()
+        mixerTable.backgroundColor = UIColor.clear
+        self.view.backgroundColor = UIColor.gray
+        randomColor()
+        mixerTable.allowsMultipleSelection = true
     }
     
-    private var selectedIndexPath: IndexPath!
-    
-    private var pluginManager: PluginManager!
-    
-    private var plugins: [String]!
-    private var cds: [AudioComponentDescription]!
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return engine.tracks.count
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Track\(section + 1): \(engine.tracks[section].name!)"
-    }
+    var selectedIndexPath: IndexPath!
     
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = UIColor.white
-            headerView.textLabel?.text = "Track\(section + 1): \(engine.tracks[section].name!)"
-            headerView.contentView.backgroundColor = UIColor.red
-//            headerView.contentView.layer.cornerRadius = 10
-//            headerView.textLabel?.textAlignment = NSTextAlignment.center
-        }
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let track = engine.tracks[section]
-        if track.type == .instrument {
-            if !track.effects.isEmpty {
-                return track.effects.count + 2
-            } else {
-                return 2
-            }
-        } else {
-            if !track.effects.isEmpty {
-                return track.effects.count + 1
-            } else {
-                return 0
-            }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = mixerTable.dequeueReusableCell(withIdentifier: "mixerCell", for: indexPath)
-        let track = engine.tracks[indexPath.section]
-        cell.selectionStyle = UITableViewCellSelectionStyle.default
-        let selView = UIView()
-        selView.backgroundColor = UIColor.orange
-        cell.selectedBackgroundView = selView
-        cell.textLabel?.highlightedTextColor = UIColor.white
-        cell.detailTextLabel?.highlightedTextColor = UIColor.white
-        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-        tap.numberOfTapsRequired = 2
-        cell.addGestureRecognizer(tap)
-        cell.textLabel?.text = track.instrument?.name
-        if track.type == .instrument {
-            if indexPath.row == 0 {
-                cell.textLabel?.text = track.instrument?.name
-                cell.detailTextLabel?.text = "Instrument"
-                cell.detailTextLabel?.isHidden = false
-            }
-            else if !track.effects.isEmpty && indexPath.row < track.effects.count + 1{
-                print(track.effects.count)
-                cell.textLabel?.text = track.effects[indexPath.row - 1].name
-                cell.detailTextLabel?.text = "Effect"
-                cell.detailTextLabel?.isHidden = false
-            }
-            else if indexPath.row == self.mixerTable.numberOfRows(inSection: indexPath.section) - 1 {
-                cell.detailTextLabel?.isHidden = true
-                cell.textLabel?.text = "Mixer"
-//                cell.selectionStyle = UITableViewCellSelectionStyle.none
-                cell.removeGestureRecognizer(tap)
-            }
-        } else {
-//            if !track.effects.isEmpty {
-//                cell.textLabel?.text = track.effects[indexPath.row].name
-//                cell.detailTextLabel?.text = "Effect"
-//            }
-        }
-        return cell
+    func goBack() {
+        print("called")
+        self.performSegue(withIdentifier: "returnToMixer", sender: self)
     }
     
     
     
-    
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedIndexPath = indexPath
-        let track = engine.tracks[indexPath.section]
-        engine.selectedTrack = track
-        if let subVC = self.subVC {
-            subVC.view.removeFromSuperview()
-            subVC.removeFromParentViewController()
-        }
-        if indexPath.row != self.mixerTable.numberOfRows(inSection: indexPath.section) - 1 {
-            if track.type == .instrument {
-                if let unit = engine.selectedTrack.instrument {
-                    engine.selectedTrack.selectedUnit = unit.auAudioUnit
-                }
-            } else {
-                if !track.effects.isEmpty {
-                    engine.selectedTrack.selectedUnit = track.effects[indexPath.row].auAudioUnit
-                }
-            }
-        } else {
-            pickerView.removeFromSuperview()
-            subVC = storyboard!.instantiateViewController(withIdentifier: "mixerSubView") as! MixerSubviewController
-            subVC.view.frame = CGRect(x: 0, y: view.frame.height - 200, width: view.frame.width, height: 200)
-            subVC.view.backgroundColor = UIColor(white: 1, alpha: 0.6)
-            subVC.titleStr = "Mixer Control on \(engine.tracks[indexPath.section].name!)"
-            self.view.addSubview(self.subVC.view)
-            self.addChildViewController(self.subVC)
-            self.subVC.didMove(toParentViewController: self)
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        selectedIndexPath = indexPath
-        if let subVC = self.subVC {
-            subVC.view.removeFromSuperview()
-            subVC.removeFromParentViewController()
-        }
-        let add = UITableViewRowAction(style: .default, title: "Insert Effect") {_,_ in
-            let track = self.engine.tracks[indexPath.section]
-            self.engine.selectedTrack = track
-            self.pickerView.backgroundColor = UIColor(white: 1, alpha: 0.9)
-            self.pickerView.frame = CGRect(x: 0, y: self.view.frame.height - 300, width: self.view.frame.width, height: 300)
-            self.view.addSubview(self.pickerView)
-        }
-        let remove = UITableViewRowAction(style: .default, title: "Remove Insert") {_,_ in 
-            let track = self.engine.tracks[indexPath.section]
-            self.engine.selectedTrack = track
-            PlaybackEngine.shared.removeEffect(index: indexPath.row - 1)
-            self.mixerTable.reloadData()
-        }
-        
-        if indexPath.row != 0 && indexPath.row != self.mixerTable.numberOfRows(inSection: indexPath.section) - 1 {
-            return [remove, add]
-        } else {
-            return [add]
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.row == self.mixerTable.numberOfRows(inSection: indexPath.section) - 1 {
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func getEffectList() {
-        pluginManager = PluginManager() {
-            self.plugins = [String]()
-            self.cds = [AudioComponentDescription]()
-            for i in self.pluginManager._availableEffects {
-                self.plugins.append(i.name)
-                self.cds.append(i.audioComponentDescription)
-            }
-        }
-    }
     override func viewWillAppear(_ animated: Bool) {
+        playControlBar.reset()
         self.mixerTable.reloadData()
     }
     
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return plugins.count
-    }
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return plugins[row]
-    }
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType.audio, cds[row], completionHandler: {
-            self.mixerTable.reloadData()
-            pickerView.removeFromSuperview()
-        })
-    }
-    
+        
     func doubleTapped() {
         self.performSegue(withIdentifier: "selectComponent", sender: self)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "selectComponent" {
-            let destination = segue.destination as! AUListViewController
-            if selectedIndexPath.row == 0 {
-                destination.pluginType = 0
-            } else {
-                destination.pluginType = 1
+    
+    
+    func randomColor() {
+        for i in engine.tracks {
+            if i.trackColor == nil {
+                let hue = CGFloat(arc4random() & 256 / 256)
+                let saturation = CGFloat(arc4random() & 256 / 256) + 0.5
+                let brightness = CGFloat(arc4random() & 256 / 256) + 0.5
+                i.trackColor = UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1)
             }
         }
     }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return engine.tracks.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = mixerTable.dequeueReusableCell(withReuseIdentifier: "mixerCell", for: indexPath) as! MixerCellView
+        cell.contentView.backgroundColor = engine.tracks[indexPath.row].trackColor
+        cell.trackIndexLabel.text = "TRACK\(indexPath.row + 1)"
+        cell.trackNameLabel.text = engine.tracks[indexPath.row].name!
+        cell.delegate = self
+        cell.indexPath = indexPath
+        return cell
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let track = self.engine.tracks[indexPath.row]
+        self.engine.selectedTrack = track
+        self.selectedIndexPath = indexPath
+        self.performSegue(withIdentifier: "showTrack", sender: self)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+
+    }
+    
+    func openCellSubview(cell: MixerCellView, indexPath: IndexPath) {
+        cell.subVC = storyboard!.instantiateViewController(withIdentifier: "mixerSubView") as? MixerSubviewController
+        if let subVC = cell.subVC {
+            subVC.view.frame = cell.bounds
+            subVC.view.backgroundColor = UIColor(white: 1, alpha: 0.7)
+            subVC.titleStr = ""
+            subVC.trackNum = indexPath.row
+            self.addChildViewController(subVC)
+            subVC.didMove(toParentViewController: self)
+            UIView.animate(withDuration: 0.4, animations: ({
+                UIView.setAnimationTransition(.flipFromLeft, for: cell.contentView, cache: true)
+                cell.contentView.addSubview(subVC.view)
+            }), completion: nil)
+        }
+
+    }
+
+    func closeCellSubview(cell: MixerCellView, indexPath: IndexPath, animated: Bool) {
+        if let subVC = cell.subVC {
+            UIView.animate(withDuration: 0.4, animations: ({
+                UIView.setAnimationTransition(.flipFromRight, for: cell.contentView, cache: true)
+                subVC.view.removeFromSuperview()
+                subVC.removeFromParentViewController()
+            }), completion: { completion in
+                cell.subVC = nil
+            })
+        }
+    }
+    
 }

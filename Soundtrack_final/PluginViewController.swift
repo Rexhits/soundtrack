@@ -34,9 +34,9 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let topbarHeight = self.navigationController?.navigationBar.frame.height
+        let titleBarHeight = self.navigationController?.navigationBar.bounds.size.height
         let toolbarHeight = tabbar.frame.height
-        rect = CGRect(x: 0, y: topbarHeight!, width: self.view.frame.width, height: self.view.frame.height - topbarHeight! - toolbarHeight)
+        rect = CGRect(x: 0, y: titleBarHeight!, width: self.view.frame.width, height: self.view.frame.height - toolbarHeight - titleBarHeight!)
         tabbar.frame = CGRect(x: 0, y: self.view.frame.height - toolbarHeight, width: self.view.frame.width, height: toolbarHeight)
         presetView.frame = rect
         if pluginView == nil {

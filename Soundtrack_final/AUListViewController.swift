@@ -174,6 +174,5 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let t = titleStr {
             self.title = t
         }
-        getAUList()
     }
 }

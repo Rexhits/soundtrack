@@ -10,6 +10,7 @@ import UIKit
 
 class MusicListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var playControlBar: PlayControlBarView!
     @IBOutlet weak var musicTable: UITableView!
     var musicList = [MusicBlock]()
     var selectedIndexPath: IndexPath!
@@ -22,6 +23,8 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
                 musicList.append(MusicBlock(name: url.lastPathComponent, composedBy: "zzw", midiFile: url))
             }
         }
+        musicTable.backgroundColor = UIColor.clear
+        self.view.backgroundColor = UIColor.gray
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -32,9 +35,6 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         return musicList.count
     }
     
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        <#code#>
-//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = musicTable.dequeueReusableCell(withIdentifier: "musicCell", for: indexPath)
@@ -42,6 +42,8 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         selView.backgroundColor = UIColor.orange
         selView.layer.cornerRadius = 10
         cell.selectedBackgroundView = selView
+        cell.textLabel?.textColor = UIColor.white
+        cell.backgroundColor = UIColor.clear
         cell.textLabel?.highlightedTextColor = UIColor.white
         cell.detailTextLabel?.highlightedTextColor = UIColor.white
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
@@ -62,5 +64,9 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         selectedIndexPath = indexPath
 //        PlaybackEngine.shared.playSequence()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        playControlBar.reset()
+        musicTable.reloadData()
     }
 }
