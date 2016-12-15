@@ -71,6 +71,8 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = mixerTable.dequeueReusableCell(withReuseIdentifier: "mixerCell", for: indexPath) as! MixerCellView
+        cell.indexPath = indexPath
+        cell.closeSubview(sender: self, animated: false)
         cell.contentView.backgroundColor = engine.tracks[indexPath.row].trackColor
         cell.trackIndexLabel.text = "TRACK\(indexPath.row + 1)"
         cell.trackNameLabel.text = engine.tracks[indexPath.row].name!
@@ -83,6 +85,7 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let track = self.engine.tracks[indexPath.row]
         self.engine.selectedTrack = track
+        self.engine.selectedTrack.trackIndex = indexPath.row
         self.selectedIndexPath = indexPath
         self.performSegue(withIdentifier: "showTrack", sender: self)
     }

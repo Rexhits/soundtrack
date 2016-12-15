@@ -38,6 +38,8 @@ class PlaybackEngine: NSObject {
     
     
     class track {
+        var trackIndex: Int!
+        var instrumentView: UIView?
         var name: String!
         var type = PlaybackEngine.trackType.instrument
         var instrument: AVAudioUnitMIDIInstrument? {
@@ -45,11 +47,24 @@ class PlaybackEngine: NSObject {
                 name = instrument?.auAudioUnit.audioUnitName
             }
             didSet {
-                name = instrument?.auAudioUnit.audioUnitName
+                if instrument != oldValue {
+                    name = instrument?.auAudioUnit.audioUnitName
+                    instrument!.auAudioUnit.requestViewController { [weak self] viewController in
+                        guard let strongSelf = self else {return}
+                        guard let vc = viewController, let view = vc.view else {
+                            /*
+                             Show placeholder text that tells the user the audio unit has
+                             no view.
+                             */
+                            strongSelf.instrumentView = nil
+                            return
+                            
+                        }
+                        strongSelf.instrumentView = view
+                    }
+                }
             }
         }
-        var signalChian = [AVAudioUnit]()
-        var trackRef: AVMusicTrack!
         var selectedNode: AVAudioUnit?
         var selectedUnit: AUAudioUnit?
         var selectedUnitDescription: AudioComponentDescription?
@@ -77,11 +92,13 @@ class PlaybackEngine: NSObject {
         let defaultTrack = track(trackType: .instrument)
         selectedTrack = defaultTrack
         // attach track's mixer
+        engine.attach(defaultTrack.instrument!)
         engine.attach(defaultTrack.mixer)
+        engine.connect(defaultTrack.instrument!, to: defaultTrack.mixer, format: audioFormat)
         // connect track's mixer to main mixer
         engine.connect(defaultTrack.mixer, to: engine.mainMixerNode, format: audioFormat)
         self.tracks.append(defaultTrack)
-        self.updateEngine()
+        
         #if os(iOS)
             do {
                 try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
@@ -90,7 +107,6 @@ class PlaybackEngine: NSObject {
                 fatalError("Can't set Audio Session category.")
             }
         #endif
-        
     }
     
     
@@ -113,6 +129,13 @@ class PlaybackEngine: NSObject {
         sequencer = nil
         sequencer = AVAudioSequencer(audioEngine: engine)
         selectedTrack = nil
+        for i in tracks {
+            engine.detach(i.instrument!)
+            for e in i.effects {
+                engine.detach(e)
+            }
+            engine.detach(i.mixer)
+        }
         tracks.removeAll()
         self.data = musicBlock.getSequenceData()
         if let data = self.data {
@@ -124,18 +147,29 @@ class PlaybackEngine: NSObject {
             }
             
             for i in sequencer.tracks {
-                if i.lengthInBeats > 0 {
-                    let newTrack = track(trackType: .instrument)
-                    i.destinationAudioUnit = newTrack.instrument!
-                    newTrack.trackRef = i
-                    tracks.append(newTrack)
-                    selectedTrack = newTrack
-                    if i.lengthInBeats > blockLength {
-                        blockLength = i.lengthInBeats
+                let newTrack = track(trackType: .instrument)
+                tracks.append(newTrack)
+                selectedTrack = newTrack
+                i.destinationAudioUnit = newTrack.instrument!
+                engine.attach(newTrack.instrument!)
+                engine.attach(newTrack.mixer)
+                if !newTrack.effects.isEmpty {
+                    for e in 0 ..< newTrack.effects.count {
+                        engine.attach(newTrack.effects[e])
+                        if e < newTrack.effects.count - 1{
+                            engine.connect(selectedTrack.effects[e], to: selectedTrack.effects[e+1], format: audioFormat)
+                        }
                     }
+                    engine.connect(newTrack.instrument!, to: newTrack.effects[0], format: audioFormat)
+                    engine.connect(newTrack.effects.last!, to: newTrack.mixer, format: audioFormat)
+                } else {
+                    engine.connect(newTrack.instrument!, to: newTrack.mixer, format: audioFormat)
+                }
+                engine.connect(newTrack.mixer, to: engine.mainMixerNode, format: audioFormat)
+                if i.lengthInBeats > blockLength {
+                    blockLength = i.lengthInBeats
                 }
             }
-            updateEngineForAllTracks()
             sequencer.prepareToPlay()
         }
         if !self.engine.isRunning {
@@ -144,155 +178,140 @@ class PlaybackEngine: NSObject {
         playSequence()
     }
     
-    func addNode(type: trackType, _ cd: AudioComponentDescription?, completionHandler: @escaping ((Void) -> Void)) {
+    func addNode(type: trackType, adding: Bool?, _ cd: AudioComponentDescription?, completionHandler: @escaping ((Void) -> Void)) {
         func done() {
-            if type == .instrument {
-                if sequencer != nil && isPlaying {
-                    try! sequencer.start()
-                }
-            }
-            self.updateEngine()
+            playSequence()
             completionHandler()
         }
         if isPlaying {
-            sequencer.stop()
+            stopSequence()
         }
-        
-        
         if let componentDescription = cd {
-            if componentDescription != selectedTrack.selectedUnitDescription {
-                AVAudioUnit.instantiate(with: componentDescription, options: []) { avAudioUnit, error in
-                    guard let avAudioUnit = avAudioUnit else { return }
-                    if type == .instrument {
-                        self.engine.disconnectNodeInput(self.selectedTrack.mixer)
-                        self.engine.detach(self.selectedTrack.instrument!)
-                        self.selectedTrack.instrument = avAudioUnit as? AVAudioUnitMIDIInstrument
-                    } else {
-                        // code for effect node
-                        self.engine.disconnectNodeInput(self.selectedTrack.mixer)
-                        self.engine.detach(self.selectedTrack.instrument!)
-                        self.selectedTrack.effects.append(avAudioUnit as! AVAudioUnitEffect)
-                        print(self.engine)
-//                        engine.connect(i.instrument!, to: self.selectedTrack.effects[0], format: audioFormat)
+            AVAudioUnit.instantiate(with: componentDescription, options: []) { avAudioUnit, error in
+                guard let avAudioUnit = avAudioUnit else { return }
+                if type == .instrument {
+                    if self.selectedTrack.selectedUnitDescription != componentDescription {
+                        self.newInst(newNode: avAudioUnit)
                     }
-                    self.selectedTrack.selectedUnit = avAudioUnit.auAudioUnit
-                    self.selectedTrack.selectedUnitPreset = avAudioUnit.auAudioUnit.factoryPresets ?? []
-                    self.selectedTrack.selectedUnitDescription = cd
-                    self.selectedTrack.selectedNode = avAudioUnit
-                    done()
+                    
+                } else {
+                    if adding! {
+                        self.addEffect(newNode: avAudioUnit)
+                    } else {
+                        self.removeEffect(unit: self.selectedTrack.selectedNode!)
+                        self.addEffect(newNode: avAudioUnit)
+                    }
                 }
-            } else {
-                completionHandler()
-                playSequence()
+                self.selectedTrack.selectedNode = avAudioUnit
+                self.selectedTrack.selectedUnit = avAudioUnit.auAudioUnit
+                self.selectedTrack.selectedUnitPreset = avAudioUnit.auAudioUnit.factoryPresets ?? []
+                self.selectedTrack.selectedUnitDescription = avAudioUnit.audioComponentDescription
+                done()
             }
         } else {
             done()
         }
     }
     
-    func updateEngine() {
+    private func newInst(newNode: AVAudioUnit) {
         if let i = selectedTrack {
-            if i.type == .instrument {
-                // attach track's instrument
-                engine.attach(i.instrument!)
-                // is instrument Track
-                if let seq = sequencer {
-                    seq.stop()
-                }
-                engine.disconnectNodeInput(i.mixer)
-                if let track = i.trackRef {
-                    track.destinationAudioUnit = i.instrument!
-                }
-                if !i.effects.isEmpty {
-                    // has effects
-                    for effect in i.effects {
-                        // attach new node
-                        if effect.audioComponentDescription == i.selectedUnitDescription {
-                            engine.attach(effect)
-                        } else {
-                            // disconnect old node input
-                            engine.disconnectNodeInput(effect)
-                        }
-                    }
-                    for index in 0 ..< i.effects.count {
-                        if index < i.effects.count - 1 {
-                            // connect effects
-                            engine.connect(i.effects[index], to: i.effects[index + 1], format: audioFormat)
-                        } else {
-                            // Last one to mixer
-                            engine.connect(i.effects[index], to: i.mixer, format: audioFormat)
-                        }
-                    }
-                    engine.connect(i.instrument!, to: i.effects[0], format: audioFormat)
-                } else {
-                    // doesn't have effect
-                    engine.connect(i.instrument!, to: i.mixer, format: audioFormat)
-                }
+            engine.detach(i.instrument!)
+            engine.attach(newNode)
+            if !i.effects.isEmpty {
+                engine.disconnectNodeInput(i.effects.first!)
+                engine.connect(newNode, to: i.effects.first!, format: audioFormat)
             } else {
-                // is AudioTrack
+                engine.disconnectNodeInput(i.mixer)
+                engine.connect(newNode, to: i.mixer, format: audioFormat)
+            }
+            i.instrument = newNode as? AVAudioUnitMIDIInstrument
+            if let seq = sequencer {
+                for s in seq.tracks {
+                    s.destinationAudioUnit = i.instrument!
+                }
             }
         }
-        if let seq = sequencer {
-            if isPlaying {
-                try! seq.start()
+    }
+
+    private func addEffect(newNode: AVAudioUnit) {
+        if let i = selectedTrack {
+            engine.attach(newNode)
+            if !i.effects.isEmpty && i.effects.count == 1{
+                engine.connect(i.effects.first!, to: newNode, format: audioFormat)
+                
             }
+            else if i.effects.count > 1 {
+                engine.connect(i.effects[i.effects.count - 1], to: newNode, format: audioFormat)
+            } else {
+                engine.disconnectNodeInput(i.mixer)
+                engine.disconnectNodeOutput(i.instrument!)
+                engine.connect(i.instrument!, to: newNode, format: audioFormat)
+                
+            }
+            engine.connect(newNode, to: i.mixer, format: audioFormat)
+            i.effects.append(newNode as! AVAudioUnitEffect)
         }
-        
     }
     
-    func updateEngineForAllTracks() {
-        for i in tracks {
-            engine.attach(i.instrument!)
-            engine.attach(i.mixer)
-            
-            if i.type == .instrument {
-                // is instrument Track
-                if !i.effects.isEmpty {
-                    // has effects
-                    engine.connect(i.instrument!, to: i.effects[0], format: audioFormat)
-                    for index in 0 ..< i.effects.count {
-                        engine.attach(i.effects[index])
-                        if index < i.effects.count - 1 {
-                            // connect effects
-                            engine.connect(i.effects[index], to: i.effects[index + 1], format: audioFormat)
-                        } else {
-                            // Last one to mixer
-                            engine.connect(i.effects[index], to: i.mixer, format: audioFormat)
-                        }
-                    }
-                } else {
-                    // doesn't have effect
-                    engine.connect(i.instrument!, to: i.mixer, format: audioFormat)
-                }
-            } else {
-                // is AudioTrack
-            }
-            engine.connect(i.mixer, to: engine.mainMixerNode, format: audioFormat)
-        }
-    }
+
     
     public func removeEffect(index: Int) {
-        let selectedUnit = selectedTrack.effects[index]
-        engine.detach(selectedUnit)
-        selectedTrack.effects.remove(at: index)
-        selectedTrack.selectedUnit = nil
-        selectedTrack.selectedUnitDescription = nil
-        selectedTrack.selectedUnitPreset = [AUAudioUnitPreset]()
-        engine.detach(selectedTrack.instrument!)
-        updateEngine()
+        if let i = selectedTrack {
+            stopSequence()
+            let oldNode = i.effects[index]
+            engine.disconnectNodeInput(oldNode)
+            engine.disconnectNodeOutput(oldNode)
+            engine.detach(oldNode)
+            if i.effects.count == 1 {
+                engine.disconnectNodeInput(i.mixer)
+                engine.connect(i.instrument!, to: i.mixer, format: audioFormat)
+            }
+            else if index == 0 && i.effects.count > 1 {
+                engine.connect(i.instrument!, to: i.effects[index + 1], format: audioFormat)
+            }
+            else if index == i.effects.count - 1{
+                engine.connect(i.effects[index - 1], to: i.mixer, format: audioFormat)
+            } else {
+                engine.connect(i.effects[index - 1], to: i.effects[index + 1], format: audioFormat)
+            }
+            i.effects.remove(at: index)
+            selectedTrack.selectedUnit = nil
+            selectedTrack.selectedUnitDescription = nil
+            selectedTrack.selectedUnitPreset = [AUAudioUnitPreset]()
+            playSequence()
+        }
+
     }
     
     public func removeEffect(unit: AVAudioUnit) {
-        engine.detach(unit)
-        if let index = selectedTrack.effects.index(of: unit as! AVAudioUnitEffect) {
-            selectedTrack.effects.remove(at: index)
+        guard let unit = unit as? AVAudioUnitEffect else {
+            return
         }
-        selectedTrack.selectedUnit = nil
-        selectedTrack.selectedUnitDescription = nil
-        selectedTrack.selectedUnitPreset = [AUAudioUnitPreset]()
-        engine.detach(selectedTrack.instrument!)
-        updateEngine()
+        if let index = selectedTrack.effects.index(of: unit) {
+            if let i = selectedTrack {
+                stopSequence()
+                let oldNode = i.effects[index]
+                engine.detach(oldNode)
+                if i.effects.count == 1 {
+//                    engine.connect(i.instrument!, to: i.mixer, format: audioFormat)
+                }
+                else if index == 0 && i.effects.count > 1 {
+                    engine.connect(i.instrument!, to: i.effects[index + 1], format: audioFormat)
+                }
+                else if index == i.effects.count - 1{
+                    engine.connect(i.effects[index - 1], to: i.mixer, format: audioFormat)
+                } else {
+                    engine.connect(i.effects[index - 1], to: i.effects[index + 1], format: audioFormat)
+                }
+                i.effects.remove(at: index)
+                selectedTrack.selectedUnit = nil
+                selectedTrack.selectedUnitDescription = nil
+                selectedTrack.selectedUnitPreset = [AUAudioUnitPreset]()
+            }
+        }
     }
+
+    
     
     private func startEngine() {
         do {
@@ -304,18 +323,28 @@ class PlaybackEngine: NSObject {
     
     public func playSequence() {
         if let sequencer = self.sequencer {
-            try! sequencer.start()
-            isPlaying = true
-            delegate?.didStartPlaying()
-            timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(playtimeObserver), userInfo: nil, repeats: true)
+            if !isPlaying {
+                sequencer.prepareToPlay()
+                do {
+                    try sequencer.start()
+                } catch {
+                    print(error)
+                }
+                isPlaying = true
+                delegate?.didStartPlaying()
+                timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(playtimeObserver), userInfo: nil, repeats: true)
+            }
         }
         
     }
     public func stopSequence() {
         if let sequencer = self.sequencer {
-            sequencer.stop()
-            isPlaying = false
-            delegate?.didFinishPlaying()
+            if isPlaying {
+                sequencer.stop()
+                isPlaying = false
+                delegate?.didFinishPlaying()
+            }
+            
         }
     }
     
@@ -339,20 +368,29 @@ class PlaybackEngine: NSObject {
         }
     }
     
+    
     func getEngine() -> AVAudioEngine {
         return self.engine
     }
-    
+    func isReadyToPlay() -> Bool {
+        return self.sequencer != nil && self.data != nil
+    }
     func playtimeObserver() {
-        let currentTime = sequencer.currentPositionInBeats
-        delegate?.updateTime(currentTime: currentTime)
-        if currentTime >= blockLength {
-            self.timer!.invalidate()
-            self.timer = nil
-            isPlaying = false
-            delegate?.didFinishPlaying()
-            self.sequencer.stop()
-            self.sequencer.currentPositionInBeats = AVMusicTimeStamp(0)
+        let queue = DispatchQueue.global(qos: .background)
+        queue.async {
+            let currentTime = self.sequencer.currentPositionInBeats
+            self.delegate?.updateTime(currentTime: currentTime)
+            if currentTime >= self.blockLength {
+                DispatchQueue.main.sync {
+                    if !self.isLooping && self.isPlaying {
+                        self.timer!.invalidate()
+                        self.timer = nil
+                        self.stopSequence()
+                        self.sequencer.currentPositionInBeats = AVMusicTimeStamp(0)
+                    }
+                }
+            }
+
         }
     }
     
@@ -367,3 +405,4 @@ protocol PlaybackEngineDelegate {
     func didStartLoop()
     func didFinishLoop()
 }
+

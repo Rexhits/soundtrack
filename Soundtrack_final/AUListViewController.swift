@@ -12,6 +12,7 @@ import CoreAudioKit
 
 class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var playbackControl: PlayControlBarView!
     struct componentDescription: CustomStringConvertible {
         var name: String!
         var version: String!
@@ -43,7 +44,10 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         auTable.delegate = self
         auTable.dataSource = self
         getAUList()
-        actionIndicator.color = UIColor.red
+        actionIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+        actionIndicator.color = UIColor.orange
+        auTable.backgroundColor = UIColor.clear
+        self.view.backgroundColor = UIColor.gray
     }
     
     func getAUList() {
@@ -75,6 +79,8 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     for (i,v) in value.value.enumerated() {
                         if v.cd == des {
                             let indexPath = IndexPath(row: i, section: index)
+                            let cell = self.auTable.cellForRow(at: indexPath)!
+                            cell.isSelected = true
                             self.auTable.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                         }
                     }
@@ -104,6 +110,12 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return values.count
     }
 
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = view as? UITableViewHeaderFooterView {
+            header.textLabel?.textColor = UIColor.orange
+            header.contentView.backgroundColor = UIColor.darkGray
+        }
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = auTable.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.selectionStyle = UITableViewCellSelectionStyle.default
@@ -111,6 +123,9 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         selView.backgroundColor = UIColor.orange
         selView.layer.cornerRadius = 10
         cell.selectedBackgroundView = selView
+        cell.textLabel?.textColor = UIColor.white
+        cell.detailTextLabel?.textColor = UIColor.white
+        cell.backgroundColor = UIColor.clear
         cell.textLabel?.highlightedTextColor = UIColor.white
         cell.detailTextLabel?.highlightedTextColor = UIColor.white
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
@@ -131,14 +146,11 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedIndexPath != indexPath {
-            if let node = PlaybackEngine.shared.selectedTrack.selectedNode {
-                PlaybackEngine.shared.removeEffect(unit: node)
-            }
             let key = [String](plugins.keys)[indexPath.section]
             let values = plugins[key]!
             let value = values[indexPath.row]
             actionIndicator.startAnimating()
-            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, value.cd, completionHandler: {
+            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, adding: false, value.cd, completionHandler: {
                 self.actionIndicator.stopAnimating()
                 self.pluginLoaded = true
                 self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
@@ -173,6 +185,15 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewWillAppear(_ animated: Bool) {
         if let t = titleStr {
             self.title = t
+        }
+        playbackControl.reset()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showPluginView" {
+            let vc = segue.destination as! PluginViewController
+            vc.isEffect = Bool.init(self.pluginType as NSNumber)
+            PlaybackEngine.shared.stopSequence()
         }
     }
 }

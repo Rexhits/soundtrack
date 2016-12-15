@@ -46,7 +46,6 @@
 		FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */; };
 		FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */; };
 		FDF3AF741DF80124002793F4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF3AF731DF80124002793F4 /* AudioToolbox.framework */; };
-		FDFEC9EB1DF2C3270019EB86 /* SimplePlayEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,7 +141,6 @@
 		FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackEngine.swift; sourceTree = "<group>"; };
 		FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUListViewController.swift; sourceTree = "<group>"; };
 		FDF3AF731DF80124002793F4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplePlayEngine.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,7 +211,6 @@
 		FD13080A1DCB27BE0040EF07 /* Infrastructures */ = {
 			isa = PBXGroup;
 			children = (
-				FDFEC9EA1DF2C3270019EB86 /* SimplePlayEngine.swift */,
 				FDA9DC7D1DA619EB004406D4 /* Global.swift */,
 				FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */,
 				FD89AD641DB60C240009815A /* MIDIParser.swift */,
@@ -487,7 +484,6 @@
 				FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */,
 				FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */,
 				FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */,
-				FDFEC9EB1DF2C3270019EB86 /* SimplePlayEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,7 +622,7 @@
 				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Soundtrack_final/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -655,7 +651,7 @@
 				);
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Soundtrack_final/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

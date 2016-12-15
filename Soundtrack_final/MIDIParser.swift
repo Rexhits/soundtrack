@@ -31,7 +31,7 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         MusicSequenceFileLoad(sequencer!, url as CFURL, .midiType, .smf_PreserveTracks)
         MusicSequenceGetTrackCount(sequencer!, &trackCount)
         MusicSequenceGetTempoTrack(sequencer!, &tempoTrack)
-        for i in 1 ..< trackCount {
+        for i in 0 ..< trackCount {
             var track: MusicTrack?
             MusicSequenceGetIndTrack(sequencer!, i, &track)
             tracks.append(track!)
@@ -51,7 +51,12 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
             self.parsedTempoTrack = getInfo(track: tempoTrack!)
         }
         for i in tracks {
-            self.parsedTracks.append(getInfo(track: i))
+            let length = getTrackLength(musicTrack: i)
+            if length > 0 {
+                self.parsedTracks.append(getInfo(track: i))
+            } else {
+                MusicSequenceDisposeTrack(sequencer!, i)
+            }
         }
         for i in 0 ..< parsedTracks.count {
             parsedTracks[i].musicTrack = tracks[i]
@@ -136,6 +141,23 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         newTrack.timeSignature = timeSignature
         newTrack.tempo = tempo
         return newTrack
+    }
+    
+    private func getTrackLength(musicTrack:MusicTrack) -> MusicTimeStamp {
+        
+        //The time of the last music event in a music track, plus time required for note fade-outs and so on.
+        var trackLength = MusicTimeStamp(0)
+        var tracklengthSize = UInt32(0)
+        let status = MusicTrackGetProperty(musicTrack,
+                                           UInt32(kSequenceTrackProperty_TrackLength),
+                                           &trackLength,
+                                           &tracklengthSize)
+        if status != OSStatus(noErr) {
+            print("Error getting track length \(status)")
+            return 0
+        }
+        print("track length is \(trackLength)")
+        return trackLength
     }
 }
 

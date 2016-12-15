@@ -16,6 +16,7 @@ class MusicBlock: MIDIParser {
         return "Name: \(name)\nComposedBy: \(composedBy)\nTempo: \(tempo)\nTimeSignature: \(timeSignature)\nHasTempoTrack: \(tempoTrack != nil)\nNumberOfTracks: \(tracks.count)"
     }
     var length = MusicTimeStamp()
+    
     init(name: String, composedBy: String) {
         self.name = name
         self.composedBy = composedBy
@@ -160,15 +161,17 @@ class MusicBlock: MIDIParser {
     
     
     // Save the midifile to somewhere
-    func saveMIDIFile (fileURL: URL) {
+    func saveMIDIFile (fileURL: URL) -> URL?{
         let typeId = MusicSequenceFileTypeID.init(rawValue: 1835623529)
         
         let fileFlag = MusicSequenceFileFlags.init(rawValue: 1)
         let status = MusicSequenceFileCreate(sequencer!, fileURL as CFURL, typeId!, fileFlag, 0)
         if status != OSStatus(noErr) {
             print("error saving midi file \(status)")
+            return fileURL
         } else {
             print("file saved at \(fileURL)")
+            return nil
         }
         
     }
@@ -177,6 +180,9 @@ class MusicBlock: MIDIParser {
     }
     
     func getSequenceData() -> Data? {
+        var trackCount:UInt32 = 0
+        MusicSequenceGetTrackCount(sequencer!, &trackCount)
+        print(trackCount)
         var status = OSStatus(noErr)
         var cfdata: Unmanaged<CFData>?
         status = MusicSequenceFileCreateData(self.sequencer!, .midiType, .eraseFile, 480, &cfdata)
@@ -184,8 +190,8 @@ class MusicBlock: MIDIParser {
             print("ERROR CREATING DATA \(status)")
             return nil
         }
-        let data = cfdata!.takeUnretainedValue()
-        cfdata?.release()
+        let data = cfdata!.takeRetainedValue()
+//        cfdata?.release()
         return data as Data
     }
     

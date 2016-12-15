@@ -55,11 +55,15 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if plugins[row] != "Done" {
-            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType.audio, cds[row - 1], completionHandler: {
+            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType.audio, adding: true, cds[row - 1], completionHandler: {
+                pickerView.removeFromSuperview()
                 self.trackTable.reloadData()
             })
+        } else {
+            pickerView.removeFromSuperview()
+            self.trackTable.reloadData()
         }
-        pickerView.removeFromSuperview()
+        
     }
 
     
@@ -127,6 +131,7 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.selectedIndexPath = indexPath
+        
         if indexPath.section != 0 && indexPath.row == self.trackTable.numberOfItems(inSection: indexPath.section) - 1 {
             let cell = trackTable.cellForItem(at: indexPath)
             if let cell = cell {
@@ -139,6 +144,19 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
                 }), completion: nil)
             }
         } else {
+            if indexPath.section == 0 {
+                engine.selectedTrack.selectedNode = engine.selectedTrack.instrument
+                engine.selectedTrack.selectedUnit = engine.selectedTrack.instrument?.auAudioUnit
+                engine.selectedTrack.selectedUnitPreset = engine.selectedTrack.instrument?.auAudioUnit.factoryPresets ?? []
+                engine.selectedTrack.selectedUnitDescription = engine.selectedTrack.instrument?.audioComponentDescription
+            } else {
+                if indexPath.row > 1 {
+                    engine.selectedTrack.selectedNode = engine.selectedTrack.effects[indexPath.row - 1]
+                    engine.selectedTrack.selectedUnit = engine.selectedTrack.effects[indexPath.row - 1].auAudioUnit
+                    engine.selectedTrack.selectedUnitPreset = engine.selectedTrack.effects[indexPath.row - 1].auAudioUnit.factoryPresets ?? []
+                    engine.selectedTrack.selectedUnitDescription = engine.selectedTrack.effects[indexPath.row - 1].audioComponentDescription
+                }
+            }
             self.performSegue(withIdentifier: "selectComponent", sender: self)
         }
     }

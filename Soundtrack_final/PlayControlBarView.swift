@@ -9,8 +9,7 @@
 import UIKit
 import AVFoundation
 
-class PlayControlBarView: UITabBar, PlaybackEngineDelegate {
-    
+class PlayControlBarView: UIView, PlaybackEngineDelegate {
     var playOrStopItem: UIButton!
     var loopItem: UIButton!
     var label: UILabel!
@@ -18,11 +17,10 @@ class PlayControlBarView: UITabBar, PlaybackEngineDelegate {
     override func awakeFromNib() {
         self.layer.masksToBounds = true
         PlaybackEngine.shared.delegate = self
-        self.barStyle = .black
+//        self.barStyle = .black
         self.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         let x = self.bounds.size.height - 19
         playOrStopItem = UIButton(frame: CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: x, height: x))
-        
         playOrStopItem.setImage(#imageLiteral(resourceName: "Play"), for: .normal)
         playOrStopItem.setImage(#imageLiteral(resourceName: "Pause"), for: .selected)
         playOrStopItem.layer.borderColor = UIColor.orange.cgColor
@@ -73,6 +71,10 @@ class PlayControlBarView: UITabBar, PlaybackEngineDelegate {
     }
     
     func reset() {
+//        let x = self.bounds.size.height - 19
+//        playOrStopItem.frame = CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: x, height: x)
+//        loopItem.frame = CGRect(x: self.bounds.size.width - 20, y: (self.bounds.size.height - x) / 2, width: x, height: x)
+//        label.frame = CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: self.bounds.size.width - 20, height: x)
         if PlaybackEngine.shared.isPlaying {
             didStartPlaying()
         } else {
@@ -93,9 +95,11 @@ class PlayControlBarView: UITabBar, PlaybackEngineDelegate {
     
     func playOrStop(sender: UIButton!) {
         if !sender.isSelected {
-            PlaybackEngine.shared.playSequence()
-            sender.isSelected = true
-            playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+            if PlaybackEngine.shared.isReadyToPlay() {
+                PlaybackEngine.shared.playSequence()
+                sender.isSelected = true
+                playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+            }
         } else {
             PlaybackEngine.shared.stopSequence()
             sender.isSelected = false
@@ -151,3 +155,4 @@ class PlayControlBarView: UITabBar, PlaybackEngineDelegate {
 protocol PlayControlBarDelegate {
     func updateTime(currentTime: AVMusicTimeStamp)
 }
+
