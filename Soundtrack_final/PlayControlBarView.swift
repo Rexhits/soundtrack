@@ -9,72 +9,52 @@
 import UIKit
 import AVFoundation
 
-class PlayControlBarView: UIView, PlaybackEngineDelegate {
-    var playOrStopItem: UIButton!
-    var loopItem: UIButton!
-    var label: UILabel!
+class PlayControlBarView: UIViewController, PlaybackEngineDelegate {
+    
+    @IBOutlet weak var playStopBtn: UIButton!
+    
+    @IBOutlet weak var loopBtn: UIButton!
+    
+    @IBOutlet weak var infoLabel: UILabel!
+    
     var playtimeDelegate: PlayControlBarDelegate?
-    override func awakeFromNib() {
-        self.layer.masksToBounds = true
+    
+    override func viewDidLoad() {
         PlaybackEngine.shared.delegate = self
-//        self.barStyle = .black
-        self.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        let x = self.bounds.size.height - 19
-        playOrStopItem = UIButton(frame: CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: x, height: x))
-        playOrStopItem.setImage(#imageLiteral(resourceName: "Play"), for: .normal)
-        playOrStopItem.setImage(#imageLiteral(resourceName: "Pause"), for: .selected)
-        playOrStopItem.layer.borderColor = UIColor.orange.cgColor
-        playOrStopItem.backgroundColor = UIColor.clear
-        playOrStopItem.layer.borderWidth = 2.0
-        playOrStopItem.layer.cornerRadius = playOrStopItem.bounds.size.width / 2
-        playOrStopItem.layer.masksToBounds = true
-        playOrStopItem.imageView?.tintColor = UIColor.orange
-        playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
-        playOrStopItem.addTarget(self, action: #selector(playOrStop(sender:)), for: .touchDown)
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        playStopBtn.isUserInteractionEnabled = false
+        playStopBtn.setImage(#imageLiteral(resourceName: "Play"), for: .normal)
+        playStopBtn.setImage(#imageLiteral(resourceName: "Pause"), for: .selected)
+        playStopBtn.tintColor = UIColor.orange
+        playStopBtn.layer.borderColor = UIColor.orange.cgColor
+        playStopBtn.backgroundColor = UIColor.clear
+        playStopBtn.layer.borderWidth = 2.0
+        playStopBtn.layer.cornerRadius = playStopBtn.bounds.size.width / 2
+        playStopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
+        playStopBtn.layer.masksToBounds = true
+        playStopBtn.addTarget(self, action: #selector(playOrStop(sender:)), for: .touchDown)
         
-        loopItem = UIButton(frame: CGRect(x: self.bounds.size.width - 20, y: (self.bounds.size.height - x) / 2, width: x, height: x))
-        if PlaybackEngine.shared.isPlaying {
-            didStartPlaying()
-        } else {
-            didFinishPlaying()
-        }
-        if PlaybackEngine.shared.isLooping {
-            didStartLoop()
-        } else {
-            didFinishLoop()
-        }
-        loopItem.setImage(#imageLiteral(resourceName: "Loop"), for: .normal)
-        loopItem.layer.borderColor = UIColor.lightGray.cgColor
-        loopItem.backgroundColor = UIColor.clear
-        loopItem.layer.borderWidth = 2.0
-        loopItem.layer.cornerRadius = loopItem.bounds.size.width / 2
-        loopItem.layer.masksToBounds = true
-        loopItem.imageView?.tintColor = UIColor.lightGray
-        loopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
-        loopItem.addTarget(self, action: #selector(loop(sender:)), for: .touchDown)
+        loopBtn.setImage(#imageLiteral(resourceName: "Loop"), for: .normal)
+        loopBtn.layer.borderColor = UIColor.lightGray.cgColor
+        loopBtn.backgroundColor = UIColor.clear
+        loopBtn.layer.borderWidth = 2.0
+        loopBtn.layer.cornerRadius = loopBtn.bounds.size.width / 2
+        loopBtn.layer.masksToBounds = true
+        loopBtn.tintColor = UIColor.gray
+        loopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+        loopBtn.addTarget(self, action: #selector(loop(sender:)), for: .touchDown)
+
         
-        label = UILabel(frame: CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: self.bounds.size.width - 20, height: x))
-        if let block = PlaybackEngine.shared.loadedBlock {
-            if let label = self.label {
-                label.text = "\(block.name) - \(block.composedBy)"
-            }
-        }
-        label.textColor = UIColor.orange
-        label.textAlignment = NSTextAlignment.center
-        label.backgroundColor = UIColor.clear
-        label.clipsToBounds = true
-        label.layer.masksToBounds = true
-        self.addSubview(playOrStopItem)
-        self.addSubview(loopItem)
-        self.addSubview(label)
-        self.autoresizesSubviews = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        reset()
     }
     
     func reset() {
-//        let x = self.bounds.size.height - 19
-//        playOrStopItem.frame = CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: x, height: x)
-//        loopItem.frame = CGRect(x: self.bounds.size.width - 20, y: (self.bounds.size.height - x) / 2, width: x, height: x)
-//        label.frame = CGRect(x: 20, y: (self.bounds.size.height - x) / 2, width: self.bounds.size.width - 20, height: x)
+        if PlaybackEngine.shared.isReadyToPlay() {
+            playStopBtn.isUserInteractionEnabled = true
+        }
         if PlaybackEngine.shared.isPlaying {
             didStartPlaying()
         } else {
@@ -86,9 +66,7 @@ class PlayControlBarView: UIView, PlaybackEngineDelegate {
             didFinishLoop()
         }
         if let block = PlaybackEngine.shared.loadedBlock {
-            if let label = self.label {
-                label.text = "\(block.name) - \(block.composedBy)"
-            }
+            infoLabel.text = "\(block.name) - \(block.composedBy)"
         }
     }
     
@@ -98,12 +76,12 @@ class PlayControlBarView: UIView, PlaybackEngineDelegate {
             if PlaybackEngine.shared.isReadyToPlay() {
                 PlaybackEngine.shared.playSequence()
                 sender.isSelected = true
-                playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+                sender.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
             }
         } else {
             PlaybackEngine.shared.stopSequence()
             sender.isSelected = false
-            playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
+            sender.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
         }
     }
     
@@ -112,12 +90,12 @@ class PlayControlBarView: UIView, PlaybackEngineDelegate {
             PlaybackEngine.shared.startLoop()
             sender.isSelected = true
             sender.layer.borderColor = UIColor.orange.cgColor
-            sender.imageView?.tintColor = UIColor.orange
+            sender.tintColor = UIColor.orange
         } else {
             PlaybackEngine.shared.stopLoop()
             sender.isSelected = false
             sender.layer.borderColor = UIColor.lightGray.cgColor
-            sender.imageView?.tintColor = UIColor.lightGray
+            sender.tintColor = UIColor.lightGray
         }
     }
     
@@ -125,29 +103,28 @@ class PlayControlBarView: UIView, PlaybackEngineDelegate {
         playtimeDelegate?.updateTime(currentTime: currentTime)
     }
     func didFinishPlaying() {
-        self.playOrStopItem.isSelected = false
-        playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
+        self.playStopBtn.isSelected = false
+        playStopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
     }
     func didStartPlaying() {
-        self.playOrStopItem.isSelected = true
-        playOrStopItem.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+        self.playStopBtn.isSelected = true
+        playStopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     }
     func didLoadBlock(block: MusicBlock) {
-        if let label = self.label {
-            label.text = "\(block.name) - \(block.composedBy)"
-        }
+        playStopBtn.isUserInteractionEnabled = true
+        infoLabel.text = "\(block.name) - \(block.composedBy)"
     }
     
     func didStartLoop() {
-        loopItem.isSelected = true
-        loopItem.layer.borderColor = UIColor.orange.cgColor
-        loopItem.imageView?.tintColor = UIColor.orange
+        loopBtn.isSelected = true
+        loopBtn.layer.borderColor = UIColor.orange.cgColor
+        loopBtn.tintColor = UIColor.orange
     }
     
     func didFinishLoop() {
-        loopItem.isSelected = false
-        loopItem.layer.borderColor = UIColor.lightGray.cgColor
-        loopItem.imageView?.tintColor = UIColor.lightGray
+        loopBtn.isSelected = false
+        loopBtn.layer.borderColor = UIColor.lightGray.cgColor
+        loopBtn.tintColor = UIColor.lightGray
     }
     
 }

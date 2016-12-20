@@ -8,6 +8,7 @@
 
 import Foundation
 import AudioToolbox
+import SwiftyJSON
 
 class MusicBlock: MIDIParser {
     var name: String
@@ -16,18 +17,48 @@ class MusicBlock: MIDIParser {
         return "Name: \(name)\nComposedBy: \(composedBy)\nTempo: \(tempo)\nTimeSignature: \(timeSignature)\nHasTempoTrack: \(tempoTrack != nil)\nNumberOfTracks: \(tracks.count)"
     }
     var length = MusicTimeStamp()
-    
+    var createdAt: Date!
+    var midiFileUrl = URL(string: "")
     init(name: String, composedBy: String) {
         self.name = name
         self.composedBy = composedBy
         super.init()
+        createdAt = Date()
     }
     init(name: String, composedBy: String, midiFile: URL) {
         self.name = name
         self.composedBy = composedBy
         super.init(url: midiFile)
         super.parse()
+        createdAt = Date()
+        midiFileUrl = midiFile
     }
+    
+    
+    init(json: JSON) {
+        guard let name = json["name"].string, let composedBy = json["composedBy"].string, let createdAt = json["createdAt"].dateTime, let fileURL = json["fileURL"].string else {
+            self.name = "unknown"
+            self.composedBy = "unknown"
+            super.init()
+            return
+        }
+        self.name = name
+        self.composedBy = composedBy
+        self.createdAt = createdAt
+        self.midiFileUrl = URL(string: fileURL)
+        super.init(url: URL(string: fileURL)!)
+        super.parse()
+    }
+    
+    var asJSON: JSON {
+        var json: JSON = [:]
+        json["name"].string = self.name
+        json["composedBy"].string = self.composedBy
+        json["createdAt"].string = Formatter.toJSON(date: self.createdAt)
+        json["fileURL"].string = self.midiFileUrl?.path
+        return json
+    }
+    
     func addTracks(tracks: [MusicalSequence]) {
         for i in tracks {
             self.tempo = i.tempo

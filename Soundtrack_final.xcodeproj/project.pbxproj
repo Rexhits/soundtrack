@@ -38,6 +38,7 @@
 		FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */; };
 		FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */; };
 		FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */; };
+		FDC298E21E086ACB00208962 /* STFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC298E11E086ACB00208962 /* STFileManager.swift */; };
 		FDCDC4371DFE88F3005F0932 /* MixerCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCDC4361DFE88F3005F0932 /* MixerCellView.swift */; };
 		FDCDC43D1DFEE7F9005F0932 /* MixerPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCDC43C1DFEE7F9005F0932 /* MixerPopoverViewController.swift */; };
 		FDCDC4401DFF3594005F0932 /* PlayControlBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCDC43F1DFF3594005F0932 /* PlayControlBarView.swift */; };
@@ -133,6 +134,7 @@
 		FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicBlock.swift; sourceTree = "<group>"; };
 		FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicalSequence.swift; sourceTree = "<group>"; };
 		FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManager.swift; sourceTree = "<group>"; };
+		FDC298E11E086ACB00208962 /* STFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STFileManager.swift; sourceTree = "<group>"; };
 		FDCDC4361DFE88F3005F0932 /* MixerCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerCellView.swift; sourceTree = "<group>"; };
 		FDCDC43C1DFEE7F9005F0932 /* MixerPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerPopoverViewController.swift; sourceTree = "<group>"; };
 		FDCDC43F1DFF3594005F0932 /* PlayControlBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayControlBarView.swift; sourceTree = "<group>"; };
@@ -212,12 +214,13 @@
 			isa = PBXGroup;
 			children = (
 				FDA9DC7D1DA619EB004406D4 /* Global.swift */,
+				FDC298E11E086ACB00208962 /* STFileManager.swift */,
+				FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */,
 				FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */,
 				FD89AD641DB60C240009815A /* MIDIParser.swift */,
 				FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */,
 				FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */,
 				FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */,
-				FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */,
 				FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */,
 			);
 			name = Infrastructures;
@@ -321,7 +324,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = WangRex;
 				TargetAttributes = {
 					FD4394F91DA4D5B00089F7CF = {
@@ -471,6 +474,7 @@
 				FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */,
 				FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */,
 				FDA9DC7E1DA619EB004406D4 /* Global.swift in Sources */,
+				FDC298E21E086ACB00208962 /* STFileManager.swift in Sources */,
 				FD5379611DF7CE68006991FD /* PluginViewController.swift in Sources */,
 				FDCDC4371DFE88F3005F0932 /* MixerCellView.swift in Sources */,
 				FDA9DC751DA605F3004406D4 /* SignupViewController.swift in Sources */,
@@ -610,6 +614,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3C9590362E7B7966EEADB891 /* Pods-Soundtrack_final.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Soundtrack_final/Soundtrack_final.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -639,6 +644,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 40AAE7650D7E32EBCD0457EC /* Pods-Soundtrack_final.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Soundtrack_final/Soundtrack_final.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

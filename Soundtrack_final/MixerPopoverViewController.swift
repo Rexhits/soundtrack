@@ -9,25 +9,19 @@
 import UIKit
 import AVFoundation
 
-class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MixerCellDelegate,UIPickerViewDelegate,UIPickerViewDataSource {
+class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MixerCellDelegate {
     
-    @IBOutlet weak var playControlBar: PlayControlBarView!
+    @IBOutlet weak var playControlBar: UIView!
     @IBOutlet weak var trackTable: UICollectionView!
-    let pickerView = UIPickerView()
     let engine = PlaybackEngine.shared
     var selectedIndexPath: IndexPath!
     var removeButton: UIButton!
     var subView: UIView!
-    private var pluginManager: PluginManager!
-    
-    private var plugins: [String]!
-    private var cds: [AudioComponentDescription]!
+    private var adding: Bool!
     
     override func viewDidLoad() {
         trackTable.delegate = self
         trackTable.dataSource = self
-        pickerView.delegate = self
-        pickerView.dataSource = self
         view.backgroundColor = engine.selectedTrack.trackColor
         trackTable.backgroundColor = UIColor.clear
         let label = UILabel(frame: CGRect(x: 0, y: view.frame.height / 2 - 20, width: view.frame.width, height: 40))
@@ -37,7 +31,6 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
         label.textAlignment = NSTextAlignment.center
         self.view.addSubview(label)
         self.view.bringSubview(toFront: trackTable)
-        getEffectList()
     }
     
     func returnToMixer() {
@@ -46,30 +39,6 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return plugins.count
-    }
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return plugins[row]
-    }
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if plugins[row] != "Done" {
-            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType.audio, adding: true, cds[row - 1], completionHandler: {
-                pickerView.removeFromSuperview()
-                self.trackTable.reloadData()
-            })
-        } else {
-            pickerView.removeFromSuperview()
-            self.trackTable.reloadData()
-        }
-        
-    }
-
-    
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let string = plugins[row]
-        return NSAttributedString(string: string, attributes: [NSForegroundColorAttributeName:UIColor.white])
     }
     
     
@@ -133,31 +102,30 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
         self.selectedIndexPath = indexPath
         
         if indexPath.section != 0 && indexPath.row == self.trackTable.numberOfItems(inSection: indexPath.section) - 1 {
-            let cell = trackTable.cellForItem(at: indexPath)
-            if let cell = cell {
-                self.pickerView.frame = cell.contentView.bounds
-                self.pickerView.backgroundColor = UIColor.lightGray
-                self.pickerView.tintColor = UIColor.white
-                UIView.animate(withDuration: 0.4, animations: ({
-                    UIView.setAnimationTransition(.flipFromLeft, for: cell.contentView, cache: true)
-                    cell.contentView.addSubview(self.pickerView)
-                }), completion: nil)
-            }
+            self.adding = true
+            engine.selectedTrack.selectedNode = nil
+            engine.selectedTrack.selectedUnit = nil
+            engine.selectedTrack.selectedUnitPreset = [AUAudioUnitPreset]()
+            engine.selectedTrack.selectedUnitDescription = nil
+            self.performSegue(withIdentifier: "selectComponent", sender: self)
+            
+        } else if (indexPath.section != 0 && indexPath.row != self.trackTable.numberOfItems(inSection: indexPath.section) - 1) {
+            self.adding = false
+            engine.selectedTrack.selectedNode = engine.selectedTrack.effects[indexPath.row]
+            engine.selectedTrack.selectedUnit = engine.selectedTrack.effects[indexPath.row].auAudioUnit
+            engine.selectedTrack.selectedUnitPreset = engine.selectedTrack.effects[indexPath.row].auAudioUnit.factoryPresets ?? []
+            engine.selectedTrack.selectedUnitDescription = engine.selectedTrack.effects[indexPath.row].audioComponentDescription
+            self.performSegue(withIdentifier: "showPluginView", sender: self)
         } else {
+            self.adding = false
             if indexPath.section == 0 {
                 engine.selectedTrack.selectedNode = engine.selectedTrack.instrument
                 engine.selectedTrack.selectedUnit = engine.selectedTrack.instrument?.auAudioUnit
                 engine.selectedTrack.selectedUnitPreset = engine.selectedTrack.instrument?.auAudioUnit.factoryPresets ?? []
                 engine.selectedTrack.selectedUnitDescription = engine.selectedTrack.instrument?.audioComponentDescription
-            } else {
-                if indexPath.row > 1 {
-                    engine.selectedTrack.selectedNode = engine.selectedTrack.effects[indexPath.row - 1]
-                    engine.selectedTrack.selectedUnit = engine.selectedTrack.effects[indexPath.row - 1].auAudioUnit
-                    engine.selectedTrack.selectedUnitPreset = engine.selectedTrack.effects[indexPath.row - 1].auAudioUnit.factoryPresets ?? []
-                    engine.selectedTrack.selectedUnitDescription = engine.selectedTrack.effects[indexPath.row - 1].audioComponentDescription
-                }
+                self.performSegue(withIdentifier: "showPluginView", sender: self)
             }
-            self.performSegue(withIdentifier: "selectComponent", sender: self)
+            
         }
     }
     
@@ -192,9 +160,8 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
             let width = subView.frame.width
             let height = CGFloat(subView.frame.height / 4)
             let x = CGFloat(0)
-            let y = subView.frame.height / 2 - height / 2
-            let removeButton = UIButton(frame: CGRect(x: x, y: y, width: width, height: height))
-            
+            let y1 = subView.frame.height / 2 - height - 5
+            let removeButton = UIButton(frame: CGRect(x: x, y: y1, width: width, height: height))
             removeButton.setTitle("Remove Effect", for: .normal)
             removeButton.titleLabel?.font = removeButton.titleLabel?.font.withSize(20)
             removeButton.backgroundColor = UIColor.red.withAlphaComponent(0.8)
@@ -202,7 +169,17 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
             removeButton.addTarget(self, action: #selector(removeAU(sender:)), for: .touchUpInside)
             removeButton.addTarget(self, action: #selector(buttonTouchDown(sender:)), for: .touchDown)
             removeButton.addTarget(self, action: #selector(buttonTouchReleased(sender:)), for: .touchUpOutside)
+            let y2 = subView.frame.height / 2 + 5
+            let changeButton = UIButton(frame: CGRect(x: x, y: y2, width: width, height: height))
+            changeButton.setTitle("Change Effect", for: .normal)
+            changeButton.titleLabel?.font = removeButton.titleLabel?.font.withSize(20)
+            changeButton.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
+            changeButton.layer.cornerRadius = 10
+            changeButton.addTarget(self, action: #selector(openAUList(sender:)), for: .touchUpInside)
+            changeButton.addTarget(self, action: #selector(buttonTouchDown(sender:)), for: .touchDown)
+            changeButton.addTarget(self, action: #selector(buttonTouchReleased(sender:)), for: .touchUpOutside)
             self.subView.addSubview(removeButton)
+            self.subView.addSubview(changeButton)
             UIView.animate(withDuration: 0.4, animations: ({
                 UIView.setAnimationTransition(.flipFromLeft, for: cell.contentView, cache: true)
                 cell.contentView.addSubview(self.subView)
@@ -237,6 +214,7 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
     }
     
     func openAUList(sender: UIButton!) {
+        self.adding = false
         sender.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
         self.performSegue(withIdentifier: "selectComponent", sender: self)
     }
@@ -248,17 +226,7 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
         self.trackTable.reloadData()
     }
     
-    func getEffectList() {
-        pluginManager = PluginManager() {
-            self.plugins = [String]()
-            self.cds = [AudioComponentDescription]()
-            for i in self.pluginManager._availableEffects {
-                self.plugins.append(i.name)
-                self.cds.append(i.audioComponentDescription)
-            }
-            self.plugins.insert("Done", at: 0)
-        }
-    }
+
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "selectComponent" {
@@ -268,12 +236,22 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
             } else {
                 destination.pluginType = 1
             }
+            destination.adding = self.adding
+        }
+        if segue.identifier == "showPluginView" {
+            self.engine.restartSeq()
+            let vc = segue.destination as! PluginViewController
+            if selectedIndexPath.section == 0 {
+                vc.isEffect = false
+            } else {
+                vc.isEffect = true
+            }
         }
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        self.playControlBar.reset()
         self.trackTable.reloadData()
+        self.selectedIndexPath = nil
     }
     
 }

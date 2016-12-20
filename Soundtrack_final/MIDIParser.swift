@@ -10,7 +10,44 @@ import Foundation
 import AudioToolbox
 import AVFoundation
 
-
+internal class MIDISequencer {
+    var sequencer: MusicSequence?
+    internal var tempoTrack: MusicTrack?
+    internal var tracks = [MusicTrack]()
+    internal var timeSignature = TimeSignature(timeStamp: 0, lengthPerBeat: 4, beatsPerMeasure: 4)
+    var tempo = 100
+    internal struct EventInfo {
+        var timeStamp: MusicTimeStamp = 0
+        var type: UInt32 = 0
+        var data: UnsafeRawPointer?
+        var dataSize: UInt32 = 0
+    }
+    
+    
+    internal struct TimeSignatureEvents {
+        var type: UInt8 = 0
+        var unused1: UInt8 = 0
+        var unused2: UInt8 = 0
+        var unused3: UInt8 = 0
+        var dataLength:UInt32 = 0
+        // This sucks! Due to the returned tuple!
+        var data = (n, n, n, n)
+    }
+    
+    internal struct InstrumentNameEvents {
+        var type: UInt8 = 0
+        var unused1: UInt8 = 0
+        var unused2: UInt8 = 0
+        var unused3: UInt8 = 0
+        var dataLength:UInt32 = 0
+        // This sucks! Due to the returned tuple! 32 char for an instrument name should be enough...
+        var data = (n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n)
+    }
+    
+    init() {
+        NewMusicSequence(&sequencer)
+    }
+}
 
 internal class MIDIParser: MIDISequencer, CustomStringConvertible {
     var parsedTempoTrack: Track?
@@ -44,7 +81,25 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         }
     }
     
-    
+    init(data: Data) {
+        super.init()
+        var trackCount: UInt32 = 0
+        NewMusicSequence(&sequencer)
+        MusicSequenceFileLoadData(sequencer!, data as CFData, .midiType, .smf_PreserveTracks)
+        MusicSequenceGetTrackCount(sequencer!, &trackCount)
+        MusicSequenceGetTempoTrack(sequencer!, &tempoTrack)
+        for i in 0 ..< trackCount {
+            var track: MusicTrack?
+            MusicSequenceGetIndTrack(sequencer!, i, &track)
+            tracks.append(track!)
+        }
+        if trackCount <= 1 {
+            // only one track
+            var track: MusicTrack?
+            MusicSequenceGetIndTrack(sequencer!, 0, &track)
+            tracks.append(track!)
+        }
+    }
     
     func parse() {
         if tempoTrack != nil {

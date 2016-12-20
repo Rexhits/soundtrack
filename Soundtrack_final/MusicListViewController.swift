@@ -10,7 +10,7 @@ import UIKit
 
 class MusicListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var playControlBar: PlayControlBarView!
+    @IBOutlet weak var playControlBar: UIView!
     @IBOutlet weak var musicTable: UITableView!
     var musicList = [MusicBlock]()
     var selectedIndexPath: IndexPath!
@@ -63,10 +63,10 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
             PlaybackEngine.shared.addMusicBlock(musicBlock: musicList[indexPath.row])
         }
         selectedIndexPath = indexPath
+        STFileManager.shared.saveCurrentBlock()
 //        PlaybackEngine.shared.playSequence()
     }
     override func viewWillAppear(_ animated: Bool) {
-        playControlBar.reset()
         musicTable.reloadData()
     }
 }

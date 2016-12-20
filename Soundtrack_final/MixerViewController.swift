@@ -15,7 +15,7 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     @IBOutlet weak var mixerTable: UICollectionView!
     
     
-    @IBOutlet weak var playControlBar: PlayControlBarView!
+    @IBOutlet weak var playControlBar: UIView!
     
     
     let engine = PlaybackEngine.shared
@@ -39,7 +39,6 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     
     override func viewWillAppear(_ animated: Bool) {
-        playControlBar.reset()
         self.mixerTable.reloadData()
     }
     

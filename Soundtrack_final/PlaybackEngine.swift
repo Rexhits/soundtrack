@@ -49,19 +49,6 @@ class PlaybackEngine: NSObject {
             didSet {
                 if instrument != oldValue {
                     name = instrument?.auAudioUnit.audioUnitName
-                    instrument!.auAudioUnit.requestViewController { [weak self] viewController in
-                        guard let strongSelf = self else {return}
-                        guard let vc = viewController, let view = vc.view else {
-                            /*
-                             Show placeholder text that tells the user the audio unit has
-                             no view.
-                             */
-                            strongSelf.instrumentView = nil
-                            return
-                            
-                        }
-                        strongSelf.instrumentView = view
-                    }
                 }
             }
         }
@@ -226,10 +213,24 @@ class PlaybackEngine: NSObject {
             }
             i.instrument = newNode as? AVAudioUnitMIDIInstrument
             if let seq = sequencer {
-                for s in seq.tracks {
-                    s.destinationAudioUnit = i.instrument!
-                }
+                seq.tracks[i.trackIndex].destinationAudioUnit = i.instrument!
             }
+            i.instrumentView = nil
+            
+            i.instrument!.auAudioUnit.requestViewController { [weak self] viewController in
+                guard let strongSelf = self?.selectedTrack else {return}
+                guard let vc = viewController, let view = vc.view else {
+                    /*
+                     Show placeholder text that tells the user the audio unit has
+                     no view.
+                     */
+                    strongSelf.instrumentView = nil
+                    return
+                    
+                }
+                strongSelf.instrumentView = view
+            }
+
         }
     }
 
@@ -391,6 +392,11 @@ class PlaybackEngine: NSObject {
                 }
             }
 
+        }
+    }
+    func restartSeq() {
+        if let seq = sequencer {
+            seq.currentPositionInBeats = AVMusicTimeStamp(0)
         }
     }
     

@@ -8,7 +8,7 @@
 
 import Foundation
 import AudioToolbox
-
+import SwiftyJSON
 
 
 var token = NSString()
@@ -26,6 +26,8 @@ func getURLInDocumentDirectoryWithFilename (filename: String) -> URL {
     let fullpath = "\(documentDirectory)/\(filename)"
     return URL(fileURLWithPath: fullpath)
 }
+
+
 
 enum auType: UInt32 {
     case instrument, effect
@@ -63,44 +65,7 @@ struct Articulation: CustomStringConvertible {
     }
 }
 
-internal class MIDISequencer {
-    var sequencer: MusicSequence?
-    internal var tempoTrack: MusicTrack?
-    internal var tracks = [MusicTrack]()
-    internal var timeSignature = TimeSignature(timeStamp: 0, lengthPerBeat: 4, beatsPerMeasure: 4)
-    var tempo = 100
-    internal struct EventInfo {
-        var timeStamp: MusicTimeStamp = 0
-        var type: UInt32 = 0
-        var data: UnsafeRawPointer?
-        var dataSize: UInt32 = 0
-    }
-    
-    
-    internal struct TimeSignatureEvents {
-        var type: UInt8 = 0
-        var unused1: UInt8 = 0
-        var unused2: UInt8 = 0
-        var unused3: UInt8 = 0
-        var dataLength:UInt32 = 0
-        // This sucks! Due to the returned tuple!
-        var data = (n, n, n, n)
-    }
-    
-    internal struct InstrumentNameEvents {
-        var type: UInt8 = 0
-        var unused1: UInt8 = 0
-        var unused2: UInt8 = 0
-        var unused3: UInt8 = 0
-        var dataLength:UInt32 = 0
-        // This sucks! Due to the returned tuple! 32 char for an instrument name should be enough...
-        var data = (n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n)
-    }
-    
-    init() {
-        NewMusicSequence(&sequencer)
-    }
-}
+
 
 public extension Sequence where Iterator.Element: Hashable {
     var uniqueElements: [Iterator.Element] {
@@ -129,3 +94,56 @@ extension AudioComponentDescription: Equatable {
     }
 }
 
+extension JSON {
+    public var date: Date? {
+        get {
+            switch self.type {
+            case .string:
+                return Formatter.jsonDateFormatter.date(from: self.object as! String)
+            default:
+                return nil
+            }
+        }
+    }
+    
+    public var dateTime: Date? {
+        get {
+            switch self.type {
+            case .string:
+                return Formatter.jsonDateTimeFormatter.date(from: self.object as! String)
+            default:
+                return nil
+            }
+        }
+    }
+}
+
+class Formatter {
+    
+    private static var internalJsonDateFormatter: DateFormatter?
+    private static var internalJsonDateTimeFormatter: DateFormatter?
+    
+    static var jsonDateFormatter: DateFormatter {
+        if (internalJsonDateFormatter == nil) {
+            internalJsonDateFormatter = DateFormatter()
+            internalJsonDateFormatter!.dateFormat = "yyyy-MM-dd"
+        }
+        return internalJsonDateFormatter!
+    }
+    
+    static var jsonDateTimeFormatter: DateFormatter {
+        if (internalJsonDateTimeFormatter == nil) {
+            internalJsonDateTimeFormatter = DateFormatter()
+            internalJsonDateTimeFormatter!.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS'Z'"
+        }
+        return internalJsonDateTimeFormatter!
+    }
+    
+    static func toJSON(date: Date) -> String {
+        if (internalJsonDateTimeFormatter == nil) {
+            internalJsonDateTimeFormatter = DateFormatter()
+            internalJsonDateTimeFormatter!.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSS'Z'"
+        }
+        return internalJsonDateTimeFormatter!.string(from: date)
+    }
+}

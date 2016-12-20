@@ -107,8 +107,8 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     
     private func showPluginView(au: AUAudioUnit) {
         if !isEffect {
-            if let view = PlaybackEngine.shared.selectedTrack.instrumentView {
-                self.pluginView = view
+            if PlaybackEngine.shared.selectedTrack.instrumentView != nil {
+                self.pluginView = PlaybackEngine.shared.selectedTrack.instrumentView!
             } else {
                 self.activityIndicator.stopAnimating()
                 self.view.isUserInteractionEnabled = true

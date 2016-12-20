@@ -12,7 +12,7 @@ import CoreAudioKit
 
 class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var playbackControl: PlayControlBarView!
+    @IBOutlet weak var playbackControl: UIView!
     struct componentDescription: CustomStringConvertible {
         var name: String!
         var version: String!
@@ -36,6 +36,7 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //            getAUList()
         }
     }
+    var adding: Bool!
     private var pluginLoaded = false
     private var selectedIndexPath: IndexPath?
     private var pluginManager: PluginManager!
@@ -128,9 +129,6 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cell.backgroundColor = UIColor.clear
         cell.textLabel?.highlightedTextColor = UIColor.white
         cell.detailTextLabel?.highlightedTextColor = UIColor.white
-        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-        tap.numberOfTapsRequired = 2
-        cell.addGestureRecognizer(tap)
         let key = [String](plugins.keys)[indexPath.section]
         let values = plugins[key]!
         let value = values[indexPath.row]
@@ -140,9 +138,6 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return cell
     }
     
-    func doubleTapped() {
-        showPluginView()
-    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedIndexPath != indexPath {
@@ -150,50 +145,31 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let values = plugins[key]!
             let value = values[indexPath.row]
             actionIndicator.startAnimating()
-            PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, adding: false, value.cd, completionHandler: {
-                self.actionIndicator.stopAnimating()
-                self.pluginLoaded = true
-                self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
-            })
+            if !pluginLoaded {
+                PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, adding: self.adding, value.cd, completionHandler: {
+                    self.actionIndicator.stopAnimating()
+                    self.pluginLoaded = true
+                    self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
+                })
+            } else {
+                PlaybackEngine.shared.addNode(type: PlaybackEngine.trackType(rawValue: self.pluginType)!, adding: false, value.cd, completionHandler: {
+                    self.actionIndicator.stopAnimating()
+                    self.pluginLoaded = true
+                    self.titleStr = PlaybackEngine.shared.selectedTrack.selectedUnit?.audioUnitName
+                })
+            }
+            
         }
         selectedIndexPath = indexPath
     }
     
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        self.pluginLoaded = false
-    }
     
 
-    
-    func showPluginView() {
-        var timer: Timer?
-        if !pluginLoaded {
-            actionIndicator.startAnimating()
-            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) {_ in
-                if self.pluginLoaded {
-                    self.performSegue(withIdentifier: "showPluginView", sender: self)
-                    timer!.invalidate()
-                    timer = nil
-                    self.actionIndicator.stopAnimating()
-                }
-            }
-        } else {
-            self.performSegue(withIdentifier: "showPluginView", sender: self)
-        }
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         if let t = titleStr {
             self.title = t
         }
-        playbackControl.reset()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showPluginView" {
-            let vc = segue.destination as! PluginViewController
-            vc.isEffect = Bool.init(self.pluginType as NSNumber)
-            PlaybackEngine.shared.stopSequence()
-        }
-    }
 }
