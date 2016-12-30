@@ -8,6 +8,7 @@
 
 import UIKit
 import AFNetworking
+import Lockbox
 import SwiftyJSON
 
 class SignupViewController: UIViewController {
@@ -34,16 +35,18 @@ class SignupViewController: UIViewController {
     
     @IBAction func signup(_ sender: UIButton) {
         let package = ["email": self.emailField.text!, "password": self.passwordField.text!, "username": usernameFiled.text!]
+        self.manager.responseSerializer = AFJSONResponseSerializer()
         self.manager.post("http://127.0.0.1:8000/users/register", parameters: package, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
             self.statusLabel.isHidden = true
-            let theResponse = JSON(response as Any)
-            print("Response! \(theResponse.description)")
+            let json = response as! Dictionary<String, AnyObject>
+            if let t = json["token"]{
+                print("Token saved! \(Lockbox.archiveObject(t as! NSString, forKey: "Token"))")
+            }
             self.performSegue(withIdentifier: "gotoIndexFromSignup", sender: self)
         }) { (task: URLSessionDataTask?, err: Error) in
             if task?.response != nil {
                 let response = task!.response as! HTTPURLResponse
-                let theResponse = JSON(err)
-                print("NO! \(theResponse.rawString())")
+                print("NO! \(err)")
                 switch response.statusCode {
                 case 400:
                     self.statusLabel.text = "Invalid Email or Password, Please try again"

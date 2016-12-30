@@ -34,11 +34,8 @@ class LoginViewController: UIViewController {
 
     @IBAction func login(_ sender: UIButton) {
         let package = ["username": self.emailField.text!, "password": self.passwordField.text!]
-//        self.manager.responseSerializer = AFHTTPResponseSerializer()
         self.manager.post("http://localhost:8000/api-token-auth/", parameters: package, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
             self.statusLabel.isHidden = true
-            
-//            let token = NSString(data: response! as! Data, encoding: String.Encoding.utf8.rawValue)
             let response = JSON(response!)
             let token = "token: \(response["token"].description)" as NSString
             print("Token saved! \(Lockbox.archiveObject(token, forKey: "Token"))")

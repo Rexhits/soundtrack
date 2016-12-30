@@ -58,7 +58,7 @@ class STFileManager: NSObject {
     func saveCurrentBlock() {
         guard let block = PlaybackEngine.shared.loadedBlock else {return}
         let formatter = DateFormatter()
-        formatter.dateFormat = "yymmddhhmmss"
+        formatter.dateFormat = "yyyymmddhhmmss"
         let dirName = formatter.string(from: Date())
         let fileName = "\(block.name)_musicData"
         do {
