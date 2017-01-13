@@ -8,49 +8,51 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 		<key>Lockbox.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-Soundtrack_final.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
+		</dict>
+		<key>RSKImageCropper.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>SwiftyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>4</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1C3436CEA5C3D39764C5F54374794ECB</key>
+		<key>0E21A9EC56AFFD78431640BEB075A69C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2486276EDA7ABEEA1C4977CC218AE159</key>
+		<key>2745ECFFBE99CDD75BCA84B26424C449</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5B1AD1F031F1F57D67EF1F78B933D6EC</key>
+		<key>C56AA29900119875EA9020C44463AD70</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B2B484AD9F4BDBE74BB5BB955C8F99E4</key>
+		<key>CF671F7E57B92905F1CC91D036D6B4A7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D3E3088F632DB5338B77B9AB2FDEDFED</key>
 		<dict>
 			<key>primary</key>
 			<true/>

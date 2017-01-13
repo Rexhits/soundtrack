@@ -37,18 +37,13 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         presetView.dataSource = self
         presetView.backgroundColor = UIColor.clear
         view.backgroundColor = UIColor.gray
-        tabbar.barTintColor = UIColor.black.withAlphaComponent(0.5)
+        tabbar.barTintColor = UIColor.darkText
     }
     
     override func viewWillAppear(_ animated: Bool) {
         if let au = PlaybackEngine.shared.selectedTrack.selectedUnit {
             self.showPluginView(au: au)
         }
-        let titleBarHeight = self.navigationController?.navigationBar.bounds.size.height
-        let toolbarHeight = tabbar.frame.height
-        rect = CGRect(x: 0, y: titleBarHeight!, width: self.view.frame.width, height: self.view.frame.height - toolbarHeight - titleBarHeight!)
-        tabbar.frame = CGRect(x: 0, y: self.view.frame.height - toolbarHeight, width: self.view.frame.width, height: toolbarHeight)
-        presetView.frame = rect
     }
     override func viewDidAppear(_ animated: Bool) {
         if pluginView == nil {
@@ -67,7 +62,7 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         if item == interfaceItem {
             if let pView = pluginView {
                 pView.removeFromSuperview()
-                pView.frame = rect
+                pView.frame = presetView.frame
                 view.addSubview(pView)
                 view.bringSubview(toFront: pView)
             }
@@ -118,6 +113,5 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
             self.activityIndicator.stopAnimating()
             self.view.isUserInteractionEnabled = true
         }
-        PlaybackEngine.shared.playSequence()
     }
 }

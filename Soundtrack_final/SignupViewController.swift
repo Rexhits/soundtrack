@@ -7,9 +7,7 @@
 //
 
 import UIKit
-import AFNetworking
 import Lockbox
-import SwiftyJSON
 
 class SignupViewController: UIViewController {
     
@@ -21,11 +19,11 @@ class SignupViewController: UIViewController {
     
     @IBOutlet var passwordField: UITextField!
     
-    let manager = AFHTTPSessionManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -34,28 +32,42 @@ class SignupViewController: UIViewController {
     }
     
     @IBAction func signup(_ sender: UIButton) {
+        guard !emailField.text!.isEmpty && !usernameFiled.text!.isEmpty && !passwordField.text!.isEmpty else {
+            self.statusLabel.text = "All the fields are required"
+            self.statusLabel.isHidden = false
+            return
+        }
+        guard emailField.text!.isValidEmail() else {
+            self.statusLabel.text = "Invalid Email, Please try again"
+            self.statusLabel.isHidden = false
+            return
+        }
+        guard passwordField.text!.isValidPassword() else {
+            self.statusLabel.text = "Password is too weak\nMust be at least 8 characters, contains both letters and digits"
+            self.statusLabel.numberOfLines = 3
+            self.statusLabel.isHidden = false
+            return
+        }
         let package = ["email": self.emailField.text!, "password": self.passwordField.text!, "username": usernameFiled.text!]
-        self.manager.responseSerializer = AFJSONResponseSerializer()
-        self.manager.post("http://127.0.0.1:8000/users/register", parameters: package, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
-            self.statusLabel.isHidden = true
-            let json = response as! Dictionary<String, AnyObject>
-            if let t = json["token"]{
-                print("Token saved! \(Lockbox.archiveObject(t as! NSString, forKey: "Token"))")
-            }
-            self.performSegue(withIdentifier: "gotoIndexFromSignup", sender: self)
-        }) { (task: URLSessionDataTask?, err: Error) in
-            if task?.response != nil {
-                let response = task!.response as! HTTPURLResponse
-                print("NO! \(err)")
-                switch response.statusCode {
-                case 400:
+        Server.post(api: "register", body: package as JSONPackage) { (response, err, errCode) in
+            guard err == nil, errCode == nil else {
+                switch errCode! {
+                case 400, 500:
                     self.statusLabel.text = "Invalid Email or Password, Please try again"
                     self.statusLabel.isHidden = false
                 default:
                     self.statusLabel.text = "Unable to reach server now... Please try again later"
                     self.statusLabel.isHidden = false
                 }
-                
+                return
+            }
+            self.statusLabel.isHidden = true
+            guard response != nil else {return}
+            let res = response! as! JSONPackage
+            if let t = res["token"]{
+                let token = "Token \(t as! String)" as NSString
+                print("Token saved! \(Lockbox.archiveObject(token, forKey: "Token"))")
+                self.performSegue(withIdentifier: "gotoIndexFromSignup", sender: self)
             }
         }
         

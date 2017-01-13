@@ -8,10 +8,73 @@
 
 import Foundation
 import AudioToolbox
+import AFNetworking
+import Lockbox
 import SwiftyJSON
 
+typealias JSONPackage = [String:AnyObject]
 
-var token = NSString()
+let serverURL = "http://localhost:8000/"
+
+final class ServerCommunicator: NSObject {
+    static let shared = ServerCommunicator()
+    let serverURL = "http://localhost:8000/"
+    let manager = AFHTTPSessionManager()
+    override init() {
+        super.init()
+        getToken()
+    }
+    
+    func getToken() {
+        let token = Lockbox.unarchiveObject(forKey: "Token")
+        if token != nil {
+            manager.requestSerializer.setValue(token! as? String, forHTTPHeaderField: "Authorization")
+        }
+    }
+    
+    func get(api: String, body:JSONPackage?, completion: @escaping (Any?, Error?, Int?)->Void) {
+        getToken()
+        manager.get("\(serverURL)\(api)/", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
+            completion(response, nil, nil)
+        }) { (task: URLSessionDataTask?, err: Error) in
+            let response = task!.response as! HTTPURLResponse
+            completion(nil, err, response.statusCode)
+        }
+    }
+    func post(api: String, body:JSONPackage, completion: @escaping (Any?, Error?, Int?)->Void) {
+        getToken()
+        manager.post("\(serverURL)\(api)/", parameters: body, progress: nil, success: { (task, response) in
+            completion(response, nil, nil)
+        }) {(task, err) in
+            let response = task!.response as! HTTPURLResponse
+            completion(nil, err, response.statusCode)
+        }
+    }
+    
+    func patch(api: String, body:JSONPackage, completion: @escaping (Any?, Error?, Int?)->Void) {
+        getToken()
+        manager.patch("\(serverURL)\(api)/", parameters: body, success: { (task:URLSessionDataTask, response: Any?) in
+            completion(response, nil, nil)
+        }) { (task: URLSessionDataTask?, err: Error) in
+            let response = task!.response as! HTTPURLResponse
+            completion(nil, err, response.statusCode)
+        }
+    }
+    
+    func uploadAvatar(data:Data, filename: String, completion: @escaping (JSONPackage?, Error?, Int?)->Void) {
+        getToken()
+        manager.post("\(serverURL)users/avatar/", parameters: nil, constructingBodyWith: { (formData: AFMultipartFormData) in
+            formData.appendPart(withFileData: data, name: "avatar", fileName: filename, mimeType: "image/jpeg")
+        }, progress: nil, success: {(task:URLSessionDataTask, response: Any?) in
+            completion(response as? JSONPackage, nil, nil)
+        }) { (task: URLSessionDataTask?, err: Error) in
+            let response = task!.response as! HTTPURLResponse
+            completion(nil, err, response.statusCode)
+        }
+    }
+}
+
+let Server = ServerCommunicator.shared
 
 let n: UInt8 = 0
 
@@ -19,6 +82,16 @@ func iteratorForTuple(tuple: Any) -> AnyIterator<Any> {
     return AnyIterator(Mirror(reflecting: tuple).children.lazy.map { $0.value }.makeIterator())
 }
 
+extension String {
+    func isValidEmail() -> Bool {
+        let regex = try? NSRegularExpression(pattern: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", options: .caseInsensitive)
+        return regex?.firstMatch(in: self, options: [], range: NSMakeRange(0, self.characters.count)) != nil
+    }
+    func isValidPassword() -> Bool {
+        let regex = try? NSRegularExpression(pattern: "^(?=.*?[a-zA-Z])(?=.*?[0-9]).{8,}$", options: .caseInsensitive)
+        return regex?.firstMatch(in: self, options: [], range: NSMakeRange(0, self.characters.count)) != nil
+    }
+}
 
 func getURLInDocumentDirectoryWithFilename (filename: String) -> URL {
     let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
@@ -146,4 +219,43 @@ class Formatter {
         }
         return internalJsonDateTimeFormatter!.string(from: date)
     }
+}
+
+extension Double {
+    func milesToMeters() -> Double {
+        return self * 1609.344
+    }
+}
+
+extension UIImage {
+    func colorized(color : UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0);
+        let context = UIGraphicsGetCurrentContext();
+        context!.translateBy(x: 0, y: self.size.height);
+        context!.scaleBy(x: 1.0, y: -1.0);
+        context!.draw(self.cgImage!, in: rect)
+        context!.clip(to: rect, mask: self.cgImage!)
+        context!.setFillColor(color.cgColor)
+        context!.fill(rect)
+        let colorizedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return colorizedImage!
+    }
+    func resize(x: CGFloat, y: CGFloat) -> UIImage {
+        let size = CGSize(width: x, height: y)
+        let scale = CGFloat(max(size.width/self.size.width,
+                                size.height/self.size.height))
+        let width:CGFloat  = self.size.width * scale
+        let height:CGFloat = self.size.height * scale;
+        
+        let rr:CGRect = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 1.0);
+        self.draw(in: rr)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
+    }
+    
 }

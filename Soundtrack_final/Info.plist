@@ -47,5 +47,11 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Taking Photo for Avatar</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choosing Photo for Avatar</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 </dict>
 </plist>

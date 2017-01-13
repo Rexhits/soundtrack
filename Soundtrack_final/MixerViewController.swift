@@ -121,5 +121,4 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
             })
         }
     }
-    
 }

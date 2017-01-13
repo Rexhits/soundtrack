@@ -239,7 +239,6 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
             destination.adding = self.adding
         }
         if segue.identifier == "showPluginView" {
-            self.engine.restartSeq()
             let vc = segue.destination as! PluginViewController
             if selectedIndexPath.section == 0 {
                 vc.isEffect = false

@@ -10,7 +10,6 @@ import UIKit
 import Lockbox
 
 class MusicListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
     @IBOutlet weak var playControlBar: UIView!
     @IBOutlet weak var musicTable: UITableView!
     var musicList = [MusicBlock]()
@@ -54,11 +53,7 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
     
-    @IBAction func logout(_ sender: UIBarButtonItem) {
-        print("Logged Out! \(Lockbox.archiveObject(nil, forKey: "Token")))")
-        self.navigationController?.performSegue(withIdentifier: "logout", sender: self)
-//        self.performSegue(withIdentifier: "logout", sender: self)
-    }
+    
     func doubleTapped() {
         self.performSegue(withIdentifier: "showMixer", sender: self)
     }

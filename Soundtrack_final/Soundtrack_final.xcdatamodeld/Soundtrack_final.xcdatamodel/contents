@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Entity" representedClassName="Entity" syncable="YES" codeGenerationType="class"/>
+    <entity name="Billboard" representedClassName="Billboard" syncable="YES" codeGenerationType="class">
+        <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="hasBlocks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Block" inverseName="onBoard" inverseEntity="Block" syncable="YES"/>
+        <relationship name="hasPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="onBoard" inverseEntity="Piece" syncable="YES"/>
+    </entity>
+    <entity name="Block" representedClassName="Block" syncable="YES" codeGenerationType="class">
+        <attribute name="composedBy" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="configFile" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="midiFile" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="onBoard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasBlocks" inverseEntity="Billboard" syncable="YES"/>
+        <relationship name="usedInPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="blocks" inverseEntity="Piece" syncable="YES"/>
+    </entity>
+    <entity name="Piece" representedClassName="Piece" syncable="YES" codeGenerationType="class">
+        <attribute name="audioFile" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="composedBy" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="blocks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Block" inverseName="usedInPieces" inverseEntity="Block" syncable="YES"/>
+        <relationship name="onBoard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasPieces" inverseEntity="Billboard" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Entity" positionX="-63" positionY="-18" width="128" height="45"/>
+        <element name="Billboard" positionX="-45" positionY="45" width="128" height="165"/>
+        <element name="Block" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Piece" positionX="-54" positionY="18" width="128" height="120"/>
     </elements>
 </model>

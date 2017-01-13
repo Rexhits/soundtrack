@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import AFNetworking
-import SwiftyJSON
 import Lockbox
 
 class LoginViewController: UIViewController {
@@ -19,7 +17,6 @@ class LoginViewController: UIViewController {
     
     @IBOutlet var passwordField: UITextField!
     
-    let manager = AFHTTPSessionManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,18 +31,9 @@ class LoginViewController: UIViewController {
 
     @IBAction func login(_ sender: UIButton) {
         let package = ["username": self.emailField.text!, "password": self.passwordField.text!]
-        self.manager.post("http://localhost:8000/api-token-auth/", parameters: package, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
-            self.statusLabel.isHidden = true
-            let response = JSON(response!)
-            let token = "token: \(response["token"].description)" as NSString
-            print("Token saved! \(Lockbox.archiveObject(token, forKey: "Token"))")
-            self.performSegue(withIdentifier: "gotoIndex", sender: self)
-            
-        }) { (task: URLSessionDataTask?, err: Error) in
-            if task?.response != nil {
-                let response = task!.response as! HTTPURLResponse
-                print("NO! \(response.statusCode)")
-                switch response.statusCode {
+        Server.post(api: "api-token-auth", body: package as JSONPackage) { (response, err, errCode) in
+            guard err == nil, errCode == nil else {
+                switch errCode! {
                 case 401, 400, 403:
                     self.statusLabel.text = "Invalid Email or Password, Please try again"
                     self.statusLabel.isHidden = false
@@ -53,7 +41,15 @@ class LoginViewController: UIViewController {
                     self.statusLabel.text = "Unable to reach server now... Please try again later"
                     self.statusLabel.isHidden = false
                 }
-
+                return
+            }
+            self.statusLabel.isHidden = true
+            guard response != nil else {return}
+            let res = response! as! JSONPackage
+            if let t = res["token"]{
+                let token = "Token \(t as! String)" as NSString
+                print("Token saved! \(Lockbox.archiveObject(token, forKey: "Token"))")
+                self.performSegue(withIdentifier: "gotoIndex", sender: self)
             }
         }
         

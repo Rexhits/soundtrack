@@ -14,19 +14,22 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Lockbox (3.0.2)
-  - SwiftyJSON (3.1.0)
+  - Lockbox (3.0.3)
+  - RSKImageCropper (1.5.2)
+  - SwiftyJSON (3.1.3)
 
 DEPENDENCIES:
   - AFNetworking
   - Lockbox
+  - RSKImageCropper
   - SwiftyJSON
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  Lockbox: bfc91deef886f9c0302e809a4d11e171c92c341b
-  SwiftyJSON: 29b9f2a64f118c07e691667c2ba1efe536acfe0b
+  Lockbox: 7bc46733434e89900924d53a08bd9d0e5ca12d46
+  RSKImageCropper: 27d0e7efa800b509720163c3561fe08a04853780
+  SwiftyJSON: 38a8ea2006779c0fc4c310cb2ee8195327740faf
 
-PODFILE CHECKSUM: 2a268f9d763b53d880c97d254fc758cd7fb0258f
+PODFILE CHECKSUM: 1a5fc32fdec3a7a79854431df5637d4bc840db2e
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

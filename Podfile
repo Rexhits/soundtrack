@@ -6,6 +6,7 @@ target "Soundtrack_final" do
 	pod 'SwiftyJSON'
 	pod 'AFNetworking'
 	pod 'Lockbox'
+	pod 'RSKImageCropper'
 end
 
 post_install do |installer|
