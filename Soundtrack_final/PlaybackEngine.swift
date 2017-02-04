@@ -90,7 +90,7 @@ class PlaybackEngine: NSObject {
             }
             engine.detach(i.mixer)
         }
-        tracks = musicBlock.parsedTracks as! [Track]
+        tracks.removeAll()
         self.data = musicBlock.getSequenceData()
         if let data = self.data {
             do {
@@ -100,32 +100,28 @@ class PlaybackEngine: NSObject {
                 print("Failed load midiData! \(error)")
             }
             
-            guard sequencer.tracks.count - tracks.count == 1 else {
-                print("err")
-                return
-            }
-            for i in 0 ..< tracks.count {
-                tracks[i].addToPlaybackEngine(trackType: .instrument)
-//                tracks.append(newTrack)
-                selectedTrack = tracks[i]
-                sequencer.tracks[i+1].destinationAudioUnit = tracks[i].instrument!
-                engine.attach(tracks[i].instrument!)
-                engine.attach(tracks[i].mixer)
-                if !tracks[i].effects.isEmpty {
-                    for e in 0 ..< tracks[i].effects.count {
-                        engine.attach(tracks[i].effects[e])
-                        if e < tracks[i].effects.count - 1{
+            for i in sequencer.tracks {
+                let newTrack = Track(trackType: .instrument)
+                tracks.append(newTrack)
+                selectedTrack = newTrack
+                i.destinationAudioUnit = newTrack.instrument!
+                engine.attach(newTrack.instrument!)
+                engine.attach(newTrack.mixer)
+                if !newTrack.effects.isEmpty {
+                    for e in 0 ..< newTrack.effects.count {
+                        engine.attach(newTrack.effects[e])
+                        if e < newTrack.effects.count - 1{
                             engine.connect(selectedTrack.effects[e], to: selectedTrack.effects[e+1], format: audioFormat)
                         }
                     }
-                    engine.connect(tracks[i].instrument!, to: tracks[i].effects[0], format: audioFormat)
-                    engine.connect(tracks[i].effects.last!, to: tracks[i].mixer, format: audioFormat)
+                    engine.connect(newTrack.instrument!, to: newTrack.effects[0], format: audioFormat)
+                    engine.connect(newTrack.effects.last!, to: newTrack.mixer, format: audioFormat)
                 } else {
-                    engine.connect(tracks[i].instrument!, to: tracks[i].mixer, format: audioFormat)
+                    engine.connect(newTrack.instrument!, to: newTrack.mixer, format: audioFormat)
                 }
-                engine.connect(tracks[i].mixer, to: engine.mainMixerNode, format: audioFormat)
-                if sequencer.tracks[i+1].lengthInBeats > blockLength {
-                    blockLength = sequencer.tracks[i+1].lengthInBeats
+                engine.connect(newTrack.mixer, to: engine.mainMixerNode, format: audioFormat)
+                if i.lengthInBeats > blockLength {
+                    blockLength = i.lengthInBeats
                 }
             }
             sequencer.prepareToPlay()
