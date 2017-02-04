@@ -14,11 +14,10 @@ import SwiftyJSON
 
 typealias JSONPackage = [String:AnyObject]
 
-let serverURL = "http://localhost:8000/"
 
 final class ServerCommunicator: NSObject {
     static let shared = ServerCommunicator()
-    let serverURL = "http://localhost:8000/"
+    let serverURL = "http://45.79.208.141:8000/"
     let manager = AFHTTPSessionManager()
     override init() {
         super.init()
@@ -82,6 +81,24 @@ func iteratorForTuple(tuple: Any) -> AnyIterator<Any> {
     return AnyIterator(Mirror(reflecting: tuple).children.lazy.map { $0.value }.makeIterator())
 }
 
+extension Int
+{
+    static func random(range: CountableClosedRange<Int> ) -> Int
+    {
+        var offset = 0
+        
+        if range.lowerBound < 0   // allow negative ranges
+        {
+            offset = abs(range.lowerBound)
+        }
+        
+        let mini = UInt32(range.lowerBound + offset)
+        let maxi = UInt32(range.upperBound   + offset)
+        
+        return Int(mini + arc4random_uniform(maxi - mini)) - offset
+    }
+}
+
 extension String {
     func isValidEmail() -> Bool {
         let regex = try? NSRegularExpression(pattern: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", options: .caseInsensitive)
@@ -114,29 +131,6 @@ enum auType: UInt32 {
     }
 }
 
-struct Track: MusicalSequence {
-    internal var content: BasicMusicalStructure = BasicMusicalStructure()
-    var parser: MIDIParser
-    init(parser: MIDIParser) {
-        self.parser = parser
-    }
-    
-}
-
-struct Measure: MusicalSequence {
-    internal var content: BasicMusicalStructure = BasicMusicalStructure()
-    
-}
-
-struct Articulation: CustomStringConvertible {
-    var status: UInt8 = 0
-    var timeStamp: MusicTimeStamp = 0
-    var controllerNum:Int = 0
-    var value:Int = 0
-    var description: String {
-        return String("Controller: \(controllerNum)\tValue: \(value)")
-    }
-}
 
 
 
@@ -146,6 +140,18 @@ public extension Sequence where Iterator.Element: Hashable {
             Set(self)
         )
     }
+    
+    func frequencies() -> [(Self.Iterator.Element,Int)] {
+        
+        var frequency: [Self.Iterator.Element:Int] = [:]
+        
+        for x in self {
+            frequency[x] = (frequency[x] ?? 0) + 1
+        }
+        
+        return frequency.sorted { $0.1 > $1.1 }
+    }
+    
 }
 public extension Sequence where Iterator.Element: Equatable {
     var uniqueElements: [Iterator.Element] {
@@ -159,7 +165,22 @@ public extension Sequence where Iterator.Element: Equatable {
     }
 }
 
-
+extension URL {
+    func fileName() -> String {
+        if let url = NSURL(fileURLWithPath: self.path).deletingPathExtension?.lastPathComponent {
+            return url
+        } else {
+            return ""
+        }
+    }
+    func fileExtension() -> String {
+        if let ext = NSURL(fileURLWithPath: self.path).pathExtension {
+            return ext
+        } else {
+            return ""
+        }
+    }
+}
 
 extension AudioComponentDescription: Equatable {
     public static func ==(lhs: AudioComponentDescription, rhs: AudioComponentDescription) -> Bool {
@@ -227,6 +248,8 @@ extension Double {
     }
 }
 
+
+
 extension UIImage {
     func colorized(color : UIColor) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
@@ -259,3 +282,38 @@ extension UIImage {
     }
     
 }
+
+extension UIColor {
+    static func randomColor() -> UIColor {
+        let hue = CGFloat(arc4random() & 256 / 256)
+        let saturation = CGFloat(arc4random() & 256 / 256) + 0.5
+        let brightness = CGFloat(arc4random() & 256 / 256) + 0.5
+        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1)
+    }
+}
+
+
+class ParkBenchTimer {
+    
+    let startTime:CFAbsoluteTime
+    var endTime:CFAbsoluteTime?
+    
+    init() {
+        startTime = CFAbsoluteTimeGetCurrent()
+    }
+    
+    func stop() -> CFAbsoluteTime {
+        endTime = CFAbsoluteTimeGetCurrent()
+        
+        return duration!
+    }
+    
+    var duration:CFAbsoluteTime? {
+        if let endTime = endTime {
+            return endTime - startTime
+        } else {
+            return nil
+        }
+    }
+}
+

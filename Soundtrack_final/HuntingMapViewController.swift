@@ -27,7 +27,7 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
             locationManager.requestWhenInUseAuthorization()
         }
         mapView.showsUserLocation = true
-        self.mapView.userTrackingMode = MKUserTrackingMode.follow
+//        self.mapView.userTrackingMode = MKUserTrackingMode.followWithHeading
     }
     
     
@@ -67,11 +67,22 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.addChildViewController(appDelegate.playbackController)
+        appDelegate.playbackController.view.frame = self.playControlBar.bounds
+        self.playControlBar.addSubview(appDelegate.playbackController.view)
+        appDelegate.playbackController.didMove(toParentViewController: self)
         showBillboards()
+        
     }
     
     func removeAnnotaions() {
+        guard mapView.annotations.count > 1 else {
+            return
+        }
         for i in mapView.annotations {
+            guard mapView.view(for: i) != nil else {
+                return
+            }
             for i in mapView.view(for: i)!.subviews {
                 i.removeFromSuperview()
             }
@@ -149,4 +160,5 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
             fetch()
         }
     }
+    
 }

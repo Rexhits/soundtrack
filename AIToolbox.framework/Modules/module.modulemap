@@ -1,0 +1,3 @@
+framework module AIToolbox {
+    header "AIToolbox-Swift.h"
+}

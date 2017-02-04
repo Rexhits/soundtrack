@@ -11,11 +11,12 @@ import CoreData
 
 class EvolutionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var playControlBar: UIView!
     let context = appDelegate.persistentContainer.viewContext
     
     @IBOutlet weak var pieceTable: UITableView!
     var pieces = [Piece]()
-    var selectedRow: Int!
+    var selectedPiece: Piece!
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor.gray
@@ -26,22 +27,17 @@ class EvolutionViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewWillAppear(_ animated: Bool) {
         fetch()
+        self.addChildViewController(appDelegate.playbackController)
+        appDelegate.playbackController.view.frame = self.playControlBar.bounds
+        self.playControlBar.addSubview(appDelegate.playbackController.view)
+        appDelegate.playbackController.didMove(toParentViewController: self)
     }
     
     @IBAction func newPiece(_ sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: "Title for the New Piece", message: nil, preferredStyle: .alert)
-        alertController.addTextField(configurationHandler: { textField in
-            textField.placeholder = "Untitled"
-        })
-        let ok = UIAlertAction(title: "OK", style: .default) { (_) in
-            let _ = Piece(title: alertController.textFields!.first!.text!)
-            appDelegate.saveContext()
-            self.performSegue(withIdentifier: "gotoPieceEditor", sender: self)
-        }
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertController.addAction(ok)
-        alertController.addAction(cancel)
-        self.present(alertController, animated: true, completion: nil)
+        let piece = Piece(title: "Default")
+        appDelegate.saveContext()
+        self.selectedPiece = piece
+        self.performSegue(withIdentifier: "gotoTemplateSelect", sender: self)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -61,9 +57,11 @@ class EvolutionViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.detailTextLabel?.textColor = UIColor.white
         guard !pieces.isEmpty else {
             cell.textLabel?.text = "No Piece was Found"
+            cell.isUserInteractionEnabled = false
             return cell
         }
         cell.textLabel?.text = pieces[indexPath.row].title
+        cell.isUserInteractionEnabled = true
         return cell
     }
     
@@ -93,7 +91,7 @@ class EvolutionViewController: UIViewController, UITableViewDelegate, UITableVie
         guard !pieces.isEmpty else {
             return
         }
-        self.selectedRow = indexPath.row
+        self.selectedPiece = pieces[indexPath.row]
         self.performSegue(withIdentifier: "gotoPieceEditor", sender: self)
     }
     
@@ -109,9 +107,14 @@ class EvolutionViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gotoTemplateSelect" {
+            let target = segue.destination as! TemplateSelViewController
+            target.piece = self.selectedPiece
+        }
         if segue.identifier == "gotoPieceEditor" {
             let target = segue.destination as! PieceEditorViewController
-            target.piece = pieces[selectedRow]
+            target.piece = self.selectedPiece
         }
     }
+    
 }

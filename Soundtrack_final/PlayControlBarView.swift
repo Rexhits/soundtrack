@@ -23,6 +23,15 @@ class PlayControlBarView: UIViewController, PlaybackEngineDelegate {
         PlaybackEngine.shared.delegate = self
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         playStopBtn.isUserInteractionEnabled = false
+       
+        playStopBtn.addTarget(self, action: #selector(playOrStop(sender:)), for: .touchDown)
+        
+        
+        loopBtn.addTarget(self, action: #selector(loop(sender:)), for: .touchDown)
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         playStopBtn.setImage(#imageLiteral(resourceName: "Play"), for: .normal)
         playStopBtn.setImage(#imageLiteral(resourceName: "Pause"), for: .selected)
         playStopBtn.tintColor = UIColor.orange
@@ -32,7 +41,6 @@ class PlayControlBarView: UIViewController, PlaybackEngineDelegate {
         playStopBtn.layer.cornerRadius = playStopBtn.bounds.size.width / 2
         playStopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
         playStopBtn.layer.masksToBounds = true
-        playStopBtn.addTarget(self, action: #selector(playOrStop(sender:)), for: .touchDown)
         
         loopBtn.setImage(#imageLiteral(resourceName: "Loop"), for: .normal)
         loopBtn.layer.borderColor = UIColor.lightGray.cgColor
@@ -42,12 +50,6 @@ class PlayControlBarView: UIViewController, PlaybackEngineDelegate {
         loopBtn.layer.masksToBounds = true
         loopBtn.tintColor = UIColor.gray
         loopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
-        loopBtn.addTarget(self, action: #selector(loop(sender:)), for: .touchDown)
-
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         reset()
     }
     
@@ -107,6 +109,10 @@ class PlayControlBarView: UIViewController, PlaybackEngineDelegate {
         playStopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 2.0)
     }
     func didStartPlaying() {
+        playStopBtn.isUserInteractionEnabled = true
+        if let block = PlaybackEngine.shared.loadedBlock {
+            infoLabel.text = "\(block.name) - \(block.composedBy)"
+        }
         self.playStopBtn.isSelected = true
         playStopBtn.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
     }
@@ -126,8 +132,9 @@ class PlayControlBarView: UIViewController, PlaybackEngineDelegate {
         loopBtn.layer.borderColor = UIColor.lightGray.cgColor
         loopBtn.tintColor = UIColor.lightGray
     }
-    
+
 }
+
 
 protocol PlayControlBarDelegate {
     func updateTime(currentTime: AVMusicTimeStamp)

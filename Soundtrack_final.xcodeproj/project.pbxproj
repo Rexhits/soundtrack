@@ -10,7 +10,6 @@
 		C895D1599E6CEEFA17989BE7 /* Pods_Soundtrack_final.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */; };
 		FD01C1001E286A3E005C3901 /* CoreDataExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD01C0FF1E286A3E005C3901 /* CoreDataExtentions.swift */; };
 		FD01C1021E28862B005C3901 /* PieceEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD01C1011E28862B005C3901 /* PieceEditorViewController.swift */; };
-		FD1C99571DBA8B1A0049EBAD /* test.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD1C99561DBA8B1A0049EBAD /* test.mid */; };
 		FD32A4941E1F89DC00C88208 /* UserSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD32A4931E1F89DC00C88208 /* UserSettingsViewController.swift */; };
 		FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */; };
 		FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4394FF1DA4D5B00089F7CF /* LoginViewController.swift */; };
@@ -24,7 +23,6 @@
 		FD5379611DF7CE68006991FD /* PluginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD5379601DF7CE68006991FD /* PluginViewController.swift */; };
 		FD586DBD1E233C5B00331D3E /* HuntingMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD586DBC1E233C5B00331D3E /* HuntingMapViewController.swift */; };
 		FD586DBF1E2341AA00331D3E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD586DBE1E2341AA00331D3E /* MapKit.framework */; };
-		FD5EF1981DD448FF004E2EAA /* Untitled.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD5EF1971DD448FF004E2EAA /* Untitled.mid */; };
 		FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */; };
 		FD62CA9A1DFF90F7007931AA /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD62CA991DFF90F7007931AA /* Segues.swift */; };
 		FD7B6A521DCAD02300B963F4 /* MIDIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD89AD641DB60C240009815A /* MIDIParser.swift */; };
@@ -36,6 +34,16 @@
 		FD90E5331DB5F62B008B0881 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5321DB5F62B008B0881 /* CoreGraphics.framework */; };
 		FD90E5351DB5F62F008B0881 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5341DB5F62F008B0881 /* CoreMotion.framework */; };
 		FD90E5371DB5F63C008B0881 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5361DB5F63C008B0881 /* QuartzCore.framework */; };
+		FD9127F61E37201E00844B33 /* TrackTypeClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9127F51E37201E00844B33 /* TrackTypeClassifier.swift */; };
+		FD9127FB1E37273700844B33 /* AIToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */; };
+		FD9127FC1E37273700844B33 /* AIToolbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FD91280D1E373CB100844B33 /* lazySong.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD9128071E373CB100844B33 /* lazySong.mid */; };
+		FD91280E1E373CB100844B33 /* lockedOutOfHeaven.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD9128081E373CB100844B33 /* lockedOutOfHeaven.mid */; };
+		FD91280F1E373CB100844B33 /* rollingInTheDeep.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD9128091E373CB100844B33 /* rollingInTheDeep.mid */; };
+		FD9128101E373CB100844B33 /* setFileToTheRain.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD91280A1E373CB100844B33 /* setFileToTheRain.mid */; };
+		FD9128111E373CB100844B33 /* test.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD91280B1E373CB100844B33 /* test.mid */; };
+		FD9128121E373CB100844B33 /* Untitled.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD91280C1E373CB100844B33 /* Untitled.mid */; };
+		FDA4052F1E37557300DA49C0 /* justTheWayYouAre.mid in Resources */ = {isa = PBXBuildFile; fileRef = FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */; };
 		FDA9DC751DA605F3004406D4 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC741DA605F3004406D4 /* SignupViewController.swift */; };
 		FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */; };
 		FDA9DC7B1DA617A7004406D4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDA9DC7A1DA617A7004406D4 /* Security.framework */; };
@@ -52,6 +60,12 @@
 		FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */; };
 		FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */; };
 		FDF3AF741DF80124002793F4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF3AF731DF80124002793F4 /* AudioToolbox.framework */; };
+		FDF9C8D21E2F333300BA4FFD /* STToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF9C8D11E2F333300BA4FFD /* STToolbarButton.swift */; };
+		FDF9C8D91E2F45A700BA4FFD /* PopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF9C8D81E2F45A700BA4FFD /* PopViewController.swift */; };
+		FDF9C8DD1E2F58FA00BA4FFD /* PopViewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF9C8DC1E2F58FA00BA4FFD /* PopViewCollectionCell.swift */; };
+		FDF9C8DF1E3004FF00BA4FFD /* PieceEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF9C8DE1E3004FE00BA4FFD /* PieceEditorCell.swift */; };
+		FDF9C8E11E300F6200BA4FFD /* AddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF9C8E01E300F6200BA4FFD /* AddCell.swift */; };
+		FDF9C8E31E30784600BA4FFD /* TemplateSelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF9C8E21E30784600BA4FFD /* TemplateSelViewController.swift */; };
 		FDFA26881E2828AE00F53783 /* EvolutionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFA26871E2828AE00F53783 /* EvolutionViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				FD9127FC1E37273700844B33 /* AIToolbox.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,7 +124,6 @@
 		7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Soundtrack_final.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD01C0FF1E286A3E005C3901 /* CoreDataExtentions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataExtentions.swift; sourceTree = "<group>"; };
 		FD01C1011E28862B005C3901 /* PieceEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieceEditorViewController.swift; sourceTree = "<group>"; };
-		FD1C99561DBA8B1A0049EBAD /* test.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = test.mid; sourceTree = "<group>"; };
 		FD32A4931E1F89DC00C88208 /* UserSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSettingsViewController.swift; sourceTree = "<group>"; };
 		FD4394FA1DA4D5B00089F7CF /* Soundtrack_final.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundtrack_final.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,7 +139,6 @@
 		FD5379601DF7CE68006991FD /* PluginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginViewController.swift; sourceTree = "<group>"; };
 		FD586DBC1E233C5B00331D3E /* HuntingMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HuntingMapViewController.swift; sourceTree = "<group>"; };
 		FD586DBE1E2341AA00331D3E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		FD5EF1971DD448FF004E2EAA /* Untitled.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = Untitled.mid; sourceTree = "<group>"; };
 		FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTheory.swift; sourceTree = "<group>"; };
 		FD62CA991DFF90F7007931AA /* Segues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
 		FD89AD641DB60C240009815A /* MIDIParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIDIParser.swift; sourceTree = "<group>"; };
@@ -137,11 +150,20 @@
 		FD90E5321DB5F62B008B0881 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		FD90E5341DB5F62F008B0881 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		FD90E5361DB5F63C008B0881 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FD9127F51E37201E00844B33 /* TrackTypeClassifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTypeClassifier.swift; sourceTree = "<group>"; };
+		FD9128071E373CB100844B33 /* lazySong.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = lazySong.mid; sourceTree = "<group>"; };
+		FD9128081E373CB100844B33 /* lockedOutOfHeaven.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = lockedOutOfHeaven.mid; sourceTree = "<group>"; };
+		FD9128091E373CB100844B33 /* rollingInTheDeep.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = rollingInTheDeep.mid; sourceTree = "<group>"; };
+		FD91280A1E373CB100844B33 /* setFileToTheRain.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = setFileToTheRain.mid; sourceTree = "<group>"; };
+		FD91280B1E373CB100844B33 /* test.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = test.mid; sourceTree = "<group>"; };
+		FD91280C1E373CB100844B33 /* Untitled.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = Untitled.mid; sourceTree = "<group>"; };
+		FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = justTheWayYouAre.mid; sourceTree = "<group>"; };
 		FDA9DC741DA605F3004406D4 /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexViewController.swift; sourceTree = "<group>"; };
 		FDA9DC7A1DA617A7004406D4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FDA9DC7C1DA617D8004406D4 /* Soundtrack_final.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Soundtrack_final.entitlements; sourceTree = "<group>"; };
 		FDA9DC7D1DA619EB004406D4 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIToolbox.framework; sourceTree = "<group>"; };
 		FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicBlock.swift; sourceTree = "<group>"; };
 		FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicalSequence.swift; sourceTree = "<group>"; };
 		FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManager.swift; sourceTree = "<group>"; };
@@ -154,6 +176,12 @@
 		FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackEngine.swift; sourceTree = "<group>"; };
 		FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUListViewController.swift; sourceTree = "<group>"; };
 		FDF3AF731DF80124002793F4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FDF9C8D11E2F333300BA4FFD /* STToolbarButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STToolbarButton.swift; sourceTree = "<group>"; };
+		FDF9C8D81E2F45A700BA4FFD /* PopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopViewController.swift; sourceTree = "<group>"; };
+		FDF9C8DC1E2F58FA00BA4FFD /* PopViewCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopViewCollectionCell.swift; sourceTree = "<group>"; };
+		FDF9C8DE1E3004FE00BA4FFD /* PieceEditorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieceEditorCell.swift; sourceTree = "<group>"; };
+		FDF9C8E01E300F6200BA4FFD /* AddCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCell.swift; sourceTree = "<group>"; };
+		FDF9C8E21E30784600BA4FFD /* TemplateSelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateSelViewController.swift; sourceTree = "<group>"; };
 		FDFA26871E2828AE00F53783 /* EvolutionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvolutionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -173,6 +201,7 @@
 				FD90E5241DB5F404008B0881 /* CoreMIDI.framework in Frameworks */,
 				FDA9DC7B1DA617A7004406D4 /* Security.framework in Frameworks */,
 				FD586DBF1E2341AA00331D3E /* MapKit.framework in Frameworks */,
+				FD9127FB1E37273700844B33 /* AIToolbox.framework in Frameworks */,
 				C895D1599E6CEEFA17989BE7 /* Pods_Soundtrack_final.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -183,6 +212,7 @@
 		AA50247B1C520F865D7FA192 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */,
 				FD586DBE1E2341AA00331D3E /* MapKit.framework */,
 				FDF3AF731DF80124002793F4 /* AudioToolbox.framework */,
 				FD90E5361DB5F63C008B0881 /* QuartzCore.framework */,
@@ -220,7 +250,12 @@
 			isa = PBXGroup;
 			children = (
 				FDFA26871E2828AE00F53783 /* EvolutionViewController.swift */,
+				FDF9C8E21E30784600BA4FFD /* TemplateSelViewController.swift */,
 				FD01C1011E28862B005C3901 /* PieceEditorViewController.swift */,
+				FDF9C8D81E2F45A700BA4FFD /* PopViewController.swift */,
+				FDF9C8DC1E2F58FA00BA4FFD /* PopViewCollectionCell.swift */,
+				FDF9C8DE1E3004FE00BA4FFD /* PieceEditorCell.swift */,
+				FDF9C8E01E300F6200BA4FFD /* AddCell.swift */,
 			);
 			name = Evolution;
 			sourceTree = "<group>";
@@ -237,6 +272,7 @@
 				FD586DBC1E233C5B00331D3E /* HuntingMapViewController.swift */,
 				FD62CA991DFF90F7007931AA /* Segues.swift */,
 				FD01C1031E288630005C3901 /* Evolution */,
+				FDF9C8D71E2F333C00BA4FFD /* UtilityView */,
 				FDCDC43E1DFEE86E005F0932 /* Mixer */,
 			);
 			name = ViewControllers;
@@ -249,10 +285,11 @@
 				FDC298E11E086ACB00208962 /* STFileManager.swift */,
 				FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */,
 				FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */,
-				FD89AD641DB60C240009815A /* MIDIParser.swift */,
 				FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */,
+				FD89AD641DB60C240009815A /* MIDIParser.swift */,
 				FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */,
 				FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */,
+				FD9127F51E37201E00844B33 /* TrackTypeClassifier.swift */,
 				FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */,
 			);
 			name = Infrastructures;
@@ -261,8 +298,13 @@
 		FD13080B1DCB28120040EF07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FD1C99561DBA8B1A0049EBAD /* test.mid */,
-				FD5EF1971DD448FF004E2EAA /* Untitled.mid */,
+				FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */,
+				FD9128071E373CB100844B33 /* lazySong.mid */,
+				FD9128081E373CB100844B33 /* lockedOutOfHeaven.mid */,
+				FD9128091E373CB100844B33 /* rollingInTheDeep.mid */,
+				FD91280A1E373CB100844B33 /* setFileToTheRain.mid */,
+				FD91280B1E373CB100844B33 /* test.mid */,
+				FD91280C1E373CB100844B33 /* Untitled.mid */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -325,6 +367,14 @@
 				FDF042121DF80A6E00FF5D5F /* libSTSynth.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FDF9C8D71E2F333C00BA4FFD /* UtilityView */ = {
+			isa = PBXGroup;
+			children = (
+				FDF9C8D11E2F333300BA4FFD /* STToolbarButton.swift */,
+			);
+			name = UtilityView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -440,10 +490,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD1C99571DBA8B1A0049EBAD /* test.mid in Resources */,
-				FD5EF1981DD448FF004E2EAA /* Untitled.mid in Resources */,
+				FD9128111E373CB100844B33 /* test.mid in Resources */,
+				FDA4052F1E37557300DA49C0 /* justTheWayYouAre.mid in Resources */,
+				FD91280D1E373CB100844B33 /* lazySong.mid in Resources */,
+				FD91280E1E373CB100844B33 /* lockedOutOfHeaven.mid in Resources */,
+				FD9128121E373CB100844B33 /* Untitled.mid in Resources */,
 				FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */,
+				FD91280F1E373CB100844B33 /* rollingInTheDeep.mid in Resources */,
 				FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */,
+				FD9128101E373CB100844B33 /* setFileToTheRain.mid in Resources */,
 				FD4395031DA4D5B00089F7CF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,12 +560,15 @@
 			files = (
 				FD4E2E7B1DFDE621002EC24A /* MixerSubviewController.swift in Sources */,
 				FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */,
+				FDF9C8D91E2F45A700BA4FFD /* PopViewController.swift in Sources */,
 				FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */,
 				FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */,
+				FD9127F61E37201E00844B33 /* TrackTypeClassifier.swift in Sources */,
 				FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */,
 				FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */,
 				FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */,
 				FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */,
+				FDF9C8D21E2F333300BA4FFD /* STToolbarButton.swift in Sources */,
 				FDA9DC7E1DA619EB004406D4 /* Global.swift in Sources */,
 				FDC298E21E086ACB00208962 /* STFileManager.swift in Sources */,
 				FD5379611DF7CE68006991FD /* PluginViewController.swift in Sources */,
@@ -520,15 +578,19 @@
 				FD7B6A521DCAD02300B963F4 /* MIDIParser.swift in Sources */,
 				FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */,
 				FDCDC4401DFF3594005F0932 /* PlayControlBarView.swift in Sources */,
+				FDF9C8E31E30784600BA4FFD /* TemplateSelViewController.swift in Sources */,
 				FD32A4941E1F89DC00C88208 /* UserSettingsViewController.swift in Sources */,
 				FD01C1021E28862B005C3901 /* PieceEditorViewController.swift in Sources */,
+				FDF9C8DD1E2F58FA00BA4FFD /* PopViewCollectionCell.swift in Sources */,
 				FDCDC43D1DFEE7F9005F0932 /* MixerPopoverViewController.swift in Sources */,
 				FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */,
 				FDFA26881E2828AE00F53783 /* EvolutionViewController.swift in Sources */,
 				FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */,
 				FD01C1001E286A3E005C3901 /* CoreDataExtentions.swift in Sources */,
 				FD62CA9A1DFF90F7007931AA /* Segues.swift in Sources */,
+				FDF9C8E11E300F6200BA4FFD /* AddCell.swift in Sources */,
 				FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */,
+				FDF9C8DF1E3004FF00BA4FFD /* PieceEditorCell.swift in Sources */,
 				FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */,
 				FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */,
 			);

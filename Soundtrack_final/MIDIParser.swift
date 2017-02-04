@@ -106,11 +106,8 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
             self.parsedTempoTrack = getInfo(track: tempoTrack!)
         }
         for i in tracks {
-            let length = getTrackLength(musicTrack: i)
-            if length > 0 {
-                self.parsedTracks.append(getInfo(track: i))
-            } else {
-                MusicSequenceDisposeTrack(sequencer!, i)
+            if let newTrack = getInfo(track: i) {
+                self.parsedTracks.append(newTrack)
             }
         }
         for i in 0 ..< parsedTracks.count {
@@ -118,12 +115,13 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         }
     }
     
-    private func getInfo(track: MusicTrack) -> Track{
+    private func getInfo(track: MusicTrack) -> Track?{
         var newTrack = Track(parser: self)
         var hasCurrent: DarwinBoolean = true
         var hasNext:DarwinBoolean = true
         var newInfo = EventInfo()
         var eventIterator: MusicEventIterator?
+        var noteCount = 0
         NewMusicEventIterator(track, &eventIterator)
         while hasNext.boolValue && hasCurrent.boolValue {
             MusicEventIteratorHasCurrentEvent(eventIterator!, &hasCurrent)
@@ -167,8 +165,9 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
                 // Note Message
                 let pointer = newInfo.data!.bindMemory(to: MIDINoteMessage.self, capacity: Int(newInfo.dataSize))
                 let mess = pointer.pointee
-                let noteEvent = NoteEvent(timeStamp: newInfo.timeStamp, channel: Int(mess.channel), note: Int(mess.note), velocity: Int(mess.velocity), duration: mess.duration)
+                let noteEvent = NoteEvent(timeStamp: newInfo.timeStamp, channel: Int(mess.channel), note: Int(mess.note), velocity: Int(mess.velocity), duration: MusicTimeStamp(mess.duration))
                 newTrack.addNote(note: noteEvent)
+                noteCount += 1
             case 7:
                 // Channel Meassage
                 let pointer = newInfo.data!.bindMemory(to: MIDIChannelMessage.self, capacity: Int(newInfo.dataSize))
@@ -195,7 +194,11 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         }
         newTrack.timeSignature = timeSignature
         newTrack.tempo = tempo
-        return newTrack
+        if noteCount > 0 {
+            return newTrack
+        } else {
+            return nil
+        }
     }
     
     private func getTrackLength(musicTrack:MusicTrack) -> MusicTimeStamp {

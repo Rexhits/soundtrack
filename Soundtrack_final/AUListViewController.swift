@@ -170,6 +170,7 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let t = titleStr {
             self.title = t
         }
+        self.playbackControl.addSubview(appDelegate.playbackController.view)
     }
     
 }

@@ -29,54 +29,21 @@ class PlaybackEngine: NSObject {
     public var isLooping = false
     private var mainMixerNode: AVAudioMixerNode!
     public var blockLength: AVMusicTimeStamp = 0
-    public var tracks = [track]()
-    public var selectedTrack: track!
+    public var tracks = [Track]()
+    public var selectedTrack: Track!
     
     public enum trackType: Int {
         case instrument = 0, audio
     }
     
     
-    class track {
-        var trackIndex: Int!
-        var instrumentView: UIView?
-        var name: String!
-        var type = PlaybackEngine.trackType.instrument
-        var instrument: AVAudioUnitMIDIInstrument? {
-            willSet {
-                name = instrument?.auAudioUnit.audioUnitName
-            }
-            didSet {
-                if instrument != oldValue {
-                    name = instrument?.auAudioUnit.audioUnitName
-                }
-            }
-        }
-        var selectedNode: AVAudioUnit?
-        var selectedUnit: AUAudioUnit?
-        var selectedUnitDescription: AudioComponentDescription?
-        var trackColor: UIColor?
-        var selectedUnitPreset = [AUAudioUnitPreset]()
-        var effects = [AVAudioUnitEffect]()
-        let mixer = AVAudioMixerNode()
-        init(trackType: PlaybackEngine.trackType) {
-            type = trackType
-            if trackType == .instrument {
-                instrument = AVAudioUnitSampler()
-                if name == nil {
-                    name = instrument?.auAudioUnit.audioUnitName
-                }
-            } else {
-                instrument = nil
-            }
-        }
-    }
+
     
     
     override init() {
         super.init()
         mainMixerNode = engine.mainMixerNode
-        let defaultTrack = track(trackType: .instrument)
+        let defaultTrack = Track(trackType: .instrument)
         selectedTrack = defaultTrack
         // attach track's mixer
         engine.attach(defaultTrack.instrument!)
@@ -134,7 +101,7 @@ class PlaybackEngine: NSObject {
             }
             
             for i in sequencer.tracks {
-                let newTrack = track(trackType: .instrument)
+                let newTrack = Track(trackType: .instrument)
                 tracks.append(newTrack)
                 selectedTrack = newTrack
                 i.destinationAudioUnit = newTrack.instrument!
@@ -162,7 +129,6 @@ class PlaybackEngine: NSObject {
         if !self.engine.isRunning {
             startEngine()
         }
-        playSequence()
     }
     
     func addNode(type: trackType, adding: Bool?, _ cd: AudioComponentDescription?, completionHandler: @escaping ((Void) -> Void)) {
@@ -379,6 +345,7 @@ class PlaybackEngine: NSObject {
     func playtimeObserver() {
         let queue = DispatchQueue.global(qos: .background)
         queue.async {
+            guard self.sequencer != nil else {return}
             let currentTime = self.sequencer.currentPositionInBeats
             self.delegate?.updateTime(currentTime: currentTime)
             if currentTime >= self.blockLength {

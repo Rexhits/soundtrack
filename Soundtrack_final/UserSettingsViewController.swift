@@ -29,6 +29,10 @@ class UserSettingsViewController: UIViewController, UITableViewDelegate, UITable
     override func viewWillAppear(_ animated: Bool) {
         info = UserInfo()
         fetch()
+        self.addChildViewController(appDelegate.playbackController)
+        appDelegate.playbackController.view.frame = self.playControlBar.bounds
+        appDelegate.playbackController.didMove(toParentViewController: self)
+        self.playControlBar.addSubview(appDelegate.playbackController.view)
     }
     
     @IBAction func logout(_ sender: UIBarButtonItem) {

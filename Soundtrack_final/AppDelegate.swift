@@ -14,16 +14,16 @@ import Lockbox
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var playbackController: PlayControlBarView!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // Access the storyboard and fetch an instance of the view controller
-        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        playbackController = storyboard.instantiateViewController(withIdentifier: "playControlBar") as! PlayControlBarView
         let myToken = Lockbox.unarchiveObject(forKey: "Token")
         if myToken != nil {
             self.window = UIWindow(frame: UIScreen.main.bounds)
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "IndexViewController")
             self.window?.rootViewController = initialViewController
             self.window?.makeKeyAndVisible()

@@ -19,6 +19,14 @@ class MusicBlock: MIDIParser {
     var length = MusicTimeStamp()
     var createdAt: Date!
     var midiFileUrl = URL(string: "")
+    
+    override init() {
+        self.name = "default"
+        self.composedBy = "user"
+        self.createdAt = Date()
+        super.init()
+    }
+    
     init(name: String, composedBy: String) {
         self.name = name
         self.composedBy = composedBy
@@ -35,27 +43,14 @@ class MusicBlock: MIDIParser {
     }
     
     
-    init(json: JSON) {
-        guard let name = json["name"].string, let composedBy = json["composedBy"].string, let createdAt = json["createdAt"].dateTime, let fileURL = json["fileURL"].string else {
-            self.name = "unknown"
-            self.composedBy = "unknown"
-            super.init()
-            return
-        }
-        self.name = name
-        self.composedBy = composedBy
-        self.createdAt = createdAt
-        self.midiFileUrl = URL(string: fileURL)
-        super.init(url: URL(string: fileURL)!)
-        super.parse()
-    }
-    
     var asJSON: JSON {
         var json: JSON = [:]
         json["name"].string = self.name
+        json["tempo"].int = self.tempo
         json["composedBy"].string = self.composedBy
         json["createdAt"].string = Formatter.toJSON(date: self.createdAt)
-        json["fileURL"].string = self.midiFileUrl?.path
+        json["timeSig"] = self.timeSignature.asJson
+        json["tracks"].arrayObject = self.parsedTracks.map{$0.getInfoJson()}
         return json
     }
     
@@ -159,7 +154,7 @@ class MusicBlock: MIDIParser {
         
     }
     private func addNoteEvent(track: MusicTrack, note: NoteEvent) {
-        var noteMess = MIDINoteMessage(channel: UInt8(note.channel), note: UInt8(note.note), velocity: UInt8(note.velocity), releaseVelocity: 0, duration: note.duration)
+        var noteMess = MIDINoteMessage(channel: UInt8(note.channel), note: UInt8(note.note), velocity: UInt8(note.velocity), releaseVelocity: 0, duration: Float32(note.duration))
         let status = MusicTrackNewMIDINoteEvent(track, note.timeStamp, &noteMess)
         if status != OSStatus(noErr) {
             print("error adding Note \(status)")
@@ -226,4 +221,34 @@ class MusicBlock: MIDIParser {
         return data as Data
     }
     
+    func trainClassifier() {
+        
+        let path = getURLInDocumentDirectoryWithFilename(filename: "\(self.name).plist")
+        print(path)
+        var data = [String: [String: Double]]()
+        var index = 0
+        for i in parsedTracks {
+            let (pitch_min, pitch_max, pitch_mean, pitch_median, pitch_standardDiviation) = i.pitchAnalysis()
+            let newdata = ["pitch_min": pitch_min, "pitch_max": pitch_max, "pitch_mean": pitch_mean, "pitch_median": pitch_median,"pitch_standardDiviation": pitch_standardDiviation, "output": 0]
+            data["Track\(index): \(i.instrumentName)"] = newdata
+            index += 1
+//            let dataSet = [bassPercentage, drumPercentage, meanOfInterval, numOfVoices]
+//            TrackTypeClassifier.shared.addDataPoint(input: dataSet, output: output)
+        }
+        let plist = NSDictionary(dictionary: data)
+        plist.write(toFile: path.path, atomically: false)
+        print(data)
+    }
+    
+    func saveJson() {
+        let path = getURLInDocumentDirectoryWithFilename(filename: "\(self.name).json")
+        print(path)
+        do {
+            let data = try self.asJSON.rawData()
+            try data.write(to: path)
+        } catch {
+            print("Error creating data")
+        }
+        
+    }
 }

@@ -12,6 +12,7 @@ import AudioToolbox
 
 class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var playControlBar: UIView!
     @IBOutlet var tabbar: UITabBar!
     @IBOutlet var interfaceItem: UITabBarItem!
     @IBOutlet var presetItem: UITabBarItem!
@@ -44,6 +45,7 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         if let au = PlaybackEngine.shared.selectedTrack.selectedUnit {
             self.showPluginView(au: au)
         }
+        self.playControlBar.addSubview(appDelegate.playbackController.view)
     }
     override func viewDidAppear(_ animated: Bool) {
         if pluginView == nil {

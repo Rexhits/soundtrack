@@ -251,6 +251,7 @@ class MixerPopoverViewController: UIViewController, UICollectionViewDelegate, UI
     override func viewWillAppear(_ animated: Bool) {
         self.trackTable.reloadData()
         self.selectedIndexPath = nil
+        self.playControlBar.addSubview(appDelegate.playbackController.view)
     }
     
 }

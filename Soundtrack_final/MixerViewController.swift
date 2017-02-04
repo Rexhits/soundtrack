@@ -30,6 +30,13 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     var selectedIndexPath: IndexPath!
     
+    func randomColor() {
+        for i in engine.tracks {
+            if i.trackColor == nil {
+                i.trackColor = UIColor.randomColor()
+            }
+        }
+    }
     
     func goBack() {
         print("called")
@@ -40,6 +47,7 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     override func viewWillAppear(_ animated: Bool) {
         self.mixerTable.reloadData()
+        self.playControlBar.addSubview(appDelegate.playbackController.view)
     }
     
         
@@ -48,17 +56,6 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
     }
     
     
-    
-    func randomColor() {
-        for i in engine.tracks {
-            if i.trackColor == nil {
-                let hue = CGFloat(arc4random() & 256 / 256)
-                let saturation = CGFloat(arc4random() & 256 / 256) + 0.5
-                let brightness = CGFloat(arc4random() & 256 / 256) + 0.5
-                i.trackColor = UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1)
-            }
-        }
-    }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
