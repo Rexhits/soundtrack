@@ -97,6 +97,18 @@ class Track: MusicalSequence {
             instrument = nil
         }
     }
+    func addToPlaybackEngine(trackType: PlaybackEngine.trackType) {
+        type = trackType
+        name = self.content.instrumentName
+        if trackType == .instrument {
+            instrument = AVAudioUnitSampler()
+            if name == nil {
+                name = instrument?.auAudioUnit.audioUnitName
+            }
+        } else {
+            instrument = nil
+        }
+    }
 
 }
 

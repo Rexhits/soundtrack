@@ -6,6 +6,13 @@
 //  Copyright © 2016 WangRex. All rights reserved.
 //
 
+//
+//  PlaybackEngine.swift
+//  Soundtrack_final
+//
+//  Created by WangRex on 12/6/16.
+//  Copyright © 2016 WangRex. All rights reserved.
+//
 import Foundation
 import UIKit
 import AVFoundation
@@ -15,7 +22,7 @@ class PlaybackEngine: NSObject {
     private let engine = AVAudioEngine()
     private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
     
-
+    
     public var loadedBlock: MusicBlock? {
         didSet {
             delegate?.didLoadBlock(block: loadedBlock!)
@@ -37,7 +44,7 @@ class PlaybackEngine: NSObject {
     }
     
     
-
+    
     
     
     override init() {
@@ -90,7 +97,7 @@ class PlaybackEngine: NSObject {
             }
             engine.detach(i.mixer)
         }
-        tracks.removeAll()
+        tracks = musicBlock.parsedTracks as! [Track]
         self.data = musicBlock.getSequenceData()
         if let data = self.data {
             do {
@@ -100,28 +107,28 @@ class PlaybackEngine: NSObject {
                 print("Failed load midiData! \(error)")
             }
             
-            for i in sequencer.tracks {
-                let newTrack = Track(trackType: .instrument)
-                tracks.append(newTrack)
-                selectedTrack = newTrack
-                i.destinationAudioUnit = newTrack.instrument!
-                engine.attach(newTrack.instrument!)
-                engine.attach(newTrack.mixer)
-                if !newTrack.effects.isEmpty {
-                    for e in 0 ..< newTrack.effects.count {
-                        engine.attach(newTrack.effects[e])
-                        if e < newTrack.effects.count - 1{
+            for i in 0 ..< tracks.count {
+                tracks[i].addToPlaybackEngine(trackType: .instrument)
+                //                tracks.append(newTrack)
+                selectedTrack = tracks[i]
+                sequencer.tracks[i].destinationAudioUnit = tracks[i].instrument!
+                engine.attach(tracks[i].instrument!)
+                engine.attach(tracks[i].mixer)
+                if !tracks[i].effects.isEmpty {
+                    for e in 0 ..< tracks[i].effects.count {
+                        engine.attach(tracks[i].effects[e])
+                        if e < tracks[i].effects.count - 1{
                             engine.connect(selectedTrack.effects[e], to: selectedTrack.effects[e+1], format: audioFormat)
                         }
                     }
-                    engine.connect(newTrack.instrument!, to: newTrack.effects[0], format: audioFormat)
-                    engine.connect(newTrack.effects.last!, to: newTrack.mixer, format: audioFormat)
+                    engine.connect(tracks[i].instrument!, to: tracks[i].effects[0], format: audioFormat)
+                    engine.connect(tracks[i].effects.last!, to: tracks[i].mixer, format: audioFormat)
                 } else {
-                    engine.connect(newTrack.instrument!, to: newTrack.mixer, format: audioFormat)
+                    engine.connect(tracks[i].instrument!, to: tracks[i].mixer, format: audioFormat)
                 }
-                engine.connect(newTrack.mixer, to: engine.mainMixerNode, format: audioFormat)
-                if i.lengthInBeats > blockLength {
-                    blockLength = i.lengthInBeats
+                engine.connect(tracks[i].mixer, to: engine.mainMixerNode, format: audioFormat)
+                if sequencer.tracks[i].lengthInBeats > blockLength {
+                    blockLength = sequencer.tracks[i].lengthInBeats
                 }
             }
             sequencer.prepareToPlay()
@@ -196,10 +203,10 @@ class PlaybackEngine: NSObject {
                 }
                 strongSelf.instrumentView = view
             }
-
+            
         }
     }
-
+    
     private func addEffect(newNode: AVAudioUnit) {
         if let i = selectedTrack {
             engine.attach(newNode)
@@ -220,7 +227,7 @@ class PlaybackEngine: NSObject {
         }
     }
     
-
+    
     
     public func removeEffect(index: Int) {
         if let i = selectedTrack {
@@ -247,7 +254,7 @@ class PlaybackEngine: NSObject {
             selectedTrack.selectedUnitPreset = [AUAudioUnitPreset]()
             playSequence()
         }
-
+        
     }
     
     public func removeEffect(unit: AVAudioUnit) {
@@ -260,7 +267,7 @@ class PlaybackEngine: NSObject {
                 let oldNode = i.effects[index]
                 engine.detach(oldNode)
                 if i.effects.count == 1 {
-//                    engine.connect(i.instrument!, to: i.mixer, format: audioFormat)
+                    //                    engine.connect(i.instrument!, to: i.mixer, format: audioFormat)
                 }
                 else if index == 0 && i.effects.count > 1 {
                     engine.connect(i.instrument!, to: i.effects[index + 1], format: audioFormat)
@@ -277,7 +284,7 @@ class PlaybackEngine: NSObject {
             }
         }
     }
-
+    
     
     
     private func startEngine() {
@@ -358,7 +365,7 @@ class PlaybackEngine: NSObject {
                     }
                 }
             }
-
+            
         }
     }
     func restartSeq() {

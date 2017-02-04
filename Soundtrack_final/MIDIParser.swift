@@ -68,17 +68,18 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         MusicSequenceFileLoad(sequencer!, url as CFURL, .midiType, .smf_PreserveTracks)
         MusicSequenceGetTrackCount(sequencer!, &trackCount)
         MusicSequenceGetTempoTrack(sequencer!, &tempoTrack)
+        guard trackCount > 1 else {
+            var track: MusicTrack?
+            MusicSequenceGetIndTrack(sequencer!, 0, &track)
+            tracks.append(track!)
+            return
+        }
         for i in 0 ..< trackCount {
             var track: MusicTrack?
             MusicSequenceGetIndTrack(sequencer!, i, &track)
             tracks.append(track!)
         }
-        if trackCount <= 1 {
-            // only one track
-            var track: MusicTrack?
-            MusicSequenceGetIndTrack(sequencer!, 0, &track)
-            tracks.append(track!)
-        }
+
     }
     
     init(data: Data) {
@@ -88,15 +89,17 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         MusicSequenceFileLoadData(sequencer!, data as CFData, .midiType, .smf_PreserveTracks)
         MusicSequenceGetTrackCount(sequencer!, &trackCount)
         MusicSequenceGetTempoTrack(sequencer!, &tempoTrack)
+        
+        guard trackCount > 1 else {
+            var track: MusicTrack?
+            MusicSequenceGetIndTrack(sequencer!, 0, &track)
+            tracks.append(track!)
+            return
+        }
+        
         for i in 0 ..< trackCount {
             var track: MusicTrack?
             MusicSequenceGetIndTrack(sequencer!, i, &track)
-            tracks.append(track!)
-        }
-        if trackCount <= 1 {
-            // only one track
-            var track: MusicTrack?
-            MusicSequenceGetIndTrack(sequencer!, 0, &track)
             tracks.append(track!)
         }
     }
@@ -197,6 +200,7 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         if noteCount > 0 {
             return newTrack
         } else {
+            MusicSequenceDisposeTrack(sequencer!, track)
             return nil
         }
     }
