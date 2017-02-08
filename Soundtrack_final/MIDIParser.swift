@@ -51,7 +51,7 @@ internal class MIDISequencer {
 
 internal class MIDIParser: MIDISequencer, CustomStringConvertible {
     var parsedTempoTrack: Track?
-    var parsedTracks = [MusicalSequence]()
+    var parsedTracks = [Track]()
     var description: String {
         return "Tempo: \(tempo)\nTimeSignature: \(timeSignature)\nHasTempoTrack: \(tempoTrack != nil)\nTempoTrackParsed: \(parsedTempoTrack != nil)\nParsedTracks: \(parsedTracks.count)-\(tracks.count)"
     }

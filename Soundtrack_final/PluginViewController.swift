@@ -21,6 +21,7 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     public var isEffect: Bool!
     var activityIndicator: UIActivityIndicatorView!
     public var preset: [AUAudioUnitPreset]!
+    public var soundFount = [SoundFount]()
     public var name: String!
     var rect: CGRect!
     override func viewDidLoad() {
@@ -69,16 +70,37 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
                 view.bringSubview(toFront: pView)
             }
         } else {
-            presetView.reloadData()
             pluginView?.removeFromSuperview()
+            if let au = PlaybackEngine.shared.selectedTrack.selectedUnit {
+                if au.audioUnitName! == "AUSampler" {
+                    let files = Bundle.main.paths(forResourcesOfType: "aupreset", inDirectory: nil)
+                    for i in files {
+                        let path = "file://\(i)"
+                        if let url = URL.init(string: path) {
+                            self.soundFount.append(SoundFount(name: url.fileName(), url: url))
+                        }
+                    }
+                }
+            }
             if preset.isEmpty || preset[0].name.isEmpty {
+                
             } else {
+                
             }
         }
+        presetView.reloadData()
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return preset.count
+        if section == 0 {
+            return preset.count
+        } else {
+            return soundFount.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -93,13 +115,25 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         cell.selectedBackgroundView = selView
         cell.textLabel?.highlightedTextColor = UIColor.white
         cell.detailTextLabel?.highlightedTextColor = UIColor.white
-        cell.textLabel?.text = preset[indexPath.row].name
+        if indexPath.section == 0 {
+            cell.textLabel?.text = preset[indexPath.row].name
+        } else {
+            cell.textLabel?.text = soundFount[indexPath.row].name
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        PlaybackEngine.shared.selectedTrack.selectedUnit!.currentPreset = preset[indexPath.row]
+        if indexPath.section == 0{
+            PlaybackEngine.shared.selectedTrack.selectedUnit!.currentPreset = preset[indexPath.row]
+        } else {
+            do {
+                try PlaybackEngine.shared.selectedTrack.selectedNode?.loadPreset(at: soundFount[indexPath.row].url)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
     }
     
     private func showPluginView(au: AUAudioUnit) {
@@ -117,3 +151,5 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         }
     }
 }
+
+

@@ -184,9 +184,41 @@ extension URL {
 
 extension AudioComponentDescription: Equatable {
     public static func ==(lhs: AudioComponentDescription, rhs: AudioComponentDescription) -> Bool {
-        return lhs.componentType == rhs.componentType && lhs.componentSubType == rhs.componentSubType && lhs.componentFlags == rhs.componentFlags && lhs.componentFlagsMask == rhs.componentFlagsMask
+        return lhs.componentType == rhs.componentType && lhs.componentSubType == rhs.componentSubType && lhs.componentFlags == rhs.componentFlags && lhs.componentFlagsMask == rhs.componentFlagsMask && lhs.componentManufacturer == rhs.componentManufacturer
+    }
+    var asJson: JSON {
+        var json: JSON = [:]
+        json["componentType"].uInt32 = self.componentType
+        json["componentSubType"].uInt32 = self.componentSubType
+        json["componentFlags"].uInt32 = self.componentFlags
+        json["componentFlagsMask"].uInt32 = self.componentFlagsMask
+        json["componentManufacturer"].uInt32 = self.componentManufacturer
+        return json
     }
 }
+
+extension UIColor {
+    var asJson: JSON {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        var json: JSON = [:]
+        json["r"].float = Float(red)
+        json["g"].float = Float(green)
+        json["b"].float = Float(blue)
+        json["a"].float = Float(alpha)
+        return json
+    }
+    public convenience init?(json: JSON) {
+        guard let r = json["r"].float, let g = json["g"].float, let b = json["b"].float, let a = json["a"].float else {
+            return nil
+        }
+        self.init(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: CGFloat(a))
+    }
+}
+
 
 extension JSON {
     public var date: Date? {

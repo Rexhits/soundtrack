@@ -95,10 +95,15 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
 //        musicList[indexPath.row].trainClassifier()
-        musicList[indexPath.row].saveJson()
+        
+        STFileManager.shared.saveCurrentBlock()
+        
+//        musicList[indexPath.row].saveJson()
+        
         for i in musicList[indexPath.row].parsedTracks {
 //            print("\(i.groupAnalysis())\n")
-            print("\(i.tempo)\t\(i.timeSignature)\t\(i.instrumentName)")
+//            print("\(i.tempo)\t\(i.timeSignature)\t\(i.instrumentName)")
+            print("\(i.timestampAnalysis())\n")
 //            print("\(i.notes.map{$0.timeStamp})\n")
 //            i.byMeasure()
             

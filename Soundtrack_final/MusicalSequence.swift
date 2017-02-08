@@ -16,6 +16,7 @@ protocol MusicalSequence: CustomStringConvertible {
     var content: BasicMusicalStructure {get set}
     var description: String {get}
     var sequenceType: Int {get set}
+    var measures: [Measure] {get}
     var asJson: JSON {get}
     init(json: JSON)
     init()
@@ -23,7 +24,6 @@ protocol MusicalSequence: CustomStringConvertible {
     mutating func addArticulation(articulation: Articulation)
     mutating func addSequence(sequence: MusicalSequence)
     mutating func appendSequence(inputSequence: MusicalSequence)
-    func byMeasure() -> [Measure]
     func getNoteMatrix() -> String
     func getArticulationMatrix() -> String
 }
@@ -46,6 +46,12 @@ extension MusicalSequence {
         json["notes"].arrayObject = self.notes.map{$0.asJson}
         json["articulations"].arrayObject = self.articulations.map{$0.asJson}
         return json
+    }
+    
+    var measures:[Measure] {
+        get{
+            return byMeasure()
+        }
     }
     
     func getInfoJson() -> JSON {
@@ -133,7 +139,7 @@ extension MusicalSequence {
     
     mutating func addNote(note: NoteEvent) {
         notes.append(note)
-        noteDistribution[note.note % 12]?.append(note)
+        noteDistribution[note.pitchClass]?.append(note)
     }
     mutating func addArticulation(articulation: Articulation) {
         articulations.append(articulation)
@@ -217,7 +223,7 @@ extension MusicalSequence {
         return trackLength
     }
     
-    func byMeasure() -> [Measure] {
+    private func byMeasure() -> [Measure] {
         var sequence = [Measure]()
         let measureLength = timeSignature.lengthPerBeat/timeSignature.beatsPerMeasure * 4
         let length = getSequenceLength()
@@ -240,6 +246,12 @@ extension MusicalSequence {
             newMeasure.content.tempo = self.tempo
             newMeasure.content.instrumentName = self.instrumentName
             newMeasure.timeSignature = self.timeSignature
+            newMeasure.notes = newMeasure.notes.map({ n -> NoteEvent in
+                var note = n
+                let offset = Double(i) * Double(measureLength)
+                note.timeStamp -= offset
+                return note
+            })
             if let attachTo = self.attachTo {
                 newMeasure.attachTo = attachTo
             }
@@ -410,13 +422,32 @@ extension MusicalSequence {
     }
     
     func getMeanNoteOctave() -> Int {
-        return lround(self.notes.map{Double($0.note) / 12.0}.reduce(0, +) / Double(self.notes.count))
+        return lround(self.notes.map{Double($0.octave)}.reduce(0, +) / Double(self.notes.count))
     }
     
-    func getPitchClass() -> [NoteEvent] {
-        return self.notes.map{NoteEvent(timeStamp: $0.timeStamp, channel: $0.channel, note: $0.note % 12, velocity: $0.velocity, duration: $0.duration)}.sorted(by: {$0.timeStamp < $1.duration})
-    }
     
+    
+    func timestampAnalysis() -> [Measure] {
+        var timestampSet = self.measures.map{Set($0.notes.flatMap{$0.timeStamp})}
 
+        var similarity = [Double]()
+        for i in 0 ..< timestampSet.count - 1{
+            guard !timestampSet[i].isEmpty && !timestampSet[i+1].isEmpty else {
+                similarity.append(0)
+                continue
+            }
+            similarity.append(Double(timestampSet[i].intersection(timestampSet[i+1]).count) / Double(max(timestampSet[i].count, timestampSet[i+1].count)))
+            
+        }
+        let patterns = similarity.enumerated().filter({$1 > 0.8}).map{$0.offset}
+        return removeConcective(input: patterns).map{self.measures[$0]}
+    }
+    
+    
+    func removeConcective(input: [Int]) -> [Int] {
+        return input.enumerated().flatMap { index, element in
+            return index > 0 && input[index - 1] + 1 == element ? nil : element
+        }
+    }
 }
 

@@ -97,7 +97,7 @@ class PlaybackEngine: NSObject {
             }
             engine.detach(i.mixer)
         }
-        tracks = musicBlock.parsedTracks as! [Track]
+        tracks = musicBlock.parsedTracks 
         self.data = musicBlock.getSequenceData()
         if let data = self.data {
             do {
@@ -108,8 +108,10 @@ class PlaybackEngine: NSObject {
             }
             
             for i in 0 ..< tracks.count {
-                tracks[i].addToPlaybackEngine(trackType: .instrument)
-                //                tracks.append(newTrack)
+                if tracks[i].instrument == nil {
+                    tracks[i].addToPlaybackEngine(trackType: .instrument)
+                }
+                tracks[i].trackIndex = i
                 selectedTrack = tracks[i]
                 sequencer.tracks[i].destinationAudioUnit = tracks[i].instrument!
                 engine.attach(tracks[i].instrument!)

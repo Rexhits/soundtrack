@@ -15,15 +15,16 @@ class Evolution {
     var mainBlock: MusicBlock! {
         didSet {
             // hard code track1 for test
-            mainCandidates.append(contentsOf: mainBlock.parsedTracks[0].getPitchClass())
+//            mainCandidates.append(contentsOf: mainBlock.parsedTracks[0].getPitchClass())
         }
     }
     var secondBlock: MusicBlock! {
         didSet {
             // hard code track1 for test
-            secondCandidates.append(contentsOf: secondBlock.parsedTracks[0].getPitchClass())
+//            secondCandidates.append(contentsOf: secondBlock.parsedTracks[0].getPitchClass())
         }
     }
+    
     
     var mainCandidates = [NoteEvent]()
     

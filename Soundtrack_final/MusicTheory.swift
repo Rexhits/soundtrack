@@ -50,13 +50,13 @@ struct RhythmPattern: CustomStringConvertible {
     }
 }
 
-struct Measure: MusicalSequence {
+class Measure: MusicalSequence {
     internal var content: BasicMusicalStructure = BasicMusicalStructure()
     init(notes: [NoteEvent], articulations: [Articulation]) {
         self.content.notes = notes
         self.content.articulations = articulations
     }
-    init() {
+    required init() {
         
     }
 }
@@ -69,11 +69,21 @@ class Track: MusicalSequence {
     var instrumentView: UIView?
     var name: String!
     var type = PlaybackEngine.trackType.instrument
-    var instrument: AVAudioUnitMIDIInstrument?
+    var instrument: AVAudioUnitMIDIInstrument? {
+        willSet {
+            name = instrument?.auAudioUnit.audioUnitName
+        }
+        didSet {
+            if instrument != oldValue {
+                name = instrument?.auAudioUnit.audioUnitName
+            }
+        }
+    }
     var selectedNode: AVAudioUnit?
     var selectedUnit: AUAudioUnit?
     var selectedUnitDescription: AudioComponentDescription?
-    var trackColor: UIColor?
+    var soundFount: SoundFount?
+    var trackColor = UIColor.randomColor()
     var selectedUnitPreset = [AUAudioUnitPreset]()
     var effects = [AVAudioUnitEffect]()
     let mixer = AVAudioMixerNode()
@@ -109,7 +119,56 @@ class Track: MusicalSequence {
             instrument = nil
         }
     }
-
+    
+    func getChannelSettings() -> JSON {
+        var json = self.getInfoJson()
+        json["trackName"].string = self.name
+        json["trackIndex"].int = self.trackIndex
+        if let sf = self.soundFount {
+            json["soundFont"] = sf.asJson
+        }
+        if let inst = self.instrument {
+            json["instrumentDes"] = inst.audioComponentDescription.asJson
+        }
+        json["trackColor"] = self.trackColor.asJson
+        if !effects.isEmpty {
+            json["effectsDes"].arrayObject = self.effects.map{$0.audioComponentDescription.asJson}
+        }
+        return json
+    }
+    
+    func restoreChannelSettings(json: JSON) {
+        guard let name = json["trackName"].string, let index = json["trackIndex"].int else {
+            return
+        }
+        self.name = name
+        self.trackIndex = index
+        let cd = self.initAudioComponentDescription(json: json["instrumentDes"])
+        self.instrument = AVAudioUnitMIDIInstrument(audioComponentDescription: cd!)
+        self.trackColor = UIColor(json: json["trackColor"])!
+        guard let effects = json["effectsDes"].array else {
+            return
+        }
+        for i in 0 ..< effects.count {
+            let cd = initAudioComponentDescription(json: effects[i])
+            let newFx = AVAudioUnitEffect(audioComponentDescription: cd!)
+            self.effects.append(newFx)
+        }
+    }
+    
+    func getAUStates() -> [String: Any] {
+        let instData = instrument!.auAudioUnit.fullState!
+        let fxData = effects.map{$0.auAudioUnit.fullState!}
+        return ["instState": instData, "fxState": fxData]
+    }
+    
+    func initAudioComponentDescription(json: JSON) -> AudioComponentDescription? {
+        guard let type = json["componentType"].uInt32, let subType = json["componentSubType"].uInt32, let flags = json["componentFlags"].uInt32, let flagsMask = json["componentFlagsMask"].uInt32, let manufacturer = json["componentManufacturer"].uInt32 else {
+            return nil
+        }
+        return AudioComponentDescription(componentType: type, componentSubType: subType, componentManufacturer: manufacturer, componentFlags: flags, componentFlagsMask: flagsMask)
+    }
+    
 }
 
 
@@ -161,6 +220,7 @@ internal struct BasicMusicalStructure {
     var musicTrack: MusicTrack?
     var noteDistribution: [Int: [NoteEvent]] = [0:[NoteEvent](), 1:[NoteEvent](), 2:[NoteEvent](), 3:[NoteEvent](), 4:[NoteEvent](), 5:[NoteEvent](), 6:[NoteEvent](), 7:[NoteEvent](), 8:[NoteEvent](), 9:[NoteEvent](), 10:[NoteEvent](), 11: [NoteEvent]()]
     var sequenceType = 0
+//    var measures: [Measure]
 }
 
 
@@ -172,7 +232,14 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
         }
     }
     var channel = 0
-    var note = 0
+    var note = 0 {
+        didSet {
+            pitchClass = note % 12
+            octave = Int(note / 12)
+        }
+    }
+    var pitchClass = 0
+    var octave = 0
     var velocity = 0
     var duration:MusicTimeStamp = 0
     var debugDescription: String {
@@ -182,9 +249,10 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
     var timeRange = ClosedRange<MusicTimeStamp>.init(uncheckedBounds: (lower: 0, upper: 1))
     var asJson: JSON {
         var json: JSON = [:]
-        json["pitchClass"].int = note % 12
+        json["note"].int = note
+        json["pitchClass"].int = pitchClass
+        json["octave"].int = octave
         json["timeStamp"].double = timeStamp
-        json["octave"].int = Int(note / 12)
         json["duration"].double = duration
         json["velocity"].int = velocity
         json["channel"].int = channel
@@ -192,10 +260,12 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
     }
     
     init(json: JSON) {
-        guard let pitchClass = json["pitchClass"].int, let timeStamp = json["timeStamp"].double, let octave = json["octave"].int, let duration = json["duration"].double, let velocity = json["velocity"].int, let channel = json["channel"].int else {
+        guard let note = json["note"].int, let pitchClass = json["pitchClass"].int, let timeStamp = json["timeStamp"].double, let octave = json["octave"].int, let duration = json["duration"].double, let velocity = json["velocity"].int, let channel = json["channel"].int else {
             return
         }
-        self.note = pitchClass + 12 * octave
+        self.note = note
+        self.pitchClass = pitchClass
+        self.octave = octave
         self.channel = channel
         self.velocity = velocity
         self.duration = duration
@@ -210,12 +280,16 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
         self.timeStamp = timeStamp
         self.channel = channel
         self.note = note
+        self.pitchClass = note % 12
+        self.octave = Int(note / 12)
         self.velocity = velocity
         self.duration = MusicTimeStamp(duration)
         self.timeRange = timeStamp ... timeStamp + duration
     }
     init(note: Int, velocity: Int, timeStamp: MusicTimeStamp, duration: MusicTimeStamp) {
         self.note = note
+        self.pitchClass = note % 12
+        self.octave = Int(note / 12)
         self.velocity = velocity
         self.timeStamp = timeStamp
         self.duration = MusicTimeStamp(duration)
@@ -238,6 +312,27 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
     }
 }
 
+struct SoundFount {
+    var name: String
+    var url: URL
+    var asJson: JSON {
+        var json: JSON = [:]
+        json["name"].string = self.name
+        json["url"].string = self.url.path
+        return json
+    }
+    init(name: String, url: URL) {
+        self.name = name
+        self.url = url
+    }
+    init?(json: JSON) {
+        guard let name = json["name"].string, let url = json["url"].string else {
+            return nil
+        }
+        self.name = name
+        self.url = URL(fileURLWithPath: url)
+    }
+}
 
 
 

@@ -40,6 +40,40 @@ class STFileManager: NSObject {
         print(filepath.path)
     }
     
+    func createMidiFile(dirName: String, filename: String, data: Data) -> String {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let dirPath = documentsDirectory.appendingPathComponent(dirName).appendingPathExtension("bundle")
+        let filepath = dirPath.appendingPathComponent(filename).appendingPathExtension("mid")
+        if !FileManager.default.fileExists(atPath: dirPath.path) {
+            do {
+                try FileManager.default.createDirectory(at: dirPath, withIntermediateDirectories: true, attributes: nil)
+                saveFile(filepath: filepath, data: data)
+            } catch let error as NSError {
+                print("Error creating directory: \(error.localizedDescription)")
+            }
+        } else {
+            saveFile(filepath: filepath, data: data)
+        }
+        return filepath.path
+    }
+    
+    func createAUPreset(dirName: String, filename: String, data: Data) -> String {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let dirPath = documentsDirectory.appendingPathComponent(dirName).appendingPathExtension("bundle")
+        let filepath = dirPath.appendingPathComponent(filename).appendingPathExtension("aupreset")
+        if !FileManager.default.fileExists(atPath: dirPath.path) {
+            do {
+                try FileManager.default.createDirectory(at: dirPath, withIntermediateDirectories: true, attributes: nil)
+                saveFile(filepath: filepath, data: data)
+            } catch let error as NSError {
+                print("Error creating directory: \(error.localizedDescription)")
+            }
+        } else {
+            saveFile(filepath: filepath, data: data)
+        }
+        return filepath.path
+    }
+    
     private func saveFile(filepath: URL, data: Data) {
         if !FileManager.default.fileExists(atPath: filepath.path) {
             FileManager.default.createFile(atPath: filepath.path, contents: data, attributes: nil)
@@ -60,9 +94,25 @@ class STFileManager: NSObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyymmddhhmmss"
         let dirName = formatter.string(from: Date())
-        let fileName = "\(block.name)_musicData"
+        let fileName = block.name
+        var json = block.asJSON
+        var instStatus = [String: Any]()
+        for i in block.parsedTracks {
+            let preset = i.getAUStates()
+            instStatus["track\(i.trackIndex)"] = preset
+        }
         do {
-            let data = try block.asJSON.rawData()
+            let data = try PropertyListSerialization.data(fromPropertyList: instStatus, format: .xml, options: 0)
+            createAUPreset(dirName: dirName, filename: fileName, data: data)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        if let midi = block.getSequenceData() {
+            json["midifilePath"].string = createMidiFile(dirName: dirName, filename: fileName, data: midi)
+        }
+        do {
+            let data = try json.rawData()
             createJSONFile(dirName: dirName, filename: fileName, data: data)
         } catch let err as NSError {
             print("Error saving musicBlock! \(err.localizedDescription)")

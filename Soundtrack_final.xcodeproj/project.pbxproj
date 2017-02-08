@@ -17,6 +17,9 @@
 		FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FD4395041DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld */; };
 		FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD4395071DA4D5B00089F7CF /* Assets.xcassets */; };
 		FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD4395091DA4D5B00089F7CF /* LaunchScreen.storyboard */; };
+		FD44D61A1E4B1A9A00F5EBC3 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = FD44D6191E4B1A9A00F5EBC3 /* Sounds */; };
+		FD44D61E1E4B32D900F5EBC3 /* TR_808.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = FD44D61D1E4B32D900F5EBC3 /* TR_808.aupreset */; };
+		FD44D6261E4B3E1C00F5EBC3 /* FingeredBass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = FD44D6251E4B3E1C00F5EBC3 /* FingeredBass.aupreset */; };
 		FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */; };
 		FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */; };
 		FD4E2E7B1DFDE621002EC24A /* MixerSubviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E7A1DFDE621002EC24A /* MixerSubviewController.swift */; };
@@ -133,6 +136,9 @@
 		FD4395071DA4D5B00089F7CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD43950A1DA4D5B00089F7CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FD43950C1DA4D5B00089F7CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FD44D6191E4B1A9A00F5EBC3 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
+		FD44D61D1E4B32D900F5EBC3 /* TR_808.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = TR_808.aupreset; sourceTree = "<group>"; };
+		FD44D6251E4B3E1C00F5EBC3 /* FingeredBass.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = FingeredBass.aupreset; sourceTree = "<group>"; };
 		FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerViewController.swift; sourceTree = "<group>"; };
 		FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicListViewController.swift; sourceTree = "<group>"; };
 		FD4E2E7A1DFDE621002EC24A /* MixerSubviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerSubviewController.swift; sourceTree = "<group>"; };
@@ -271,9 +277,9 @@
 				FD32A4931E1F89DC00C88208 /* UserSettingsViewController.swift */,
 				FD586DBC1E233C5B00331D3E /* HuntingMapViewController.swift */,
 				FD62CA991DFF90F7007931AA /* Segues.swift */,
+				FDCDC43E1DFEE86E005F0932 /* Mixer */,
 				FD01C1031E288630005C3901 /* Evolution */,
 				FDF9C8D71E2F333C00BA4FFD /* UtilityView */,
-				FDCDC43E1DFEE86E005F0932 /* Mixer */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -298,6 +304,9 @@
 		FD13080B1DCB28120040EF07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FD44D6251E4B3E1C00F5EBC3 /* FingeredBass.aupreset */,
+				FD44D61D1E4B32D900F5EBC3 /* TR_808.aupreset */,
+				FD44D6191E4B1A9A00F5EBC3 /* Sounds */,
 				FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */,
 				FD9128071E373CB100844B33 /* lazySong.mid */,
 				FD9128081E373CB100844B33 /* lockedOutOfHeaven.mid */,
@@ -490,12 +499,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD44D6261E4B3E1C00F5EBC3 /* FingeredBass.aupreset in Resources */,
 				FD9128111E373CB100844B33 /* test.mid in Resources */,
 				FDA4052F1E37557300DA49C0 /* justTheWayYouAre.mid in Resources */,
 				FD91280D1E373CB100844B33 /* lazySong.mid in Resources */,
 				FD91280E1E373CB100844B33 /* lockedOutOfHeaven.mid in Resources */,
+				FD44D61A1E4B1A9A00F5EBC3 /* Sounds in Resources */,
 				FD9128121E373CB100844B33 /* Untitled.mid in Resources */,
 				FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */,
+				FD44D61E1E4B32D900F5EBC3 /* TR_808.aupreset in Resources */,
 				FD91280F1E373CB100844B33 /* rollingInTheDeep.mid in Resources */,
 				FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */,
 				FD9128101E373CB100844B33 /* setFileToTheRain.mid in Resources */,

@@ -24,19 +24,11 @@ class MixerViewController: UIViewController, UICollectionViewDelegate, UICollect
         mixerTable.dataSource = self
         mixerTable.backgroundColor = UIColor.clear
         self.view.backgroundColor = UIColor.gray
-        randomColor()
         mixerTable.allowsMultipleSelection = true
     }
     
     var selectedIndexPath: IndexPath!
     
-    func randomColor() {
-        for i in engine.tracks {
-            if i.trackColor == nil {
-                i.trackColor = UIColor.randomColor()
-            }
-        }
-    }
     
     func goBack() {
         print("called")

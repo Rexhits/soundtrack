@@ -50,7 +50,7 @@ class MusicBlock: MIDIParser {
         json["composedBy"].string = self.composedBy
         json["createdAt"].string = Formatter.toJSON(date: self.createdAt)
         json["timeSig"] = self.timeSignature.asJson
-        json["tracks"].arrayObject = self.parsedTracks.map{$0.getInfoJson()}
+        json["tracks"].arrayObject = self.parsedTracks.map{$0.getChannelSettings()}
         return json
     }
     
@@ -70,7 +70,7 @@ class MusicBlock: MIDIParser {
         getTempoTrack()
         addTempoEvent(bpm: Float64(self.tempo), startAt: 0)
         addTimeSignatureEvent(timeSignature: self.timeSignature, startAt: 0)
-        self.parsedTracks = tracks
+        self.parsedTracks = tracks as! [Track]
     }
     func addTrack(track: MusicalSequence) {
         var localtrack = track
@@ -86,7 +86,7 @@ class MusicBlock: MIDIParser {
         self.tracks.append(newtrack)
         addTempoEvent(bpm: Float64(self.tempo), startAt: 0)
         localtrack.musicTrack = newtrack
-        self.parsedTracks.append(localtrack)
+        self.parsedTracks.append(localtrack as! Track)
     }
     
     
