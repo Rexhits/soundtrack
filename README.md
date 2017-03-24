@@ -1,5 +1,8 @@
 # soundtrack
 
+Source code for the server side can be found here: 
+https://github.com/Rexhits/Soundtrack_Server
+
 To Do:
 * Improve the LSTM-based deep learning model for piece combining
 * UI for user uploading/downloading blocks
