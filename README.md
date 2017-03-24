@@ -1,14 +1,13 @@
 # soundtrack
 
-version 0.01:
-  
-  * Port to swift 3
-  
-  * Implemented:
-  
-    - MusicSequence (LoadMIDIFile, Retrieve tracks)
-    - MusicEventIterator (MIDINoteEvent & MIDIMetaEvent)
-    - Basic music structure (Notes, Measures, Tracks)
-    - Login/Logout using token authentication (AFNetworking, SwiftyJSON)
-  
-  * Got CSound for iOS working with swift
+To Do:
+* Improve the LSTM-based deep learning model for piece combining
+* UI for user uploading/downloading blocks
+* Test & evalueation
+
+Done:
+* Server side is all ready
+* MIDI playback engine supporting sound fonts and third party audio units
+* Dedicated software synthesizer “STSynth”
+* Location related functionality (MapView on iOS, geographic info in database)
+* Save/restore audio engine states from server
