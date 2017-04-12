@@ -19,8 +19,10 @@ class MixerSubviewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         titleLabel.text = titleStr
-        slider.value = PlaybackEngine.shared.selectedTrack.mixer.volume
+        slider.value = PlaybackEngine.shared.tracks[trackNum].mixer.volume
     }
+
+    
     override func viewDidLoad() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         tap.numberOfTapsRequired = 2
@@ -31,17 +33,17 @@ class MixerSubviewController: UIViewController {
     func doubleTapped() {
         if target == 0 {
             slider.value = 1
-            PlaybackEngine.shared.selectedTrack.mixer.volume = 1
+            PlaybackEngine.shared.tracks[trackNum].mixer.volume = 1
         } else {
             slider.value = 0
-            PlaybackEngine.shared.selectedTrack.mixer.pan = 0
+            PlaybackEngine.shared.tracks[trackNum].mixer.pan = 0
         }
     }
     
     @IBAction func targetChanged(_ sender: UISegmentedControl) {
         target = targetChooser.selectedSegmentIndex
         if target == 0 {
-            slider.maximumTrackTintColor = UIColor.clear
+            slider.maximumTrackTintColor = UIColor.lightGray
             slider.maximumValue = 1.0
             slider.minimumValue = 0.0
             slider.value = PlaybackEngine.shared.tracks[trackNum].mixer.volume

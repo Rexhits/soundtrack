@@ -57,13 +57,13 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.plugins = [String: [componentDescription]]()
                 for i in self.pluginManager._availableInstruments {
                     if self.plugins[i.manufacturerName] == nil {
-                        if i.manufacturerName != "Apple" {
+//                        if i.manufacturerName != "Apple" {
                             self.plugins[i.manufacturerName] = [componentDescription]()
-                        }
+//                        }
                     }
-                    if i.manufacturerName != "Apple" {
+//                    if i.manufacturerName != "Apple" {
                         self.plugins[i.manufacturerName]!.append(componentDescription(name: i.name, version: i.versionString, cd: i.audioComponentDescription))
-                    }
+//                    }
                 }
             } else {
                 self.plugins = [String: [componentDescription]]()
@@ -170,7 +170,10 @@ class AUListViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let t = titleStr {
             self.title = t
         }
+        self.addChildViewController(appDelegate.playbackController)
+        appDelegate.playbackController.view.frame = self.playbackControl.bounds
         self.playbackControl.addSubview(appDelegate.playbackController.view)
+        appDelegate.playbackController.didMove(toParentViewController: self)
     }
     
 }

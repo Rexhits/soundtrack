@@ -10,6 +10,9 @@
 		C895D1599E6CEEFA17989BE7 /* Pods_Soundtrack_final.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */; };
 		FD01C1001E286A3E005C3901 /* CoreDataExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD01C0FF1E286A3E005C3901 /* CoreDataExtentions.swift */; };
 		FD01C1021E28862B005C3901 /* PieceEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD01C1011E28862B005C3901 /* PieceEditorViewController.swift */; };
+		FD1E9D001E5828B000DF853B /* TR_808.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = FD44D61D1E4B32D900F5EBC3 /* TR_808.aupreset */; };
+		FD2BE6DD1E9A4EE7006C7D0A /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD2BE6DC1E9A4EE7006C7D0A /* CompositionViewController.swift */; };
+		FD2BE6E41E9A7900006C7D0A /* BlockSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD2BE6E31E9A7900006C7D0A /* BlockSelectionViewController.swift */; };
 		FD32A4941E1F89DC00C88208 /* UserSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD32A4931E1F89DC00C88208 /* UserSettingsViewController.swift */; };
 		FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */; };
 		FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4394FF1DA4D5B00089F7CF /* LoginViewController.swift */; };
@@ -18,7 +21,6 @@
 		FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD4395071DA4D5B00089F7CF /* Assets.xcassets */; };
 		FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD4395091DA4D5B00089F7CF /* LaunchScreen.storyboard */; };
 		FD44D61A1E4B1A9A00F5EBC3 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = FD44D6191E4B1A9A00F5EBC3 /* Sounds */; };
-		FD44D61E1E4B32D900F5EBC3 /* TR_808.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = FD44D61D1E4B32D900F5EBC3 /* TR_808.aupreset */; };
 		FD44D6261E4B3E1C00F5EBC3 /* FingeredBass.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = FD44D6251E4B3E1C00F5EBC3 /* FingeredBass.aupreset */; };
 		FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E721DFC5CE7002EC24A /* MixerViewController.swift */; };
 		FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */; };
@@ -29,6 +31,7 @@
 		FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */; };
 		FD62CA9A1DFF90F7007931AA /* Segues.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD62CA991DFF90F7007931AA /* Segues.swift */; };
 		FD7B6A521DCAD02300B963F4 /* MIDIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD89AD641DB60C240009815A /* MIDIParser.swift */; };
+		FD8CFE171E5AECDD0073F63C /* Yamaha Grand.aupreset in Resources */ = {isa = PBXBuildFile; fileRef = FD8CFE161E5AECDD0073F63C /* Yamaha Grand.aupreset */; };
 		FD90E5241DB5F404008B0881 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5231DB5F404008B0881 /* CoreMIDI.framework */; };
 		FD90E5281DB5F426008B0881 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5271DB5F426008B0881 /* CoreAudio.framework */; };
 		FD90E52A1DB5F42B008B0881 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5291DB5F42B008B0881 /* AVFoundation.framework */; };
@@ -38,14 +41,18 @@
 		FD90E5351DB5F62F008B0881 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5341DB5F62F008B0881 /* CoreMotion.framework */; };
 		FD90E5371DB5F63C008B0881 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD90E5361DB5F63C008B0881 /* QuartzCore.framework */; };
 		FD9127F61E37201E00844B33 /* TrackTypeClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9127F51E37201E00844B33 /* TrackTypeClassifier.swift */; };
-		FD9127FB1E37273700844B33 /* AIToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */; };
-		FD9127FC1E37273700844B33 /* AIToolbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD91280D1E373CB100844B33 /* lazySong.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD9128071E373CB100844B33 /* lazySong.mid */; };
 		FD91280E1E373CB100844B33 /* lockedOutOfHeaven.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD9128081E373CB100844B33 /* lockedOutOfHeaven.mid */; };
 		FD91280F1E373CB100844B33 /* rollingInTheDeep.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD9128091E373CB100844B33 /* rollingInTheDeep.mid */; };
 		FD9128101E373CB100844B33 /* setFileToTheRain.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD91280A1E373CB100844B33 /* setFileToTheRain.mid */; };
 		FD9128111E373CB100844B33 /* test.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD91280B1E373CB100844B33 /* test.mid */; };
 		FD9128121E373CB100844B33 /* Untitled.mid in Resources */ = {isa = PBXBuildFile; fileRef = FD91280C1E373CB100844B33 /* Untitled.mid */; };
+		FD9ADC261E8A19E7004989D9 /* BlockUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9ADC251E8A19E7004989D9 /* BlockUploadViewController.swift */; };
+		FDA2DD2A1E9B25AF00A37627 /* PagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA2DD291E9B25AF00A37627 /* PagingViewController.swift */; };
+		FDA2DD301E9B2CD300A37627 /* ClipsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA2DD2F1E9B2CD300A37627 /* ClipsManagementViewController.swift */; };
+		FDA2DD321E9B35BD00A37627 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA2DD311E9B35BD00A37627 /* ComposeViewController.swift */; };
+		FDA2DD361E9B58AA00A37627 /* BlockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FDA2DD351E9B58AA00A37627 /* BlockView.xib */; };
+		FDA2DD381E9B5AA600A37627 /* BlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA2DD371E9B5AA600A37627 /* BlockView.swift */; };
 		FDA4052F1E37557300DA49C0 /* justTheWayYouAre.mid in Resources */ = {isa = PBXBuildFile; fileRef = FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */; };
 		FDA9DC751DA605F3004406D4 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC741DA605F3004406D4 /* SignupViewController.swift */; };
 		FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */; };
@@ -54,11 +61,15 @@
 		FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */; };
 		FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */; };
 		FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */; };
+		FDBA855A1E8B7AD700BDA3CF /* BillboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBA85591E8B7AD700BDA3CF /* BillboardViewController.swift */; };
+		FDBA85621E8BA85A00BDA3CF /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDBA85611E8BA85A00BDA3CF /* libmp3lame.a */; };
+		FDBA85671E8BA88D00BDA3CF /* ExtAudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = FDBA85661E8BA88D00BDA3CF /* ExtAudioConverter.m */; };
 		FDC298E21E086ACB00208962 /* STFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC298E11E086ACB00208962 /* STFileManager.swift */; };
+		FDC347E31E9A3FA300BD3382 /* spark.sks in Resources */ = {isa = PBXBuildFile; fileRef = FDC347E21E9A3FA300BD3382 /* spark.sks */; };
 		FDCDC4371DFE88F3005F0932 /* MixerCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCDC4361DFE88F3005F0932 /* MixerCellView.swift */; };
 		FDCDC43D1DFEE7F9005F0932 /* MixerPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCDC43C1DFEE7F9005F0932 /* MixerPopoverViewController.swift */; };
 		FDCDC4401DFF3594005F0932 /* PlayControlBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCDC43F1DFF3594005F0932 /* PlayControlBarView.swift */; };
-		FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */; };
+		FDD72EF71E5A3AC900DB3EA5 /* BlockInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD72EF61E5A3AC900DB3EA5 /* BlockInfoEditViewController.swift */; };
 		FDF042131DF80AA700FF5D5F /* STSynth.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FDF0420E1DF80A6E00FF5D5F /* STSynth.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */; };
 		FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */; };
@@ -114,7 +125,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FD9127FC1E37273700844B33 /* AIToolbox.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +137,8 @@
 		7369E8D2C92E5AFC672C0308 /* Pods_Soundtrack_final.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Soundtrack_final.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD01C0FF1E286A3E005C3901 /* CoreDataExtentions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataExtentions.swift; sourceTree = "<group>"; };
 		FD01C1011E28862B005C3901 /* PieceEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieceEditorViewController.swift; sourceTree = "<group>"; };
+		FD2BE6DC1E9A4EE7006C7D0A /* CompositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
+		FD2BE6E31E9A7900006C7D0A /* BlockSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockSelectionViewController.swift; sourceTree = "<group>"; };
 		FD32A4931E1F89DC00C88208 /* UserSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSettingsViewController.swift; sourceTree = "<group>"; };
 		FD4394FA1DA4D5B00089F7CF /* Soundtrack_final.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundtrack_final.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -148,6 +160,7 @@
 		FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTheory.swift; sourceTree = "<group>"; };
 		FD62CA991DFF90F7007931AA /* Segues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segues.swift; sourceTree = "<group>"; };
 		FD89AD641DB60C240009815A /* MIDIParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIDIParser.swift; sourceTree = "<group>"; };
+		FD8CFE161E5AECDD0073F63C /* Yamaha Grand.aupreset */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Yamaha Grand.aupreset"; sourceTree = "<group>"; };
 		FD90E5231DB5F404008B0881 /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
 		FD90E5271DB5F426008B0881 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		FD90E5291DB5F42B008B0881 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -163,21 +176,33 @@
 		FD91280A1E373CB100844B33 /* setFileToTheRain.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = setFileToTheRain.mid; sourceTree = "<group>"; };
 		FD91280B1E373CB100844B33 /* test.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = test.mid; sourceTree = "<group>"; };
 		FD91280C1E373CB100844B33 /* Untitled.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = Untitled.mid; sourceTree = "<group>"; };
+		FD9ADC251E8A19E7004989D9 /* BlockUploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockUploadViewController.swift; sourceTree = "<group>"; };
+		FDA2DD291E9B25AF00A37627 /* PagingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingViewController.swift; sourceTree = "<group>"; };
+		FDA2DD2F1E9B2CD300A37627 /* ClipsManagementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClipsManagementViewController.swift; sourceTree = "<group>"; };
+		FDA2DD311E9B35BD00A37627 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
+		FDA2DD351E9B58AA00A37627 /* BlockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BlockView.xib; sourceTree = "<group>"; };
+		FDA2DD371E9B5AA600A37627 /* BlockView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockView.swift; sourceTree = "<group>"; };
 		FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = justTheWayYouAre.mid; sourceTree = "<group>"; };
 		FDA9DC741DA605F3004406D4 /* SignupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexViewController.swift; sourceTree = "<group>"; };
 		FDA9DC7A1DA617A7004406D4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FDA9DC7C1DA617D8004406D4 /* Soundtrack_final.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Soundtrack_final.entitlements; sourceTree = "<group>"; };
 		FDA9DC7D1DA619EB004406D4 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AIToolbox.framework; sourceTree = "<group>"; };
 		FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicBlock.swift; sourceTree = "<group>"; };
 		FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicalSequence.swift; sourceTree = "<group>"; };
 		FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManager.swift; sourceTree = "<group>"; };
+		FDBA85591E8B7AD700BDA3CF /* BillboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillboardViewController.swift; sourceTree = "<group>"; };
+		FDBA85601E8BA85A00BDA3CF /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
+		FDBA85611E8BA85A00BDA3CF /* libmp3lame.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmp3lame.a; sourceTree = "<group>"; };
+		FDBA85641E8BA88C00BDA3CF /* Soundtrack_final-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Soundtrack_final-Bridging-Header.h"; sourceTree = "<group>"; };
+		FDBA85651E8BA88D00BDA3CF /* ExtAudioConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtAudioConverter.h; sourceTree = "<group>"; };
+		FDBA85661E8BA88D00BDA3CF /* ExtAudioConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExtAudioConverter.m; sourceTree = "<group>"; };
 		FDC298E11E086ACB00208962 /* STFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STFileManager.swift; sourceTree = "<group>"; };
+		FDC347E21E9A3FA300BD3382 /* spark.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = spark.sks; sourceTree = "<group>"; };
 		FDCDC4361DFE88F3005F0932 /* MixerCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerCellView.swift; sourceTree = "<group>"; };
 		FDCDC43C1DFEE7F9005F0932 /* MixerPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MixerPopoverViewController.swift; sourceTree = "<group>"; };
 		FDCDC43F1DFF3594005F0932 /* PlayControlBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayControlBarView.swift; sourceTree = "<group>"; };
-		FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneticAlgorithms.swift; sourceTree = "<group>"; };
+		FDD72EF61E5A3AC900DB3EA5 /* BlockInfoEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockInfoEditViewController.swift; sourceTree = "<group>"; };
 		FDF042061DF80A6E00FF5D5F /* STSynth.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = STSynth.xcodeproj; path = ../../Documents/Programming/Juce/STSynth/Builds/iOS/STSynth.xcodeproj; sourceTree = "<group>"; };
 		FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackEngine.swift; sourceTree = "<group>"; };
 		FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUListViewController.swift; sourceTree = "<group>"; };
@@ -207,8 +232,8 @@
 				FD90E5241DB5F404008B0881 /* CoreMIDI.framework in Frameworks */,
 				FDA9DC7B1DA617A7004406D4 /* Security.framework in Frameworks */,
 				FD586DBF1E2341AA00331D3E /* MapKit.framework in Frameworks */,
-				FD9127FB1E37273700844B33 /* AIToolbox.framework in Frameworks */,
 				C895D1599E6CEEFA17989BE7 /* Pods_Soundtrack_final.framework in Frameworks */,
+				FDBA85621E8BA85A00BDA3CF /* libmp3lame.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +243,6 @@
 		AA50247B1C520F865D7FA192 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FDAB4FBB1E36EC5D00749E85 /* AIToolbox.framework */,
 				FD586DBE1E2341AA00331D3E /* MapKit.framework */,
 				FDF3AF731DF80124002793F4 /* AudioToolbox.framework */,
 				FD90E5361DB5F63C008B0881 /* QuartzCore.framework */,
@@ -262,6 +286,11 @@
 				FDF9C8DC1E2F58FA00BA4FFD /* PopViewCollectionCell.swift */,
 				FDF9C8DE1E3004FE00BA4FFD /* PieceEditorCell.swift */,
 				FDF9C8E01E300F6200BA4FFD /* AddCell.swift */,
+				FD2BE6DC1E9A4EE7006C7D0A /* CompositionViewController.swift */,
+				FD2BE6E31E9A7900006C7D0A /* BlockSelectionViewController.swift */,
+				FDA2DD2F1E9B2CD300A37627 /* ClipsManagementViewController.swift */,
+				FDA2DD311E9B35BD00A37627 /* ComposeViewController.swift */,
+				FDA2DD291E9B25AF00A37627 /* PagingViewController.swift */,
 			);
 			name = Evolution;
 			sourceTree = "<group>";
@@ -273,10 +302,9 @@
 				FDA9DC741DA605F3004406D4 /* SignupViewController.swift */,
 				FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */,
 				FD4E2E781DFC7411002EC24A /* MusicListViewController.swift */,
-				FDCDC43F1DFF3594005F0932 /* PlayControlBarView.swift */,
 				FD32A4931E1F89DC00C88208 /* UserSettingsViewController.swift */,
-				FD586DBC1E233C5B00331D3E /* HuntingMapViewController.swift */,
 				FD62CA991DFF90F7007931AA /* Segues.swift */,
+				FDBA855F1E8B7AE200BDA3CF /* Hunting */,
 				FDCDC43E1DFEE86E005F0932 /* Mixer */,
 				FD01C1031E288630005C3901 /* Evolution */,
 				FDF9C8D71E2F333C00BA4FFD /* UtilityView */,
@@ -291,12 +319,12 @@
 				FDC298E11E086ACB00208962 /* STFileManager.swift */,
 				FD61A45D1DBD3FC70050F099 /* MusicTheory.swift */,
 				FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */,
-				FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */,
 				FD89AD641DB60C240009815A /* MIDIParser.swift */,
+				FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */,
 				FDF0CCE91DF720EF00D0B8DC /* PlaybackEngine.swift */,
 				FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */,
 				FD9127F51E37201E00844B33 /* TrackTypeClassifier.swift */,
-				FDEF0BF81DC3B6AD005A564C /* GeneticAlgorithms.swift */,
+				FDC347E21E9A3FA300BD3382 /* spark.sks */,
 			);
 			name = Infrastructures;
 			sourceTree = "<group>";
@@ -305,6 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				FD44D6251E4B3E1C00F5EBC3 /* FingeredBass.aupreset */,
+				FD8CFE161E5AECDD0073F63C /* Yamaha Grand.aupreset */,
 				FD44D61D1E4B32D900F5EBC3 /* TR_808.aupreset */,
 				FD44D6191E4B1A9A00F5EBC3 /* Sounds */,
 				FDA4052E1E37557300DA49C0 /* justTheWayYouAre.mid */,
@@ -340,19 +369,50 @@
 		FD4394FC1DA4D5B00089F7CF /* Soundtrack_final */ = {
 			isa = PBXGroup;
 			children = (
+				FDBA85681E8BA89400BDA3CF /* ExtAudioConverter */,
+				FDBA85631E8BA85E00BDA3CF /* lame */,
 				FDA9DC7C1DA617D8004406D4 /* Soundtrack_final.entitlements */,
 				FD4394FD1DA4D5B00089F7CF /* AppDelegate.swift */,
 				FD01C0FE1E286A21005C3901 /* CoreData */,
 				FD1308091DCB27A60040EF07 /* ViewControllers */,
 				FD13080A1DCB27BE0040EF07 /* Infrastructures */,
 				FD4395011DA4D5B00089F7CF /* Main.storyboard */,
+				FDA2DD351E9B58AA00A37627 /* BlockView.xib */,
 				FD4395071DA4D5B00089F7CF /* Assets.xcassets */,
 				FD4395091DA4D5B00089F7CF /* LaunchScreen.storyboard */,
 				FD43950C1DA4D5B00089F7CF /* Info.plist */,
 				FD4395041DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld */,
 				FD13080B1DCB28120040EF07 /* Resources */,
+				FDBA85641E8BA88C00BDA3CF /* Soundtrack_final-Bridging-Header.h */,
 			);
 			path = Soundtrack_final;
+			sourceTree = "<group>";
+		};
+		FDBA855F1E8B7AE200BDA3CF /* Hunting */ = {
+			isa = PBXGroup;
+			children = (
+				FD586DBC1E233C5B00331D3E /* HuntingMapViewController.swift */,
+				FDBA85591E8B7AD700BDA3CF /* BillboardViewController.swift */,
+			);
+			name = Hunting;
+			sourceTree = "<group>";
+		};
+		FDBA85631E8BA85E00BDA3CF /* lame */ = {
+			isa = PBXGroup;
+			children = (
+				FDBA85601E8BA85A00BDA3CF /* lame.h */,
+				FDBA85611E8BA85A00BDA3CF /* libmp3lame.a */,
+			);
+			name = lame;
+			sourceTree = "<group>";
+		};
+		FDBA85681E8BA89400BDA3CF /* ExtAudioConverter */ = {
+			isa = PBXGroup;
+			children = (
+				FDBA85651E8BA88D00BDA3CF /* ExtAudioConverter.h */,
+				FDBA85661E8BA88D00BDA3CF /* ExtAudioConverter.m */,
+			);
+			name = ExtAudioConverter;
 			sourceTree = "<group>";
 		};
 		FDCDC43E1DFEE86E005F0932 /* Mixer */ = {
@@ -364,6 +424,8 @@
 				FD4E2E7A1DFDE621002EC24A /* MixerSubviewController.swift */,
 				FDF0CCEB1DF74AAA00D0B8DC /* AUListViewController.swift */,
 				FD5379601DF7CE68006991FD /* PluginViewController.swift */,
+				FDD72EF61E5A3AC900DB3EA5 /* BlockInfoEditViewController.swift */,
+				FD9ADC251E8A19E7004989D9 /* BlockUploadViewController.swift */,
 			);
 			name = Mixer;
 			sourceTree = "<group>";
@@ -382,6 +444,8 @@
 			isa = PBXGroup;
 			children = (
 				FDF9C8D11E2F333300BA4FFD /* STToolbarButton.swift */,
+				FDCDC43F1DFF3594005F0932 /* PlayControlBarView.swift */,
+				FDA2DD371E9B5AA600A37627 /* BlockView.swift */,
 			);
 			name = UtilityView;
 			sourceTree = "<group>";
@@ -424,7 +488,7 @@
 					FD4394F91DA4D5B00089F7CF = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 8U45AH5629;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -499,15 +563,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD1E9D001E5828B000DF853B /* TR_808.aupreset in Resources */,
 				FD44D6261E4B3E1C00F5EBC3 /* FingeredBass.aupreset in Resources */,
 				FD9128111E373CB100844B33 /* test.mid in Resources */,
+				FD8CFE171E5AECDD0073F63C /* Yamaha Grand.aupreset in Resources */,
+				FDC347E31E9A3FA300BD3382 /* spark.sks in Resources */,
 				FDA4052F1E37557300DA49C0 /* justTheWayYouAre.mid in Resources */,
 				FD91280D1E373CB100844B33 /* lazySong.mid in Resources */,
 				FD91280E1E373CB100844B33 /* lockedOutOfHeaven.mid in Resources */,
+				FDA2DD361E9B58AA00A37627 /* BlockView.xib in Resources */,
 				FD44D61A1E4B1A9A00F5EBC3 /* Sounds in Resources */,
 				FD9128121E373CB100844B33 /* Untitled.mid in Resources */,
 				FD43950B1DA4D5B00089F7CF /* LaunchScreen.storyboard in Resources */,
-				FD44D61E1E4B32D900F5EBC3 /* TR_808.aupreset in Resources */,
 				FD91280F1E373CB100844B33 /* rollingInTheDeep.mid in Resources */,
 				FD4395081DA4D5B00089F7CF /* Assets.xcassets in Resources */,
 				FD9128101E373CB100844B33 /* setFileToTheRain.mid in Resources */,
@@ -570,15 +637,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FDD72EF71E5A3AC900DB3EA5 /* BlockInfoEditViewController.swift in Sources */,
 				FD4E2E7B1DFDE621002EC24A /* MixerSubviewController.swift in Sources */,
 				FD4E2E731DFC5CE7002EC24A /* MixerViewController.swift in Sources */,
 				FDF9C8D91E2F45A700BA4FFD /* PopViewController.swift in Sources */,
 				FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */,
+				FDA2DD2A1E9B25AF00A37627 /* PagingViewController.swift in Sources */,
 				FD4E2E791DFC7411002EC24A /* MusicListViewController.swift in Sources */,
 				FD9127F61E37201E00844B33 /* TrackTypeClassifier.swift in Sources */,
 				FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */,
-				FDEF0BF91DC3B6AD005A564C /* GeneticAlgorithms.swift in Sources */,
+				FDBA85671E8BA88D00BDA3CF /* ExtAudioConverter.m in Sources */,
 				FD4395001DA4D5B00089F7CF /* LoginViewController.swift in Sources */,
+				FDA2DD321E9B35BD00A37627 /* ComposeViewController.swift in Sources */,
 				FD4395061DA4D5B00089F7CF /* Soundtrack_final.xcdatamodeld in Sources */,
 				FDF9C8D21E2F333300BA4FFD /* STToolbarButton.swift in Sources */,
 				FDA9DC7E1DA619EB004406D4 /* Global.swift in Sources */,
@@ -591,20 +661,26 @@
 				FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */,
 				FDCDC4401DFF3594005F0932 /* PlayControlBarView.swift in Sources */,
 				FDF9C8E31E30784600BA4FFD /* TemplateSelViewController.swift in Sources */,
+				FDA2DD381E9B5AA600A37627 /* BlockView.swift in Sources */,
 				FD32A4941E1F89DC00C88208 /* UserSettingsViewController.swift in Sources */,
 				FD01C1021E28862B005C3901 /* PieceEditorViewController.swift in Sources */,
+				FD2BE6DD1E9A4EE7006C7D0A /* CompositionViewController.swift in Sources */,
 				FDF9C8DD1E2F58FA00BA4FFD /* PopViewCollectionCell.swift in Sources */,
 				FDCDC43D1DFEE7F9005F0932 /* MixerPopoverViewController.swift in Sources */,
+				FDBA855A1E8B7AD700BDA3CF /* BillboardViewController.swift in Sources */,
 				FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */,
 				FDFA26881E2828AE00F53783 /* EvolutionViewController.swift in Sources */,
 				FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */,
+				FD9ADC261E8A19E7004989D9 /* BlockUploadViewController.swift in Sources */,
 				FD01C1001E286A3E005C3901 /* CoreDataExtentions.swift in Sources */,
+				FD2BE6E41E9A7900006C7D0A /* BlockSelectionViewController.swift in Sources */,
 				FD62CA9A1DFF90F7007931AA /* Segues.swift in Sources */,
 				FDF9C8E11E300F6200BA4FFD /* AddCell.swift in Sources */,
 				FD4394FE1DA4D5B00089F7CF /* AppDelegate.swift in Sources */,
 				FDF9C8DF1E3004FF00BA4FFD /* PieceEditorCell.swift in Sources */,
 				FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */,
 				FDF0CCEA1DF720EF00D0B8DC /* PlaybackEngine.swift in Sources */,
+				FDA2DD301E9B2CD300A37627 /* ClipsManagementViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,11 +809,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Soundtrack_final/Soundtrack_final.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 8U45AH5629;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -745,14 +822,16 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Soundtrack_final/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks $(CONFIGURATION_BUILD_DIR)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Soundtrack_final",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rexwang.Soundtrack-final";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Soundtrack_final/Soundtrack_final-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -763,11 +842,12 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Soundtrack_final/Soundtrack_final.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = 8U45AH5629;
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -775,14 +855,15 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Soundtrack_final/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks $(CONFIGURATION_BUILD_DIR)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Soundtrack_final",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rexwang.Soundtrack-final";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Soundtrack_final/Soundtrack_final-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

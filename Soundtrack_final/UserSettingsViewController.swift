@@ -10,7 +10,7 @@ import UIKit
 import Lockbox
 import RSKImageCropper
 
-class UserSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate, RSKImageCropViewControllerDelegate {
+class UserSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, RSKImageCropViewControllerDelegate {
     
     @IBOutlet weak var userSettingsTable: UITableView!
     
@@ -25,6 +25,7 @@ class UserSettingsViewController: UIViewController, UITableViewDelegate, UITable
         userSettingsTable.dataSource = self
         userSettingsTable.backgroundColor = UIColor.clear
         self.view.backgroundColor = UIColor.lightGray
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         info = UserInfo()
@@ -45,7 +46,8 @@ class UserSettingsViewController: UIViewController, UITableViewDelegate, UITable
             guard err == nil, errCode == nil else {
                 switch errCode! {
                 case 403:
-                    print("Need re-login")
+                    print("Logged Out! \(Lockbox.archiveObject(nil, forKey: "Token")))")
+                    self.performSegue(withIdentifier: "logout", sender: self)
                 default:
                     break
                 }
@@ -66,7 +68,8 @@ class UserSettingsViewController: UIViewController, UITableViewDelegate, UITable
             guard err == nil, errCode == nil else {
                 switch errCode! {
                 case 403:
-                    print("Need re-login")
+                    print("Logged Out! \(Lockbox.archiveObject(nil, forKey: "Token")))")
+                    self.performSegue(withIdentifier: "logout", sender: self)
                 default:
                     break
                 }
@@ -163,6 +166,7 @@ class UserSettingsViewController: UIViewController, UITableViewDelegate, UITable
             self.present(alerview, animated: true, completion: nil)
         } else {
             let title = "Editing \(info.keys[indexPath.row-1])"
+            
             let alerview = UIAlertController(title: title, message: nil, preferredStyle: .alert)
             alerview.addTextField(configurationHandler: { textField in
                 textField.placeholder = "Enter New \(self.info.keys[indexPath.row-1])"
@@ -190,7 +194,7 @@ class UserSettingsViewController: UIViewController, UITableViewDelegate, UITable
     func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect) {
         let resized = downsizeImage(image: croppedImage, toTheSize: CGSize(width: 500, height: 500))
         let imgData = UIImageJPEGRepresentation(resized, 0.5)
-        Server.uploadAvatar(data: imgData!, filename: "\(self.info.username!).jpeg") { (response, err, errCode) in
+        Server.uploadAvatar(data: imgData!, filename: "\(self.info.id!).jpeg") { (response, err, errCode) in
             guard err == nil, errCode == nil else {
                 switch errCode! {
                 case 403:

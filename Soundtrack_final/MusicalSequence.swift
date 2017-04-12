@@ -9,6 +9,7 @@
 import Foundation
 import AudioToolbox
 import SwiftyJSON
+import Upsurge
 
 protocol MusicalSequence: CustomStringConvertible {
     var attachTo: MusicBlock? {get set}
@@ -24,8 +25,9 @@ protocol MusicalSequence: CustomStringConvertible {
     mutating func addArticulation(articulation: Articulation)
     mutating func addSequence(sequence: MusicalSequence)
     mutating func appendSequence(inputSequence: MusicalSequence)
-    func getNoteMatrix() -> String
+    func getNoteMatrix() -> Matrix<Int>
     func getArticulationMatrix() -> String
+    
 }
 
 extension MusicalSequence {
@@ -69,6 +71,7 @@ extension MusicalSequence {
         json["goupPolyphonic"].double = groupPolyphonic
         json["groupRepetion"].double = groupRepetition
         json["noteDistribution"].arrayObject = getNoteDistribution()
+        json["rhythumPattern"].arrayObject = getRhythumPattern()
         return json
     }
     
@@ -95,7 +98,7 @@ extension MusicalSequence {
         get {return content.musicTrack}
         set {
             content.musicTrack = newValue
-            print("MusicTrack set \(self.content.musicTrack)")
+//            print("MusicTrack set \(self.content.musicTrack)")
         }
     }
     var attachTo: MusicBlock? {
@@ -156,7 +159,7 @@ extension MusicalSequence {
     mutating func appendSequence(inputSequence: MusicalSequence) {
         var endTime: MusicTimeStamp = 0
         if self.musicTrack != nil {
-            endTime = getTrackLength(musicTrack: self.musicTrack!)
+            endTime = getTrackLength()
             print("EndTime: \(endTime)")
         }
         for var i in inputSequence.notes {
@@ -177,12 +180,12 @@ extension MusicalSequence {
     }
     
     private func addNoteEvent(track: MusicTrack, note: NoteEvent) {
-        var noteMess = MIDINoteMessage(channel: UInt8(note.channel), note: UInt8(note.note), velocity: UInt8(note.velocity), releaseVelocity: 0, duration: Float32(note.duration))
+        var noteMess = MIDINoteMessage(channel: 0, note: UInt8(note.note), velocity: UInt8(note.velocity), releaseVelocity: 0, duration: Float32(note.duration))
         let status = MusicTrackNewMIDINoteEvent(track, note.timeStamp, &noteMess)
         if status != OSStatus(noErr) {
-            print("error adding Note \(status)")
+//            print("error adding Note \(status)")
         } else {
-            print("new Note added: \(note)")
+//            print("new Note added: \(note)")
         }
     }
     
@@ -206,8 +209,8 @@ extension MusicalSequence {
             print("new Controller Message added: \(event)")
         }
     }
-    private func getTrackLength(musicTrack:MusicTrack) -> MusicTimeStamp {
-        
+    func getTrackLength() -> MusicTimeStamp {
+        let musicTrack = self.musicTrack!
         //The time of the last music event in a music track, plus time required for note fade-outs and so on.
         var trackLength = MusicTimeStamp(0)
         var tracklengthSize = UInt32(0)
@@ -223,21 +226,28 @@ extension MusicalSequence {
         return trackLength
     }
     
-    private func byMeasure() -> [Measure] {
-        var sequence = [Measure]()
+    
+    func getNumOfMeasure() -> Int {
         let measureLength = timeSignature.lengthPerBeat/timeSignature.beatsPerMeasure * 4
         let length = getSequenceLength()
-        let quantizedNotes = quantize().notes
-        var numOfMeasure: Int {
-            guard length >= 1 else {
-                return 1
-            }
-            if Float(measureLength).truncatingRemainder(dividingBy: Float(length)) != 0 {
-                return Int(length / Double(measureLength)) + 1
-            } else {
-                return Int(length / Double(measureLength))
-            }
+        guard length >= 1 else {
+            return 1
         }
+        if Float(measureLength).truncatingRemainder(dividingBy: Float(length)) != 0 {
+            return Int(length / Double(measureLength)) + 1
+        } else {
+            return Int(length / Double(measureLength))
+        }
+    }
+    
+    
+    
+    func byMeasure() -> [Measure] {
+        
+        var sequence = [Measure]()
+        let measureLength = timeSignature.lengthPerBeat/timeSignature.beatsPerMeasure * 4
+        let quantizedNotes = quantize().notes
+        let numOfMeasure = getNumOfMeasure()
         for i in 0 ..< numOfMeasure {
             let currentTime = i * measureLength
             let noteList = quantizedNotes.filter{(Double(currentTime) ..< Double(currentTime + measureLength)).contains($0.timeStamp)}
@@ -260,13 +270,33 @@ extension MusicalSequence {
         return sequence
     }
     
-    func getNoteMatrix() -> String {
+    func getNoteMatrix() -> Matrix<Int> {
         /// OutputMartixString, Format: Channel, TimeStamp, Note, Velocity, Duration
-        var output = [String]()
-        for i in notes {
-            output.append("\(String.init(format: "%2d", i.channel)) \t \(String.init(format: "%.2f", i.timeStamp)) \t \(String.init(format: "%3d", i.note)) \t \(String.init(format: "%3d", i.velocity)) \t \(String.init(format: "%.4f", i.duration))")
+        
+//        var output = [String]()
+//        for i in notes {
+//            output.append("\(String.init(format: "%2d", i.channel)) \t \(String.init(format: "%.2f", i.timeStamp)) \t \(String.init(format: "%3d", i.note)) \t \(String.init(format: "%3d", i.velocity)) \t \(String.init(format: "%.4f", i.duration))")
+//        }
+//        return output.joined(separator: "\n")
+        var matrix = [[Int]]()
+        let quantized = self.quantize()
+        let length = ceil(getSequenceLength())
+        var i: MusicTimeStamp = 0
+        let oneTimeStep = 0.25
+        while i <= length {
+            var state = [Int].init(repeating: 0, count: 78)
+            let now = i ..< i + oneTimeStep
+            let notes_now = quantized.notes.filter({ (inNote) -> Bool in
+                let overlap = inNote.timeRange.clamped(to: now)
+                return !overlap.isEmpty
+            })
+            for n in notes_now {
+                state[n.note] = n.velocity
+            }
+            matrix.append(state)
+            i += oneTimeStep
         }
-        return output.joined(separator: "\n")
+        return Matrix<Int>(matrix)
     }
     
     func getArticulationMatrix() -> String {
@@ -344,7 +374,8 @@ extension MusicalSequence {
         let min = Double(pitches.min()!)
         let max = Double(pitches.max()!)
         let mean = Double(pitches.reduce(0, +)) / Double(pitches.count)
-        var median: Double {
+        
+        func getMedian() -> Double{
             let sorted = pitches.sorted()
             if pitches.count % 2 == 1 {
                 return Double(sorted[Int(floor(Double(pitches.count)/2))])
@@ -354,6 +385,8 @@ extension MusicalSequence {
                 return -Double(Int.max)
             }
         }
+        
+        let median = getMedian()
         let standardDiviation = (pitches.map{pow(Double($0) - mean, 2.0)}.reduce(0, +)) / Double(pitches.count)
         return (min, max, mean, median, standardDiviation)
     }
@@ -397,16 +430,21 @@ extension MusicalSequence {
         return self.notes.map{$0.timeRange.upperBound - $0.timeRange.lowerBound}.reduce(0, +) / Double(self.notes.count)
     }
     
+    
     func quantize() -> BasicMusicalStructure {
         var sequence = self.content
         let meanNoteLength = self.getMeanNoteLength()
-        var quantizationStep: Double {
+        
+        func getQuantizationStep() -> Double {
             if meanNoteLength > 0.5 {
                 return 0.5
             } else {
                 return 0.25
             }
+
         }
+        
+        let quantizationStep = getQuantizationStep()
         let quantizedTime = self.notes.map{$0.timeStamp}.map { (i) -> MusicTimeStamp in
             let ramianer = i.truncatingRemainder(dividingBy: quantizationStep)
             if ramianer < quantizationStep / 2 {
@@ -443,11 +481,24 @@ extension MusicalSequence {
         return removeConcective(input: patterns).map{self.measures[$0]}
     }
     
+    func getRhythumPattern() -> [[String: Any]] {
+        let analysis = timestampAnalysis()
+        var output = [[String: Any]]()
+        for i in analysis {
+            let dic: [String: Any] = ["timeStamp": i.notes.map{$0.timeStamp}, "velocity": i.notes.map{$0.velocity}, "note": i.notes.map{$0.note}, "duration": i.notes.map{$0.duration}]
+            output.append(dic)
+        }
+        return output
+    }
+    
+    
     
     func removeConcective(input: [Int]) -> [Int] {
         return input.enumerated().flatMap { index, element in
             return index > 0 && input[index - 1] + 1 == element ? nil : element
         }
     }
+    
+    
 }
 

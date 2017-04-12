@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BlockView" customModule="Soundtrack_final" customModuleProvider="target">
+            <connections>
+                <outlet property="artistLabel" destination="ME0-hj-mAt" id="JCI-8k-ivl"/>
+                <outlet property="blockCategoryLabel" destination="TKr-TH-T3z" id="TYF-WI-k9a"/>
+                <outlet property="changeBtn" destination="5XO-kw-dQg" id="fd6-di-fuj"/>
+                <outlet property="playBtn" destination="BMz-r4-m2W" id="q1l-Nf-OJ9"/>
+                <outlet property="titleLabel" destination="goQ-Wr-6Rg" id="f7t-Ic-6Ou"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="482" height="263"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BlockCategory" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TKr-TH-T3z">
+                    <rect key="frame" x="16" y="20" width="126.5" height="21"/>
+                    <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="18"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="dMR-z7-PaW">
+                    <rect key="frame" x="367" y="214" width="95" height="29"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BMz-r4-m2W">
+                            <rect key="frame" x="0.0" y="0.0" width="30" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="tintColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
+                            <state key="normal" title="Play"/>
+                            <connections>
+                                <action selector="playBtnTapped:" destination="-1" eventType="touchUpInside" id="vSp-Dy-98g"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5XO-kw-dQg">
+                            <rect key="frame" x="45" y="0.0" width="50" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="tintColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
+                            <state key="normal" title="Change"/>
+                            <connections>
+                                <action selector="changeBtnTapped:" destination="-1" eventType="touchUpInside" id="gwS-7L-kEc"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="ioU-1j-b6N">
+                    <rect key="frame" x="16" y="206.5" width="40.5" height="35"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="goQ-Wr-6Rg">
+                            <rect key="frame" x="0.0" y="0.0" width="40.5" height="16.5"/>
+                            <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ME0-hj-mAt">
+                            <rect key="frame" x="0.0" y="18.5" width="40.5" height="16.5"/>
+                            <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="14"/>
+                            <color key="textColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+            <color key="tintColor" red="0.091928518510000001" green="0.092838701859999997" blue="0.092838701859999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="ioU-1j-b6N" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="LsR-s9-1cf"/>
+                <constraint firstAttribute="bottom" secondItem="dMR-z7-PaW" secondAttribute="bottom" constant="20" id="Pc1-pH-XbY"/>
+                <constraint firstAttribute="bottom" secondItem="ioU-1j-b6N" secondAttribute="bottom" constant="21.5" id="Qbb-eM-I4E"/>
+                <constraint firstItem="TKr-TH-T3z" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="XRA-Ha-tkh"/>
+                <constraint firstAttribute="trailing" secondItem="dMR-z7-PaW" secondAttribute="trailing" constant="20" id="ddF-gF-d2n"/>
+                <constraint firstItem="TKr-TH-T3z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="z1x-6O-wJh"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                    <real key="value" value="2"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                    <color key="value" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <point key="canvasLocation" x="94" y="-174"/>
+        </view>
+    </objects>
+</document>

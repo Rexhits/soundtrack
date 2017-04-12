@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class PopViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var chooseClipBtn: STToolbarButton!
@@ -17,16 +18,15 @@ class PopViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     var blocks = [MusicBlock]()
     var parameters = ["Number of bars", "Note Density"]
-    
+    var blockSerializer: MusicBlockSerializer!
     var showBlocks = true
-    private var centerPoint: CGPoint!
+    var centerPoint: CGPoint!
     
     var delegate: PopViewDelegate?
     
     override func viewDidLoad() {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +40,7 @@ class PopViewController: UIViewController, UICollectionViewDelegate, UICollectio
         self.centerPoint = self.view.center
         self.refreshList()
         self.collectionView.reloadData()
+        blockSerializer = MusicBlockSerializer()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -104,9 +105,11 @@ class PopViewController: UIViewController, UICollectionViewDelegate, UICollectio
     
     func pullUp() {
         self.view.isHidden = false
+        self.collectionView.reloadData()
         UIView.animate(withDuration: 0.5, animations: {
             self.view.center = self.centerPoint
         }, completion: nil)
+        
     }
     @IBAction func done(_ sender: UIButton) {
         PlaybackEngine.shared.stopSequence()
@@ -114,13 +117,26 @@ class PopViewController: UIViewController, UICollectionViewDelegate, UICollectio
         delegate?.done()
     }
     
+//    func blockConfigured(block: MusicBlock) {
+//        self.blocks.append(block)
+//        self.collectionView.reloadData()
+//    }
+    
     func refreshList() {
-        let files = Bundle.main.paths(forResourcesOfType: "mid", inDirectory: nil)
-        for i in files {
-            if let url = URL.init(string: i) {
-                blocks.append(MusicBlock(name: url.fileName(), composedBy: "default", midiFile: url))
+        Server.get(api: "users/current", body: nil) { (response, err, errCode) in
+            guard response != nil else {return}
+            let res = JSON(response!)
+            for i in res["savedBlocks"].arrayValue {
+                self.blocks.append(self.blockSerializer.getMusicBlock(json: i))
             }
+            self.collectionView.reloadData()
         }
+//        let files = Bundle.main.paths(forResourcesOfType: "mid", inDirectory: nil)
+//        for i in files {
+//            if let url = URL.init(string: i) {
+//                blocks.append(MusicBlock(name: url.fileName(), composedBy: "default", midiFile: url))
+//            }
+//        }
     }
     
 }

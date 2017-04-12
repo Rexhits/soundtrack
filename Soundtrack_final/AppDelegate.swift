@@ -19,10 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // Access the storyboard and fetch an instance of the view controller
+        STFileManager.shared.createAUSamplerPresetFolder()
+        STFileManager.shared.clearInbox()
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         playbackController = storyboard.instantiateViewController(withIdentifier: "playControlBar") as! PlayControlBarView
         let myToken = Lockbox.unarchiveObject(forKey: "Token")
         if myToken != nil {
+            ServerCommunicator.shared.getCurrentUser()
             self.window = UIWindow(frame: UIScreen.main.bounds)
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "IndexViewController")
             self.window?.rootViewController = initialViewController
@@ -58,6 +61,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // MARK: - Core Data stack
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        let block = MusicBlock(name: url.fileName(), composedBy: "", midiFile: url)
+        block.saveJson()
+        return true
+    }
 
     lazy var persistentContainer: NSPersistentContainer = {
         /*
@@ -86,6 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
 
+    
     // MARK: - Core Data Saving support
 
     func saveContext () {

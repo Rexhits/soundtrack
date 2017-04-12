@@ -9,8 +9,133 @@
 import Foundation
 import UIKit
 import CoreData
+import SwiftyJSON
 
 let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
+class MusicBlockSerializer {
+    var title: String?
+    var url: String?
+    var audioUrl: String?
+    var composedBy: ComposerSerializer?
+    var date: String?
+    var id: Int?
+    var saved: Bool?
+    var collected: Bool?
+    var composed: Bool?
+    var delegate: MusicBlockSerializerDelegate?
+    static let shared = MusicBlockSerializer()
+    
+    init() {
+        
+    }
+    
+    init (json: JSON) {
+        fromJSON(json: json)
+    }
+    
+    func fromJSON(json:JSON) {
+        title = json["title"].stringValue
+        url = json["url"].stringValue
+        audioUrl = json["audioFile"].stringValue
+        composedBy = ComposerSerializer(json: json["composedBy"])
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        let _date = dateFormatter.date(from: json["createdAt"].stringValue)
+        if let d = _date {
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            date = dateFormatter.string(from: d)
+        }
+        if url != nil {
+            id = url!.getIDFromURL()!
+        }
+        
+        if let user = currentUser {
+            if composedBy?.id == user.id {
+                self.composed = true
+            }
+            for i in json["savedBy"] {
+                let id = i.1.stringValue.getIDFromURL()
+                if id == user.id {
+                    self.saved = true
+                }
+            }
+        }
+    }
+    
+    func getMusicBlock(json: JSON) -> MusicBlock {
+        fromJSON(json: json)
+        STFileManager.shared.emptyTempFoler()
+        let midifileURL = URL(string: json["midiFile"].stringValue)
+        let jsonfileURL = URL(string: json["jsonFile"].stringValue)
+        let midiData = try! Data.init(contentsOf: midifileURL!)
+        let jsonData = try! Data.init(contentsOf: jsonfileURL!)
+        let musicblock = MusicBlock(jsonFile: jsonData, midiFile: midiData)
+        musicblock.url = self.url
+        musicblock.composedBy = self.composedBy!.name!
+        self.delegate?.blockConfigured(block: musicblock)
+        return musicblock
+    }
+    
+    
+    
+    func downloader(urls: [URL], completion: @escaping ([URL])->Void) {
+        var outputUrls = [URL]()
+        for i in urls {
+            let instPreset = STFileManager.shared.getTempDir().appendingPathComponent("\(i.fileName()).aupreset")
+            let session = URLSession(configuration: .default)
+            let task = session.downloadTask(with: i, completionHandler: { (tempLocalUrl, response, error) in
+                if let tempLocalUrl = tempLocalUrl, error == nil {
+                    // Success
+                    if let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                        print("Successfully downloaded. Status code: \(statusCode)")
+                    }
+                    
+                    do {
+                        try FileManager.default.copyItem(at: tempLocalUrl, to: instPreset)
+                        outputUrls.append(instPreset)
+                        if outputUrls.count == urls.count {
+                            completion(outputUrls)
+                        }
+                    } catch (let writeError) {
+                        print("Error creating a file \(i) : \(writeError)")
+                    }
+                    
+                } else {
+                    print("Error took place while downloading a file.\(error!.localizedDescription)")
+                }
+            })
+            task.resume()
+        }
+    }
+    
+}
+
+protocol MusicBlockSerializerDelegate {
+    func blockConfigured(block: MusicBlock)
+}
+
+
+
+class ComposerSerializer {
+    var name: String?
+    var avatar: NSData?
+    var id: Int?
+    init(json: JSON) {
+        name = json["displayName"].stringValue
+        id = json["id"].intValue
+        let urlString = json["avatar"].stringValue
+        let url = URL(string: urlString)
+        if let url = url {
+            do {
+                avatar = try Data(contentsOf: url) as NSData
+            } catch {
+                print("unable to get avatar")
+            }
+        }
+    }
+}
 
 
 struct UserInfo {
@@ -21,6 +146,8 @@ struct UserInfo {
     var selfIntro: String?
     var country: String?
     var city: String?
+    var collectedBlock: MusicBlock?
+    var composedMusic: MusicBlock?
     let keys = ["Username", "Email", "Self Intro", "Country", "City", "Genres"]
     let searchKeys = ["displayName", "email", "selfIntro", "country", "city", "favoriteGenres"]
     var values = [String]()
@@ -56,6 +183,7 @@ struct UserInfo {
                 break
             }
         }
+        
     }
 }
 
@@ -69,8 +197,67 @@ extension Billboard {
         address2 = json["address2"] as? String
         latitude = json["latitude"] as! Double
         longitude = json["longitude"] as! Double
+        url = json["url"] as? String
     }
 }
+
+extension Composer {
+    convenience init(json: JSON) {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+        name = json["displayName"].stringValue
+        let urlString = json["avatar"].stringValue
+        let url = URL(string: urlString)
+        if let url = url {
+            do {
+                avatar = try Data(contentsOf: url) as NSData
+            } catch {
+                print("unable to get avatar")
+            }
+            
+        }
+    }
+    convenience init(serializer: ComposerSerializer) {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+        name = serializer.name
+        avatar = serializer.avatar
+    }
+}
+
+extension MusicBlockData {
+    convenience init(json: JSON) {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+        title = json["title"].stringValue
+        url = json["url"].stringValue
+        audioUrl = json["audioFile"].stringValue
+        composedBy = Composer(json: json["composedBy"])
+        if url != nil {
+            id = Int32(url!.getIDFromURL()!)
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        let _date = dateFormatter.date(from: json["createdAt"].stringValue)
+        if let d = _date {
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            date = dateFormatter.string(from: d)
+        }
+    }
+    convenience init(serializer: MusicBlockSerializer) {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+        title = serializer.title
+        url = serializer.url
+        audioUrl = serializer.url
+        composedBy = Composer(serializer: serializer.composedBy!)
+        date = serializer.date
+        if let id = serializer.id {
+            self.id = Int32(id)
+        }
+    }
+}
+
 
 extension Piece {
     convenience init(title: String) {
@@ -94,3 +281,5 @@ extension Piece {
 
     }
 }
+
+

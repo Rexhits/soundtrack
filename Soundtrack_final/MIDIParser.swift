@@ -205,7 +205,7 @@ internal class MIDIParser: MIDISequencer, CustomStringConvertible {
         }
     }
     
-    private func getTrackLength(musicTrack:MusicTrack) -> MusicTimeStamp {
+    func getTrackLength(musicTrack:MusicTrack) -> MusicTimeStamp {
         
         //The time of the last music event in a music track, plus time required for note fade-outs and so on.
         var trackLength = MusicTimeStamp(0)

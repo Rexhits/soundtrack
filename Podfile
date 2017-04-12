@@ -3,10 +3,17 @@ platform :ios, '9.0'
 use_frameworks!
 
 target "Soundtrack_final" do
-	pod 'SwiftyJSON'
+	pod 'SwiftyJSON', '< 3.1.4'
 	pod 'AFNetworking'
 	pod 'Lockbox'
 	pod 'RSKImageCropper'
+	pod 'Material', '~> 2.0'
+	pod 'PopupDialog', '~> 0.5'
+	pod 'HDAugmentedReality', :git => 'https://github.com/DanijelHuis/HDAugmentedReality.git'
+	pod 'Upsurge'
+	pod 'Charts'
+	pod "RQShineLabel"
+	pod 'PageMenu'
 end
 
 post_install do |installer|

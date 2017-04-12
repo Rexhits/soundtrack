@@ -9,15 +9,20 @@
 import UIKit
 import Lockbox
 import SwiftyJSON
+import Material
 
-
-class MusicListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MusicListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MusicListCellDelegate, MusicBlockSerializerDelegate {
     
+    internal func editBtnTouched() {
+        self.performSegue(withIdentifier: "gotoBlockInfoEditor", sender: self)
+    }
+
     @IBOutlet weak var playbackBar: UIView!
     
     @IBOutlet weak var musicTable: UITableView!
     var musicList = [MusicBlock]()
     var selectedIndexPath: IndexPath!
+    
     
     override func viewDidLoad() {
         musicTable.delegate = self
@@ -26,7 +31,7 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         let files = Bundle.main.paths(forResourcesOfType: "mid", inDirectory: nil)
         for i in files {
             if let url = URL.init(string: i) {
-                musicList.append(MusicBlock(name: url.lastPathComponent, composedBy: "zzw", midiFile: url))
+                musicList.append(MusicBlock(name: url.fileName(), composedBy: "zzw", midiFile: url))
             }
         }
         
@@ -63,47 +68,46 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = musicTable.dequeueReusableCell(withIdentifier: "musicCell", for: indexPath)
-        let selView = UIView()
-        selView.backgroundColor = UIColor.orange
-        selView.layer.cornerRadius = 10
-        cell.selectedBackgroundView = selView
-        cell.textLabel?.textColor = UIColor.white
-        cell.backgroundColor = UIColor.clear
-        cell.textLabel?.highlightedTextColor = UIColor.white
-        cell.detailTextLabel?.highlightedTextColor = UIColor.white
-        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
-        tap.numberOfTapsRequired = 2
-        cell.addGestureRecognizer(tap)
+        let cell = musicTable.dequeueReusableCell(withIdentifier: "musicCell", for: indexPath) as! MusicListCell
+        cell.delegate = self
+        cell.editBtn.isHidden = true
         cell.textLabel?.text = musicList[indexPath.row].name
         return cell
     }
     
-    
-    func doubleTapped() {
-        self.performSegue(withIdentifier: "showMixer", sender: self)
+    func blockConfigured(block: MusicBlock) {
+        DispatchQueue.main.async {
+            self.musicList.append(block)
+            self.musicTable.reloadData()
+        }
+        
     }
+    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //
-        
+        let cell = tableView.cellForRow(at: indexPath)! as! MusicListCell
+        cell.editBtn.isHidden = false
         if selectedIndexPath != indexPath {
             PlaybackEngine.shared.addMusicBlock(musicBlock: musicList[indexPath.row])
         }
-        selectedIndexPath = indexPath
         
+        selectedIndexPath = indexPath
         
         
 //        musicList[indexPath.row].trainClassifier()
         
-        STFileManager.shared.saveCurrentBlock()
+//        STFileManager.shared.saveCurrentBlock()
+        
+//        musicList[indexPath.row].uploadToServer()
+        
         
 //        musicList[indexPath.row].saveJson()
         
         for i in musicList[indexPath.row].parsedTracks {
+            
 //            print("\(i.groupAnalysis())\n")
 //            print("\(i.tempo)\t\(i.timeSignature)\t\(i.instrumentName)")
-            print("\(i.timestampAnalysis())\n")
 //            print("\(i.notes.map{$0.timeStamp})\n")
 //            i.byMeasure()
             
@@ -120,8 +124,16 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
 //            print("Poosibility of drum: \(i.getDrumPossibility())\t")
 //            print("Number of Voices: \(i.getNumOfVoices())\n")
 //        }
-//        STFileManager.shared.saveCurrentBlock()
-        PlaybackEngine.shared.playSequence()
+//        PlaybackEngine.shared.playSequence()
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)! as! MusicListCell
+        cell.editBtn.isHidden = true
+    }
+    
+    @IBAction func saveBlock(_ sender: UIBarButtonItem) {
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -130,5 +142,54 @@ class MusicListViewController: UIViewController, UITableViewDelegate, UITableVie
         appDelegate.playbackController.view.frame = self.playbackBar.bounds
         self.playbackBar.addSubview(appDelegate.playbackController.view)
         appDelegate.playbackController.didMove(toParentViewController: self)
+//        Server.get(api: "users/current", body: nil) { (response, err, errCode) in
+//            guard response != nil else {return}
+//            let res = JSON(response!)
+//            for i in res["savedBlocks"].arrayValue {
+//                MusicBlockSerializer.shared.getMusicBlock(json: i)
+//            }
+//        }
     }
 }
+
+class MusicListCell: UITableViewCell {
+    
+    var delegate: MusicListCellDelegate!
+    
+    internal func editBtnTouched() {
+        
+    }
+    func gotoEdit(sender: UIButton) {
+        if delegate != nil {
+            delegate.editBtnTouched()
+        }
+    }
+    
+    let editBtn = UIButton(type: UIButtonType.infoDark)
+    
+    override func awakeFromNib() {
+        let width = self.bounds.height - 2
+//        let x = self.bounds.width - width - 10
+        editBtn.tintColor = UIColor.white
+        editBtn.frame = CGRect(x: 0, y: 0, width: width, height: width)
+        self.contentView.addSubview(editBtn)
+        self.contentView.layout(editBtn).right(15).centerVertically()
+        editBtn.addTarget(self, action: #selector(gotoEdit(sender:)), for: .touchUpInside)
+        let selView = UIView()
+        selView.backgroundColor = UIColor.orange
+        selView.layer.cornerRadius = 10
+        self.selectedBackgroundView = selView
+        self.textLabel?.textColor = UIColor.white
+        self.backgroundColor = UIColor.clear
+        self.textLabel?.highlightedTextColor = UIColor.white
+        self.detailTextLabel?.highlightedTextColor = UIColor.white
+    }
+    
+}
+
+
+protocol MusicListCellDelegate {
+    func editBtnTouched()
+}
+
+

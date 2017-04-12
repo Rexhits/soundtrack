@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Billboard" representedClassName="Billboard" syncable="YES" codeGenerationType="class">
         <attribute name="address1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="address2" optional="YES" attributeType="String" syncable="YES"/>
@@ -7,27 +7,45 @@
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="hasBlocks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Block" inverseName="onBoard" inverseEntity="Block" syncable="YES"/>
-        <relationship name="hasPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="onBoard" inverseEntity="Piece" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="hasBlocks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MusicBlockData" inverseName="onBoard" inverseEntity="MusicBlockData" syncable="YES"/>
+        <relationship name="hasPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="onBoad" inverseEntity="Piece" syncable="YES"/>
     </entity>
-    <entity name="Block" representedClassName="Block" syncable="YES" codeGenerationType="class">
-        <attribute name="composedBy" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="configFile" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="midiFile" optional="YES" attributeType="Binary" syncable="YES"/>
+    <entity name="Clips" representedClassName="Clips" syncable="YES" codeGenerationType="class">
+        <attribute name="midiData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="inPiece" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="hasClips" inverseEntity="Piece" syncable="YES"/>
+    </entity>
+    <entity name="Composer" representedClassName="Composer" syncable="YES" codeGenerationType="class">
+        <attribute name="avatar" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="composedBlock" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MusicBlockData" inverseName="composedBy" inverseEntity="MusicBlockData" syncable="YES"/>
+    </entity>
+    <entity name="MusicBlockData" representedClassName="MusicBlockData" syncable="YES" codeGenerationType="class">
+        <attribute name="audioUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="collected" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="composed" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="saved" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="composedBy" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Composer" inverseName="composedBlock" inverseEntity="Composer" syncable="YES"/>
         <relationship name="onBoard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasBlocks" inverseEntity="Billboard" syncable="YES"/>
-        <relationship name="usedInPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="blocks" inverseEntity="Piece" syncable="YES"/>
     </entity>
     <entity name="Piece" representedClassName="Piece" syncable="YES" codeGenerationType="class">
         <attribute name="audioFile" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="composedBy" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mainBlock" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="secondBlock" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="blocks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Block" inverseName="usedInPieces" inverseEntity="Block" syncable="YES"/>
-        <relationship name="onBoard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasPieces" inverseEntity="Billboard" syncable="YES"/>
+        <relationship name="hasClips" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clips" inverseName="inPiece" inverseEntity="Clips" syncable="YES"/>
+        <relationship name="onBoad" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasPieces" inverseEntity="Billboard" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Billboard" positionX="-45" positionY="45" width="128" height="165"/>
-        <element name="Block" positionX="-63" positionY="-18" width="128" height="135"/>
-        <element name="Piece" positionX="-54" positionY="18" width="128" height="120"/>
+        <element name="Billboard" positionX="-45" positionY="54" width="128" height="180"/>
+        <element name="Composer" positionX="-45" positionY="117" width="128" height="90"/>
+        <element name="MusicBlockData" positionX="-54" positionY="90" width="128" height="30"/>
+        <element name="Piece" positionX="-54" positionY="18" width="128" height="150"/>
+        <element name="Clips" positionX="-36" positionY="144" width="128" height="75"/>
     </elements>
 </model>

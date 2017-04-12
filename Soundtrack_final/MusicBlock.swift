@@ -11,14 +11,31 @@ import AudioToolbox
 import SwiftyJSON
 
 class MusicBlock: MIDIParser {
-    var name: String
-    var composedBy: String
+    var name: String = ""
+    var composedBy: String = ""
     override var description: String {
         return "Name: \(name)\nComposedBy: \(composedBy)\nTempo: \(tempo)\nTimeSignature: \(timeSignature)\nHasTempoTrack: \(tempoTrack != nil)\nNumberOfTracks: \(tracks.count)"
     }
     var length = MusicTimeStamp()
     var createdAt: Date!
     var midiFileUrl = URL(string: "")
+    var url: String?
+    var presetLoaded = false
+    var key = 0
+    var jsonFile: JSON!
+    var audioFile: String?
+    
+    
+    var asJSON: JSON {
+        var json: JSON = [:]
+        json["title"].string = self.name
+        json["tempo"].int = self.tempo
+        json["composedBy"].string = self.composedBy
+        json["timeSig"] = self.timeSignature.asJson
+        json["key"].int = self.key
+        json["tracks"].arrayObject = self.parsedTracks.map{$0.getChannelSettings()}
+        return json
+    }
     
     override init() {
         self.name = "default"
@@ -42,17 +59,16 @@ class MusicBlock: MIDIParser {
         midiFileUrl = midiFile
     }
     
-    
-    var asJSON: JSON {
-        var json: JSON = [:]
-        json["name"].string = self.name
-        json["tempo"].int = self.tempo
-        json["composedBy"].string = self.composedBy
-        json["createdAt"].string = Formatter.toJSON(date: self.createdAt)
-        json["timeSig"] = self.timeSignature.asJson
-        json["tracks"].arrayObject = self.parsedTracks.map{$0.getChannelSettings()}
-        return json
+    init(jsonFile: Data, midiFile: Data) {
+        let json = JSON.init(data: jsonFile)
+        super.init(data: midiFile)
+        loadData(json: json)
+        
+        super.parse()
+        
     }
+    
+    
     
     func addTracks(tracks: [MusicalSequence]) {
         for i in tracks {
@@ -113,7 +129,7 @@ class MusicBlock: MIDIParser {
         }
     }
     
-    private func addTempoEvent(bpm: Float64, startAt: MusicTimeStamp) {
+    func addTempoEvent(bpm: Float64, startAt: MusicTimeStamp) {
         if tempoTrack != nil {
             if startAt == 0 {
                 // Clear the tempo track if the event start at the beginning, in case there're multiple tempo event there
@@ -131,7 +147,7 @@ class MusicBlock: MIDIParser {
         }
     }
     // Method to add time signature event
-    private func addTimeSignatureEvent(timeSignature: TimeSignature, startAt: MusicTimeStamp) {
+    func addTimeSignatureEvent(timeSignature: TimeSignature, startAt: MusicTimeStamp) {
         // Convert raw denominator into required value (a negative power of 2: 2 = quarter note, 3 = eighth, 4 = 16 etc)
         let numerator = UInt8(timeSignature.beatsPerMeasure)
         let denominatorOut = UInt8(log2f(Float(timeSignature.lengthPerBeat)))
@@ -153,17 +169,17 @@ class MusicBlock: MIDIParser {
         }
         
     }
-    private func addNoteEvent(track: MusicTrack, note: NoteEvent) {
-        var noteMess = MIDINoteMessage(channel: UInt8(note.channel), note: UInt8(note.note), velocity: UInt8(note.velocity), releaseVelocity: 0, duration: Float32(note.duration))
+    func addNoteEvent(track: MusicTrack, note: NoteEvent) {
+        var noteMess = MIDINoteMessage(channel: 0, note: UInt8(note.note), velocity: UInt8(note.velocity), releaseVelocity: 0, duration: Float32(note.duration))
         let status = MusicTrackNewMIDINoteEvent(track, note.timeStamp, &noteMess)
         if status != OSStatus(noErr) {
             print("error adding Note \(status)")
         } else {
-            print("new Note added: \(note)")
+//            print("new Note added: \(note)")
         }
     }
     
-    private func addControllerEvent(track: MusicTrack, event: Articulation) {
+    func addControllerEvent(track: MusicTrack, event: Articulation) {
         var messStatus = event.status
         switch messStatus {
         case 160 ... 175:
@@ -221,25 +237,6 @@ class MusicBlock: MIDIParser {
         return data as Data
     }
     
-    func trainClassifier() {
-        
-        let path = getURLInDocumentDirectoryWithFilename(filename: "\(self.name).plist")
-        print(path)
-        var data = [String: [String: Double]]()
-        var index = 0
-        for i in parsedTracks {
-            let (pitch_min, pitch_max, pitch_mean, pitch_median, pitch_standardDiviation) = i.pitchAnalysis()
-            let newdata = ["pitch_min": pitch_min, "pitch_max": pitch_max, "pitch_mean": pitch_mean, "pitch_median": pitch_median,"pitch_standardDiviation": pitch_standardDiviation, "output": 0]
-            data["Track\(index): \(i.instrumentName)"] = newdata
-            index += 1
-//            let dataSet = [bassPercentage, drumPercentage, meanOfInterval, numOfVoices]
-//            TrackTypeClassifier.shared.addDataPoint(input: dataSet, output: output)
-        }
-        let plist = NSDictionary(dictionary: data)
-        plist.write(toFile: path.path, atomically: false)
-        print(data)
-    }
-    
     func saveJson() {
         let path = getURLInDocumentDirectoryWithFilename(filename: "\(self.name).json")
         print(path)
@@ -250,5 +247,97 @@ class MusicBlock: MIDIParser {
             print("Error creating data")
         }
         
+    }
+    
+//    func loadData() {
+//        let dir = getURLInDocumentDirectoryWithFilename(filename: self.name)
+//        let jsonPath = dir.appendingPathComponent("\(self.name).json")
+//        do {
+//            let jsonData = try Data.init(contentsOf: jsonPath, options: .dataReadingMapped)
+//            let json = JSON.init(data: jsonData, options: .allowFragments, error: nil)
+//            guard let tracks = json["tracks"].arrayObject, let composedBy = json["composedBy"].string, let name = json["title"].string, let tempo = json["tempo"].int else {
+//                return
+//            }
+//            self.composedBy = composedBy
+//            self.name = name
+//            self.tempo = tempo
+//            self.timeSignature = TimeSignature(json: json["timeSig"])
+//            for i in tracks.enumerated() {
+//                self.parsedTracks[i.offset].restoreChannelSettings(json: JSON(i.element))
+//            }
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//    }
+    
+    
+    
+    func loadData(json: JSON) {
+        self.jsonFile = json
+        guard let composedBy = json["composedBy"].string, let name = json["title"].string, let tempo = json["tempo"].int, let key = json["key"].int else {
+            return
+        }
+        self.key = key
+        self.composedBy = composedBy
+        self.name = name
+        self.tempo = tempo
+        self.timeSignature = TimeSignature(json: json["timeSig"])
+        presetLoaded = true
+    }
+    
+    func loadPreset() {
+        if presetLoaded {
+            for i in 0 ..< parsedTracks.count {
+                self.parsedTracks[i].restoreChannelSettingsFromServer(json: self.jsonFile["tracks"][i])
+            }
+        }
+    }
+
+//    func loadPreset() {
+//        if !presetLoaded {
+//            let (instPreset, fxPreset) = STFileManager.shared.getPresetPath()
+//            guard let instData = instPreset, let fxData = fxPreset else {return}
+//            for i in instData {
+//                let url = URL(fileURLWithPath: i)
+//                let trackIndex = Int(url.fileName().components(separatedBy: "_").last!)!
+//                do {
+//                    self.parsedTracks[trackIndex].instrument?.reset()
+//                    try self.parsedTracks[trackIndex].instrument?.loadPreset(at: url)
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//            for i in fxData {
+//                let url = URL(fileURLWithPath: i)
+//                let fileNameComponents = url.fileName().components(separatedBy: "_")
+//                let trackIndex = Int(fileNameComponents[1])!
+//                let effectIndex = Int(fileNameComponents[2])!
+//                do {
+//                    self.parsedTracks[trackIndex].effects[effectIndex].reset()
+//                    try self.parsedTracks[trackIndex].effects[effectIndex].loadPreset(at: url)
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//            presetLoaded = true
+//        }
+//    }
+    
+    func uploadToServer(billboard: String, completion: @escaping (String)->Void) {
+        STFileManager.shared.uploadCurrentBlock(block: self, billboard: billboard) { (package, err, code) in
+            if let pack = package ?? nil {
+                completion("Musicblock uploaded!")
+                self.url = pack["url"] as! String!
+            }
+        }
+    }
+    
+    func getBlockLength() -> MusicTimeStamp {
+        let endTimes = self.parsedTracks.map{$0.notes.last!.timeStamp + $0.notes.last!.duration}
+        return endTimes.max()!
+    }
+    
+    func getJson() -> JSON {
+        return self.asJSON
     }
 }

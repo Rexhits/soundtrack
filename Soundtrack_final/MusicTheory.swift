@@ -35,6 +35,7 @@ struct TimeSignature: CustomStringConvertible {
         }
         self.lengthPerBeat = lengthPerBeat
         self.beatsPerMeasure = beatsPerMeasure
+        self.description = "\(lengthPerBeat)/\(beatsPerMeasure)"
     }
 }
 
@@ -71,18 +72,22 @@ class Track: MusicalSequence {
     var type = PlaybackEngine.trackType.instrument
     var instrument: AVAudioUnitMIDIInstrument? {
         willSet {
-            name = instrument?.auAudioUnit.audioUnitName
+            if name == nil {
+                name = instrument?.auAudioUnit.audioUnitName
+            }
         }
         didSet {
             if instrument != oldValue {
-                name = instrument?.auAudioUnit.audioUnitName
+                if name == nil {
+                    name = instrument?.auAudioUnit.audioUnitName
+                }
             }
         }
     }
     var selectedNode: AVAudioUnit?
     var selectedUnit: AUAudioUnit?
     var selectedUnitDescription: AudioComponentDescription?
-    var soundFount: SoundFount?
+    var soundFont: SoundFont?
     var trackColor = UIColor.randomColor()
     var selectedUnitPreset = [AUAudioUnitPreset]()
     var effects = [AVAudioUnitEffect]()
@@ -97,7 +102,9 @@ class Track: MusicalSequence {
     
     init(trackType: PlaybackEngine.trackType) {
         type = trackType
-        name = self.content.instrumentName
+        if name == nil {
+            name = self.content.instrumentName
+        }
         if trackType == .instrument {
             instrument = AVAudioUnitSampler()
             if name == nil {
@@ -109,7 +116,9 @@ class Track: MusicalSequence {
     }
     func addToPlaybackEngine(trackType: PlaybackEngine.trackType) {
         type = trackType
-        name = self.content.instrumentName
+        if name == nil {
+            name = self.content.instrumentName
+        }
         if trackType == .instrument {
             instrument = AVAudioUnitSampler()
             if name == nil {
@@ -122,9 +131,10 @@ class Track: MusicalSequence {
     
     func getChannelSettings() -> JSON {
         var json = self.getInfoJson()
+//        var json: JSON = [:]
         json["trackName"].string = self.name
         json["trackIndex"].int = self.trackIndex
-        if let sf = self.soundFount {
+        if let sf = self.soundFont {
             json["soundFont"] = sf.asJson
         }
         if let inst = self.instrument {
@@ -134,17 +144,43 @@ class Track: MusicalSequence {
         if !effects.isEmpty {
             json["effectsDes"].arrayObject = self.effects.map{$0.audioComponentDescription.asJson}
         }
+        json["volume"].float = self.mixer.volume
+        json["pan"].float = self.mixer.pan
         return json
     }
     
     func restoreChannelSettings(json: JSON) {
-        guard let name = json["trackName"].string, let index = json["trackIndex"].int else {
+        guard let name = json["trackName"].string, let index = json["trackIndex"].int, let volume = json["volume"].float, let pan = json["pan"].float, let sequenceType = json["sequenceType"].int else {
             return
         }
         self.name = name
         self.trackIndex = index
+        self.content.sequenceType = sequenceType
+        self.mixer.volume = volume
+        self.mixer.pan = pan
         let cd = self.initAudioComponentDescription(json: json["instrumentDes"])
-        self.instrument = AVAudioUnitMIDIInstrument(audioComponentDescription: cd!)
+        AVAudioUnit.instantiate(with: cd!, options: []) { avAudioUnit, error in
+            guard let avAudioUnit = avAudioUnit else { return }
+            self.instrument = avAudioUnit as? AVAudioUnitMIDIInstrument
+            avAudioUnit.auAudioUnit.requestViewController(completionHandler: { (vc) in
+                if let vc = vc {
+                    self.instrumentView = vc.view
+                }
+            })
+            
+            let presets = STFileManager.shared.getAUSapmlerPresets().map{URL.init(fileURLWithPath: $0)}
+            
+            let sf = SoundFont(json: json["soundFont"])
+            if let sf = sf {
+                self.soundFont = sf
+                let url = presets.filter{$0.fileName() == sf.name}.first!
+                do {
+                    try avAudioUnit.loadPreset(at: url)
+                } catch {
+                    print(error)
+                }
+            }
+        }
         self.trackColor = UIColor(json: json["trackColor"])!
         guard let effects = json["effectsDes"].array else {
             return
@@ -153,6 +189,46 @@ class Track: MusicalSequence {
             let cd = initAudioComponentDescription(json: effects[i])
             let newFx = AVAudioUnitEffect(audioComponentDescription: cd!)
             self.effects.append(newFx)
+        }
+        
+        
+    }
+    
+    func restoreChannelSettingsFromServer(json:JSON) {
+        
+        self.name = json["trackName"].stringValue
+        self.trackIndex = json["trackIndex"].intValue
+        self.content.sequenceType = json["sequenceType"].intValue
+        self.mixer.volume = json["volume"].floatValue
+        self.mixer.pan = json["pan"].floatValue
+        let cd = self.initAudioComponentDescription(json: json["instrumentDes"])
+        self.trackColor = UIColor(json: json["trackColor"])!
+        if let effects = json["effectsDes"].array {
+            for i in 0 ..< effects.count {
+                let cd = initAudioComponentDescription(json: effects[i])
+                let newFx = AVAudioUnitEffect(audioComponentDescription: cd!)
+                self.effects.append(newFx)
+            }
+        }
+        
+        AVAudioUnit.instantiate(with: cd!, options: []) { avAudioUnit, error in
+            guard let avAudioUnit = avAudioUnit else { return }
+            self.instrument = avAudioUnit as? AVAudioUnitMIDIInstrument
+            avAudioUnit.auAudioUnit.requestViewController(completionHandler: { (vc) in
+                if let vc = vc {
+                    self.instrumentView = vc.view
+                }
+            })
+            let sf = SoundFont(json: json["soundFont"])
+            if let sf = sf {
+                self.soundFont = sf
+                print(sf.url)
+                do {
+                    try avAudioUnit.loadPreset(at: sf.url)
+                } catch {
+                    print(error)
+                }
+            }
         }
     }
     
@@ -168,6 +244,8 @@ class Track: MusicalSequence {
         }
         return AudioComponentDescription(componentType: type, componentSubType: subType, componentManufacturer: manufacturer, componentFlags: flags, componentFlagsMask: flagsMask)
     }
+    
+    
     
 }
 
@@ -221,6 +299,16 @@ internal struct BasicMusicalStructure {
     var noteDistribution: [Int: [NoteEvent]] = [0:[NoteEvent](), 1:[NoteEvent](), 2:[NoteEvent](), 3:[NoteEvent](), 4:[NoteEvent](), 5:[NoteEvent](), 6:[NoteEvent](), 7:[NoteEvent](), 8:[NoteEvent](), 9:[NoteEvent](), 10:[NoteEvent](), 11: [NoteEvent]()]
     var sequenceType = 0
 //    var measures: [Measure]
+    func startFromZeroTime() -> BasicMusicalStructure {
+        var sequence = self
+        let offset = notes.first?.timeStamp
+        if offset != 0 {
+            for i in 0 ..< sequence.notes.count {
+                sequence.notes[i].timeStamp -= offset!
+            }
+        }
+        return sequence
+    }
 }
 
 
@@ -228,7 +316,7 @@ internal struct BasicMusicalStructure {
 struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStringConvertible {
     var timeStamp: MusicTimeStamp = 0 {
         didSet {
-            timeRange = timeStamp ... timeStamp + duration
+            timeRange = timeStamp ..< timeStamp + duration
         }
     }
     var channel = 0
@@ -246,7 +334,7 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
         return String(note)
     }
     
-    var timeRange = ClosedRange<MusicTimeStamp>.init(uncheckedBounds: (lower: 0, upper: 1))
+    var timeRange = Range<MusicTimeStamp>.init(uncheckedBounds: (lower: 0, upper: 1))
     var asJson: JSON {
         var json: JSON = [:]
         json["note"].int = note
@@ -270,7 +358,7 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
         self.velocity = velocity
         self.duration = duration
         self.timeStamp = timeStamp
-        self.timeRange =  timeStamp ... timeStamp + duration
+        self.timeRange =  timeStamp ..< timeStamp + duration
     }
     
     var description: String {
@@ -284,7 +372,7 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
         self.octave = Int(note / 12)
         self.velocity = velocity
         self.duration = MusicTimeStamp(duration)
-        self.timeRange = timeStamp ... timeStamp + duration
+        self.timeRange = timeStamp ..< timeStamp + duration
     }
     init(note: Int, velocity: Int, timeStamp: MusicTimeStamp, duration: MusicTimeStamp) {
         self.note = note
@@ -293,7 +381,7 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
         self.velocity = velocity
         self.timeStamp = timeStamp
         self.duration = MusicTimeStamp(duration)
-        self.timeRange = timeStamp ... timeStamp + duration
+        self.timeRange = timeStamp ..< timeStamp + duration
     }
     
     static func == (lhs: NoteEvent, rhs: NoteEvent) -> Bool {
@@ -310,11 +398,15 @@ struct NoteEvent: Equatable, Comparable, CustomStringConvertible, CustomDebugStr
     static func < (lhs: NoteEvent, rhs: NoteEvent) -> Bool {
         return lhs.timeStamp < rhs.timeStamp
     }
+    
 }
 
-struct SoundFount {
+
+
+struct SoundFont {
     var name: String
     var url: URL
+
     var asJson: JSON {
         var json: JSON = [:]
         json["name"].string = self.name
@@ -326,11 +418,16 @@ struct SoundFount {
         self.url = url
     }
     init?(json: JSON) {
-        guard let name = json["name"].string, let url = json["url"].string else {
+        guard let name = json["name"].string, let _ = json["url"].string else {
             return nil
         }
         self.name = name
-        self.url = URL(fileURLWithPath: url)
+        let path = json["url"].stringValue
+        self.name = URL(fileURLWithPath: path).fileName()
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let dirPath = documentsDirectory.appendingPathComponent("AUSampler")
+        self.url =  dirPath.appendingPathComponent("\(self.name).aupreset")
+        
     }
 }
 

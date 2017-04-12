@@ -21,7 +21,7 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
     public var isEffect: Bool!
     var activityIndicator: UIActivityIndicatorView!
     public var preset: [AUAudioUnitPreset]!
-    public var soundFount = [SoundFount]()
+    public var soundFont = [SoundFont]()
     public var name: String!
     var rect: CGRect!
     override func viewDidLoad() {
@@ -46,7 +46,10 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         if let au = PlaybackEngine.shared.selectedTrack.selectedUnit {
             self.showPluginView(au: au)
         }
+        self.addChildViewController(appDelegate.playbackController)
+        appDelegate.playbackController.view.frame = self.playControlBar.bounds
         self.playControlBar.addSubview(appDelegate.playbackController.view)
+        appDelegate.playbackController.didMove(toParentViewController: self)
     }
     override func viewDidAppear(_ animated: Bool) {
         if pluginView == nil {
@@ -73,12 +76,11 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
             pluginView?.removeFromSuperview()
             if let au = PlaybackEngine.shared.selectedTrack.selectedUnit {
                 if au.audioUnitName! == "AUSampler" {
-                    let files = Bundle.main.paths(forResourcesOfType: "aupreset", inDirectory: nil)
+                    let files = STFileManager.shared.getAUSapmlerPresets()
                     for i in files {
-                        let path = "file://\(i)"
-                        if let url = URL.init(string: path) {
-                            self.soundFount.append(SoundFount(name: url.fileName(), url: url))
-                        }
+//                        let path = "file://\(i)"
+                        let url = URL.init(fileURLWithPath: i)
+                        self.soundFont.append(SoundFont(name: url.fileName(), url: url))
                     }
                 }
             }
@@ -99,7 +101,7 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         if section == 0 {
             return preset.count
         } else {
-            return soundFount.count
+            return soundFont.count
         }
     }
     
@@ -118,7 +120,7 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
         if indexPath.section == 0 {
             cell.textLabel?.text = preset[indexPath.row].name
         } else {
-            cell.textLabel?.text = soundFount[indexPath.row].name
+            cell.textLabel?.text = soundFont[indexPath.row].name
         }
         return cell
     }
@@ -128,7 +130,8 @@ class PluginViewController: UIViewController, UITabBarDelegate, UITableViewDeleg
             PlaybackEngine.shared.selectedTrack.selectedUnit!.currentPreset = preset[indexPath.row]
         } else {
             do {
-                try PlaybackEngine.shared.selectedTrack.selectedNode?.loadPreset(at: soundFount[indexPath.row].url)
+                try PlaybackEngine.shared.selectedTrack.selectedNode?.loadPreset(at: soundFont[indexPath.row].url)
+                PlaybackEngine.shared.selectedTrack.soundFont = soundFont[indexPath.row]
             } catch {
                 print(error.localizedDescription)
             }

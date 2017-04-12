@@ -34,9 +34,6 @@ class EvolutionViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     @IBAction func newPiece(_ sender: UIBarButtonItem) {
-        let piece = Piece(title: "Default")
-        appDelegate.saveContext()
-        self.selectedPiece = piece
         self.performSegue(withIdentifier: "gotoTemplateSelect", sender: self)
     }
     
@@ -107,12 +104,8 @@ class EvolutionViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "gotoTemplateSelect" {
-            let target = segue.destination as! TemplateSelViewController
-            target.piece = self.selectedPiece
-        }
         if segue.identifier == "gotoPieceEditor" {
-            let target = segue.destination as! PieceEditorViewController
+            let target = segue.destination as! CompositionViewController
             target.piece = self.selectedPiece
         }
     }

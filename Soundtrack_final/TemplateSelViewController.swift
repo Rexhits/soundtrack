@@ -33,14 +33,18 @@ class TemplateSelViewController: UIViewController, PopViewDelegate {
     }
     
     func blockSelected(sender: PopViewCollectionCell, block: MusicBlock) {
-        self.selectedCellTitle.text = sender.title.text
-        Evolution.shared.mainBlock = block
+//        self.selectedCellTitle.text = sender.title.text
+//        Evolution.shared.mainBlock = block
     }
     
     func blockDeselected(sender: PopViewCollectionCell) {
-        Evolution.shared.mainBlock = nil
+//        Evolution.shared.mainBlock = nil
     }
     func done() {
+        self.piece = Piece(title: "Default")
+        self.piece.composedBy = currentUser?.username
+        piece.mainBlock = PlaybackEngine.shared.loadedBlock?.url
+        appDelegate.saveContext()
         self.performSegue(withIdentifier: "gotoPieceEditor", sender: self)
     }
     
