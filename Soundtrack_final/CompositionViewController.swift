@@ -10,6 +10,7 @@ import UIKit
 import SpriteKit
 import AVFoundation
 import RQShineLabel
+import PopupDialog
 
 class CompositionViewController: UIViewController {
     
@@ -19,6 +20,7 @@ class CompositionViewController: UIViewController {
     
     var piece: Piece!
     
+    
     var shineLabel: ShineLabel!
     
     
@@ -26,10 +28,12 @@ class CompositionViewController: UIViewController {
         PlaybackEngine.shared.delegate = self
         setupScene()
         updateLabel(text: "Welcome to the Lab! You can combine two pieces together here")
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         PlaybackEngine.shared.delegate = nil
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -38,6 +42,37 @@ class CompositionViewController: UIViewController {
                 vc.piece = self.piece
             }
         }
+        else if segue.identifier == "showMixer" {
+            if let vc = segue.destination as? BlockInfoEditViewController {
+                vc.piece = self.piece
+                if let finishedClip = self.piece.finishedClip {
+                    let block = MusicBlock(clip: finishedClip)
+                    PlaybackEngine.shared.updateBlock(newBlock: block)
+                }
+            }
+        }
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "showMixer" {
+            if piece.finishedClip == nil {
+                let popup = PopupDialog(title: "Sorry", message: "Compose Something First...")
+                let ok = DefaultButton(title: "OK", action: nil)
+                popup.addButton(ok)
+                self.present(popup, animated: true, completion: nil)
+                return false
+            } else {
+                return true
+            }
+        }
+        return true
+    }
+    
+}
+
+extension CompositionViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
@@ -61,7 +96,11 @@ extension CompositionViewController: PlaybackEngineDelegate {
     func updateTime(currentTime: AVMusicTimeStamp) {
         //
     }
+    
+    
 }
+
+
 
 extension CompositionViewController {
     func addShineLabel() {
@@ -107,6 +146,7 @@ extension CompositionViewController {
             sparkNode?.removeFromParent()
         }
     }
+    
 }
 
 class ShineLabel: RQShineLabel {
@@ -146,5 +186,6 @@ class ShineLabel: RQShineLabel {
         
         return contentSize
     }
-    
 }
+
+

@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         // Access the storyboard and fetch an instance of the view controller
         STFileManager.shared.createAUSamplerPresetFolder()
-        STFileManager.shared.clearInbox()
+//        STFileManager.shared.clearInbox()
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         playbackController = storyboard.instantiateViewController(withIdentifier: "playControlBar") as! PlayControlBarView
         let myToken = Lockbox.unarchiveObject(forKey: "Token")
@@ -63,8 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Core Data stack
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        let block = MusicBlock(name: url.fileName(), composedBy: "", midiFile: url)
-        block.saveJson()
         return true
     }
 

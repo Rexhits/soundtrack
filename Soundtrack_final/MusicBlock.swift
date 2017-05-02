@@ -68,7 +68,19 @@ class MusicBlock: MIDIParser {
         
     }
     
-    
+    init(clip: Clip) {
+        super.init(data: clip.midiData! as Data)
+        super.parse()
+        self.tempo = Int(clip.tempo)
+        let timeSig = clip.timeSignature?.components(separatedBy: "/")
+        self.timeSignature = TimeSignature(timeStamp: 0, lengthPerBeat: Int(timeSig!.first!)!, beatsPerMeasure: Int(timeSig!.last!)!)
+        self.key = Int(clip.key)
+//        let trackDataSet = clip.hasTracks!.map{$0 as! TrackData}
+//        for i in trackDataSet.enumerated() {
+//            self.parsedTracks[i.offset].mixer.volume = i.element.volume
+//            self.parsedTracks[i.offset].mixer.pan = i.element.pan
+//        }
+    }
     
     func addTracks(tracks: [MusicalSequence]) {
         for i in tracks {
@@ -104,6 +116,7 @@ class MusicBlock: MIDIParser {
         localtrack.musicTrack = newtrack
         self.parsedTracks.append(localtrack as! Track)
     }
+    
     
     
     // Method to add a new track
@@ -179,6 +192,12 @@ class MusicBlock: MIDIParser {
         }
     }
     
+    func addNoteEvent(trackNum: Int, note: NoteEvent) {
+        addNoteEvent(track: self.tracks[trackNum], note: note)
+        self.parsedTracks[trackNum].addNote(note: note)
+    }
+    
+    
     func addControllerEvent(track: MusicTrack, event: Articulation) {
         var messStatus = event.status
         switch messStatus {
@@ -249,6 +268,29 @@ class MusicBlock: MIDIParser {
         
     }
     
+    func selectRange(start: MusicTimeStamp, length: MusicTimeStamp) -> MusicBlock {
+        let newBlock = self
+        let blockLength = newBlock.getBlockLength()
+        var end = start + length
+        if end >= blockLength {
+            end = blockLength
+        }
+        let range = start ..< start + length
+        for var i in newBlock.parsedTracks {
+            i.notes = i.notes.filter{range.contains($0.timeStamp)}
+            for n in 0 ..< i.notes.count {
+                i.notes[n].timeStamp -= start
+            }
+        }
+        let cutLeft = 0 ... start
+        let cutRight = end ... blockLength
+        
+        for i in newBlock.tracks {
+            MusicTrackCut(i, cutRight.lowerBound, cutRight.upperBound)
+            MusicTrackCut(i, cutLeft.lowerBound, cutLeft.upperBound)
+        }
+        return newBlock
+    }
 //    func loadData() {
 //        let dir = getURLInDocumentDirectoryWithFilename(filename: self.name)
 //        let jsonPath = dir.appendingPathComponent("\(self.name).json")
@@ -333,7 +375,14 @@ class MusicBlock: MIDIParser {
     }
     
     func getBlockLength() -> MusicTimeStamp {
-        let endTimes = self.parsedTracks.map{$0.notes.last!.timeStamp + $0.notes.last!.duration}
+        
+        
+        let endTimes = self.parsedTracks.map { (track) -> MusicTimeStamp in
+            guard !track.notes.isEmpty else {
+                return 0
+            }
+            return track.notes.last!.timeStamp + track.notes.last!.duration
+        }
         return endTimes.max()!
     }
     

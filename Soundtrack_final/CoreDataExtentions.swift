@@ -112,13 +112,26 @@ class MusicBlockSerializer {
     
 }
 
+extension MusicBlockSerializer: Hashable {
+    var hashValue: Int {
+        guard self.id != nil else {
+            return -1
+        }
+        return id!
+    }
+    static func == (lhs: MusicBlockSerializer, rhs: MusicBlockSerializer) -> Bool {
+        let equal = lhs.id == rhs.id
+        return equal
+    }
+}
+
 protocol MusicBlockSerializerDelegate {
     func blockConfigured(block: MusicBlock)
 }
 
 
 
-class ComposerSerializer {
+class ComposerSerializer: Hashable {
     var name: String?
     var avatar: NSData?
     var id: Int?
@@ -135,8 +148,68 @@ class ComposerSerializer {
             }
         }
     }
+    
+    var hashValue: Int {
+        guard id != nil else {
+            return -1
+        }
+        return id!
+    }
+    
+    static func == (lhs: ComposerSerializer, rhs: ComposerSerializer) -> Bool {
+        let equal = lhs.id == rhs.id
+        return equal
+    }
 }
 
+class PieceSerializer: Hashable {
+    var url: String?
+    var title: String?
+    var audioUrl: String?
+    var id: Int?
+    var composedBy: ComposerSerializer?
+    var collectedBy: UserInfo?
+    var onboard: BillboardSerializer?
+    var date: String?
+    var saved = false
+    var composed = false
+    init(json: JSON) {
+        title = json["title"].stringValue
+        url = json["url"].stringValue
+        self.id = url?.getIDFromURL()
+        audioUrl = json["audioFile"].stringValue
+        composedBy = ComposerSerializer(json: json["composedBy"])
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        let _date = dateFormatter.date(from: json["createdAt"].stringValue)
+        if let d = _date {
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            date = dateFormatter.string(from: d)
+        }
+        if let user = currentUser {
+            if composedBy?.id == user.id {
+                self.composed = true
+            }
+            for i in json["collectedBy"] {
+                let id = i.1.stringValue.getIDFromURL()
+                if id == user.id {
+                    self.saved = true
+                }
+            }
+        }
+    }
+    var hashValue: Int {
+        guard id != nil else {
+            return -1
+        }
+        return id!
+    }
+    
+    static func == (lhs: PieceSerializer, rhs: PieceSerializer) -> Bool {
+        let equal = lhs.id == rhs.id
+        return equal
+    }
+}
 
 struct UserInfo {
     var id: Int?
@@ -146,8 +219,10 @@ struct UserInfo {
     var selfIntro: String?
     var country: String?
     var city: String?
-    var collectedBlock: MusicBlock?
-    var composedMusic: MusicBlock?
+    var collectedBlocks: [MusicBlockSerializer]?
+    var composedBlocks: [MusicBlockSerializer]?
+    var collectedPieces: [PieceSerializer]?
+    var composedPieces: [PieceSerializer]?
     let keys = ["Username", "Email", "Self Intro", "Country", "City", "Genres"]
     let searchKeys = ["displayName", "email", "selfIntro", "country", "city", "favoriteGenres"]
     var values = [String]()
@@ -183,7 +258,24 @@ struct UserInfo {
                 break
             }
         }
+        if let composed = json["composedBlocks"] {
+            let composed_json = JSON(composed)
+            composedBlocks = composed_json.map{MusicBlockSerializer.init(json: $0.1)}
+        }
+        if let collected = json["savedBlocks"] {
+            let collected_json = JSON(collected)
+            collectedBlocks = collected_json.map{MusicBlockSerializer.init(json: $0.1)}
+        }
         
+        if let composed_P = json["composedMusic"] {
+            let composed_json = JSON(composed_P)
+            composedPieces = composed_json.map{PieceSerializer.init(json: $0.1)}
+        }
+        
+        if let collected_P = json["collectedMusic"] {
+            let collected_json = JSON(collected_P)
+            collectedPieces = collected_json.map{PieceSerializer.init(json: $0.1)}
+        }
     }
 }
 
@@ -198,6 +290,31 @@ extension Billboard {
         latitude = json["latitude"] as! Double
         longitude = json["longitude"] as! Double
         url = json["url"] as? String
+    }
+}
+
+extension Clip {
+    convenience init(length: Double, data: NSData, fromMainBlock: Bool?) {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+        if let fromMain = fromMainBlock {
+            self.fromMainBlock = fromMain
+        }
+        self.length = length
+        self.midiData = data
+    }
+    convenience init() {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+    }
+}
+
+extension TrackData {
+    convenience init(volume: Double, pan: Double) {
+        let context = appDelegate.persistentContainer.viewContext
+        self.init(context: context)
+        self.pan = Float(pan)
+        self.volume = Float(volume)
     }
 }
 
@@ -257,6 +374,7 @@ extension MusicBlockData {
         }
     }
 }
+
 
 
 extension Piece {

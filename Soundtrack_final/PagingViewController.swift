@@ -25,6 +25,7 @@ class PagingViewController: UIViewController {
     var clipsManagementVC: ClipsManagementViewController!
     var composeVC: ComposeViewController!
     
+    
     override func viewDidLoad() {
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
@@ -41,12 +42,15 @@ class PagingViewController: UIViewController {
         if composeVC == nil {
             composeVC = storyBoard.instantiateViewController(withIdentifier: "composeVC") as! ComposeViewController
             composeVC.title = "Composition"
+            composeVC.rootVC = self
+        }
+        if pageMenu == nil {
+            setupPageVC()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         fetch()
-        setupPageVC()
     }
     
 //    override func viewDidLayoutSubviews() {
@@ -62,6 +66,7 @@ class PagingViewController: UIViewController {
         self.view.addSubview(pageMenu!.view)
         pageMenu!.didMove(toParentViewController: self)
         pageMenu?.delegate = self
+        pageMenu?.view.subviews.map{$0 as? UIScrollView}.forEach{$0?.isScrollEnabled = false}
     }
 }
 
@@ -74,6 +79,7 @@ extension PagingViewController {
                 self.mainBlockSerializer = MusicBlockSerializer(json: json)
                 self.mainBlock = self.mainBlockSerializer.getMusicBlock(json: json)
                 self.blockSelectionVC.getBlocks()
+                PlaybackEngine.shared.addMusicBlock(musicBlock: self.mainBlock)
             })
         }
         if let url = piece.secondBlock {

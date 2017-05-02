@@ -58,6 +58,8 @@
 		FDA9DC791DA60A4A004406D4 /* IndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC781DA60A4A004406D4 /* IndexViewController.swift */; };
 		FDA9DC7B1DA617A7004406D4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDA9DC7A1DA617A7004406D4 /* Security.framework */; };
 		FDA9DC7E1DA619EB004406D4 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA9DC7D1DA619EB004406D4 /* Global.swift */; };
+		FDB2E3601E9F6057007C9871 /* CombineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB2E35F1E9F6057007C9871 /* CombineViewController.swift */; };
+		FDB625C41E9E9ED200C6E91D /* TrackSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB625C31E9E9ED200C6E91D /* TrackSelectorViewController.swift */; };
 		FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */; };
 		FDB9E31D1DF60E440009C7C2 /* MusicalSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */; };
 		FDB9E31F1DF60F240009C7C2 /* PluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */; };
@@ -188,6 +190,8 @@
 		FDA9DC7A1DA617A7004406D4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		FDA9DC7C1DA617D8004406D4 /* Soundtrack_final.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Soundtrack_final.entitlements; sourceTree = "<group>"; };
 		FDA9DC7D1DA619EB004406D4 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		FDB2E35F1E9F6057007C9871 /* CombineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombineViewController.swift; sourceTree = "<group>"; };
+		FDB625C31E9E9ED200C6E91D /* TrackSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackSelectorViewController.swift; sourceTree = "<group>"; };
 		FDB9E31A1DF60DF40009C7C2 /* MusicBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicBlock.swift; sourceTree = "<group>"; };
 		FDB9E31C1DF60E440009C7C2 /* MusicalSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicalSequence.swift; sourceTree = "<group>"; };
 		FDB9E31E1DF60F240009C7C2 /* PluginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManager.swift; sourceTree = "<group>"; };
@@ -283,14 +287,16 @@
 				FDF9C8E21E30784600BA4FFD /* TemplateSelViewController.swift */,
 				FD01C1011E28862B005C3901 /* PieceEditorViewController.swift */,
 				FDF9C8D81E2F45A700BA4FFD /* PopViewController.swift */,
-				FDF9C8DC1E2F58FA00BA4FFD /* PopViewCollectionCell.swift */,
 				FDF9C8DE1E3004FE00BA4FFD /* PieceEditorCell.swift */,
 				FDF9C8E01E300F6200BA4FFD /* AddCell.swift */,
 				FD2BE6DC1E9A4EE7006C7D0A /* CompositionViewController.swift */,
 				FD2BE6E31E9A7900006C7D0A /* BlockSelectionViewController.swift */,
+				FDF9C8DC1E2F58FA00BA4FFD /* PopViewCollectionCell.swift */,
 				FDA2DD2F1E9B2CD300A37627 /* ClipsManagementViewController.swift */,
+				FDB625C31E9E9ED200C6E91D /* TrackSelectorViewController.swift */,
 				FDA2DD311E9B35BD00A37627 /* ComposeViewController.swift */,
 				FDA2DD291E9B25AF00A37627 /* PagingViewController.swift */,
+				FDB2E35F1E9F6057007C9871 /* CombineViewController.swift */,
 			);
 			name = Evolution;
 			sourceTree = "<group>";
@@ -661,6 +667,7 @@
 				FDB9E31B1DF60DF40009C7C2 /* MusicBlock.swift in Sources */,
 				FDCDC4401DFF3594005F0932 /* PlayControlBarView.swift in Sources */,
 				FDF9C8E31E30784600BA4FFD /* TemplateSelViewController.swift in Sources */,
+				FDB2E3601E9F6057007C9871 /* CombineViewController.swift in Sources */,
 				FDA2DD381E9B5AA600A37627 /* BlockView.swift in Sources */,
 				FD32A4941E1F89DC00C88208 /* UserSettingsViewController.swift in Sources */,
 				FD01C1021E28862B005C3901 /* PieceEditorViewController.swift in Sources */,
@@ -671,6 +678,7 @@
 				FD61A45E1DBD3FC70050F099 /* MusicTheory.swift in Sources */,
 				FDFA26881E2828AE00F53783 /* EvolutionViewController.swift in Sources */,
 				FDF0CCEC1DF74AAA00D0B8DC /* AUListViewController.swift in Sources */,
+				FDB625C41E9E9ED200C6E91D /* TrackSelectorViewController.swift in Sources */,
 				FD9ADC261E8A19E7004989D9 /* BlockUploadViewController.swift in Sources */,
 				FD01C1001E286A3E005C3901 /* CoreDataExtentions.swift in Sources */,
 				FD2BE6E41E9A7900006C7D0A /* BlockSelectionViewController.swift in Sources */,

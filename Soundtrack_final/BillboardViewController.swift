@@ -13,29 +13,56 @@ import AVFoundation
 import CoreData
 import HDAugmentedReality
 
-class BillboardViewController: UIViewController, BillboardCellDelegate , UICollectionViewDataSource, UICollectionViewDelegate {
+class BillboardViewController: UIViewController, BillboardCellDelegate, UICollectionViewDelegate {
+    
     
     
     var selectedBillboard: BillboardSerializer!
     
     @IBOutlet weak var collectionView: UICollectionView!
-    var blocksOnBoard: [MusicBlockSerializer]!
+    
     
     var audioPlayer: AVPlayer!
     
+    var blocksOnBoard: [MusicBlockSerializer]!
+    
+    var piecesOnBoard: [PieceSerializer]!
+    
     var selectedBlock: BillboardCellView?
     
+    var blockDataSource: BlockOnBoardDataSource!
+    
+    var pieceDataSource: PiecesOnBoardDataSource!
+    
     override func viewDidLoad() {
-        collectionView.dataSource = self
+        blockDataSource = BlockOnBoardDataSource(viewController: self)
+        pieceDataSource = PiecesOnBoardDataSource(viewController: self)
         collectionView.delegate = self
     }
     
+    @IBOutlet weak var pageControl: UISegmentedControl!
     
     override func viewWillAppear(_ animated: Bool) {
         self.blocksOnBoard = [MusicBlockSerializer]()
-        self.collectionView.reloadData()
+        self.piecesOnBoard = [PieceSerializer]()
+        collectionView.dataSource = blockDataSource
+//        self.collectionView.reloadData()
         fetch()
-        
+    }
+    
+    @IBAction func pageChanged(_ sender: UISegmentedControl) {
+        self.selectedBlock = nil
+        for i in collectionView.visibleCells {
+            let cell = i as! BillboardCellView
+            cell.playStopBtn.isSelected = false
+            self.audioPlayer = nil
+        }
+        if sender.selectedSegmentIndex == 0 {
+            collectionView.dataSource = blockDataSource
+        } else {
+            collectionView.dataSource = pieceDataSource
+        }
+        collectionView.reloadData()
     }
     
     func fetch() {
@@ -46,31 +73,16 @@ class BillboardViewController: UIViewController, BillboardCellDelegate , UIColle
                 let blocks = json["blockOnBoard"]
                 for i in blocks {
                     self.blocksOnBoard.append(MusicBlockSerializer(json: i.1))
-                    self.collectionView.reloadData()
                 }
+                let pieces = json["pieceOnBoard"]
+                for i in pieces {
+                    self.piecesOnBoard.append(PieceSerializer(json: i.1))
+                }
+                self.collectionView.reloadData()
             })
         }
     }
     
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return blocksOnBoard.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "billboardCell", for: indexPath) as! BillboardCellView
-        cell.block = blocksOnBoard[indexPath.row]
-        cell.delegate = self
-        if let saved = blocksOnBoard[indexPath.row].saved {
-            cell.likeBtn.isSelected = saved
-            cell.likeBtn.tintColor = UIColor.red
-        }
-        return cell
-    }
     
     override func viewWillDisappear(_ animated: Bool) {
         if self.audioPlayer != nil {
@@ -88,6 +100,23 @@ class BillboardViewController: UIViewController, BillboardCellDelegate , UIColle
     func playTapped(sender: BillboardCellView) {
         PlaybackEngine.shared.stopSequence()
         print("play tapped")
+        guard pageControl.selectedSegmentIndex == 0 else {
+            if let url = sender.piece.audioUrl {
+                if self.selectedBlock == nil {
+                    audioPlayer = AVPlayer(url: URL(string: url)!)
+                    audioPlayer.play()
+                    self.selectedBlock = sender
+                } else if sender != self.selectedBlock! {
+                    selectedBlock!.playStopBtn.isSelected = false
+                    audioPlayer = AVPlayer(url: URL(string: url)!)
+                    audioPlayer.play()
+                    self.selectedBlock = sender
+                } else {
+                    audioPlayer.play()
+                }
+            }
+            return
+        }
         if let url = sender.block.audioUrl {
             if self.selectedBlock == nil {
                 audioPlayer = AVPlayer(url: URL(string: url)!)
@@ -113,6 +142,13 @@ class BillboardViewController: UIViewController, BillboardCellDelegate , UIColle
     
     func liked(sender: BillboardCellView) {
         print("like tapped")
+        guard pageControl.selectedSegmentIndex == 0 else {
+            if let url = sender.piece.url {
+                ServerCommunicator.shared.get(url: url + "like/", body: nil, completion: { (response, err, errCode) in
+                })
+            }
+            return
+        }
         if let url = sender.block.url {
             ServerCommunicator.shared.get(url: url + "like/", body: nil, completion: { (response, err, errCode) in
             })
@@ -121,6 +157,13 @@ class BillboardViewController: UIViewController, BillboardCellDelegate , UIColle
     
     func disLiked(sender: BillboardCellView) {
         print("dislike tapped")
+        guard pageControl.selectedSegmentIndex == 0 else {
+            if let url = sender.piece.url {
+                ServerCommunicator.shared.get(url: url + "dislike/", body: nil, completion: { (response, err, errCode) in
+                })
+            }
+            return
+        }
         if let url = sender.block.url {
             ServerCommunicator.shared.get(url: url + "dislike/", body: nil, completion: { (response, err, errCode) in
             })
@@ -129,6 +172,70 @@ class BillboardViewController: UIViewController, BillboardCellDelegate , UIColle
     }
     func shareTapped(sender: BillboardCellView) {
         //
+    }
+}
+
+class BlockOnBoardDataSource: NSObject, UICollectionViewDataSource {
+
+    var vc: BillboardViewController!
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return vc.blocksOnBoard.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "billboardCell", for: indexPath) as! BillboardCellView
+        cell.block = vc.blocksOnBoard[indexPath.row]
+        cell.delegate = vc
+        if let saved = vc.blocksOnBoard[indexPath.row].saved {
+            if saved {
+                cell.likeBtn.isSelected = true
+                cell.likeBtn.tintColor = UIColor.red
+            } else {
+                cell.likeBtn.isSelected = false
+                cell.likeBtn.tintColor = UIColor.lightGray
+            }
+        }
+        return cell
+    }
+    
+    convenience init(viewController: BillboardViewController) {
+        self.init()
+        self.vc = viewController
+    }
+}
+
+class PiecesOnBoardDataSource: NSObject, UICollectionViewDataSource {
+    
+    var vc: BillboardViewController!
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return vc.piecesOnBoard.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "billboardCell", for: indexPath) as! BillboardCellView
+        cell.piece = vc.piecesOnBoard[indexPath.row]
+        cell.delegate = vc
+        if vc.piecesOnBoard[indexPath.row].saved {
+            cell.likeBtn.isSelected = true
+            cell.likeBtn.tintColor = UIColor.red
+        } else {
+            cell.likeBtn.isSelected = false
+            cell.likeBtn.tintColor = UIColor.lightGray
+        }
+        return cell
+    }
+    
+    convenience init(viewController: BillboardViewController) {
+        self.init()
+        self.vc = viewController
     }
 }
 
@@ -141,6 +248,16 @@ class BillboardCellView: UICollectionViewCell {
             self.title.text = block.title
             self.date.text = block.date
             if let avatar = block.composedBy?.avatar {
+                self.avatar.image = UIImage(data: avatar as Data)
+            }
+        }
+    }
+    var piece: PieceSerializer! {
+        didSet {
+            self.artist.text = piece.composedBy?.name
+            self.title.text = piece.title
+            self.date.text = piece.date
+            if let avatar = piece.composedBy?.avatar {
                 self.avatar.image = UIImage(data: avatar as Data)
             }
         }

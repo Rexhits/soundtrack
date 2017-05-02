@@ -50,7 +50,7 @@ class TemplateSelViewController: UIViewController, PopViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "gotoPieceEditor" {
-            let target = segue.destination as! PieceEditorViewController
+            let target = segue.destination as! CompositionViewController
             target.piece = self.piece
         }
     }

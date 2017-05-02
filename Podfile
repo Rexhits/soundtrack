@@ -14,6 +14,8 @@ target "Soundtrack_final" do
 	pod 'Charts'
 	pod "RQShineLabel"
 	pod 'PageMenu'
+	pod 'ValueStepper'
+	pod 'Persei', '~> 3.0'
 end
 
 post_install do |installer|

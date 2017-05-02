@@ -34,6 +34,9 @@ class BlockUploadViewController: UIViewController, MKMapViewDelegate, CLLocation
     
     @IBOutlet weak var searchBtn: UIButton!
     
+    var uploadingBlock = true
+    
+    var mp3URL: URL!
     
     var searchResultsController: SearchTableViewController!
     
@@ -209,8 +212,18 @@ class BlockUploadViewController: UIViewController, MKMapViewDelegate, CLLocation
         
         let popup = PopupDialog.init(title: "Pin On This Billboard?", message: mess, image: nil, buttonAlignment: .vertical, transitionStyle: .bounceUp, gestureDismissal: false, completion: nil)
         
-        let ok = DefaultButton(title: "Yes") { 
-            PlaybackEngine.shared.bounceCurrentBlock()
+        let ok = DefaultButton(title: "Yes") {
+            if self.uploadingBlock {
+                PlaybackEngine.shared.bounceCurrentBlock()
+            } else {
+                let popView = PopupDialog(title: "Uploading your music", message: "Please Wait...")
+                self.present(popView, animated: true, completion: nil)
+                ServerCommunicator.shared.uploadMusicPiece(mp3: self.mp3URL, billboard: self.selectedBillboard, completion: { (_, _, _) in
+                    popView.dismiss()
+                    let _ = self.navigationController?.popViewController(animated: true)
+                })
+            }
+            
         }
         let cancel = CancelButton(title: "Cancel", action: nil)
         popup.addButtons([ok, cancel])

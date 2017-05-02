@@ -183,7 +183,19 @@ class PlaybackEngine: NSObject {
     
     func updateBlock(newBlock: MusicBlock) {
         stopSequence()
-        self.blockLength = 0
+        guard loadedBlock != nil else {
+            return
+        }
+        for (i,var v) in newBlock.parsedTracks.enumerated() {
+            v.sequenceType = loadedBlock!.parsedTracks[i].sequenceType
+            v.trackColor = loadedBlock!.parsedTracks[i].trackColor
+            v.trackIndex = loadedBlock!.parsedTracks[i].trackIndex
+            v.name = loadedBlock!.parsedTracks[i].name
+            v.instrumentName = loadedBlock!.parsedTracks[i].instrumentName
+        }
+        newBlock.tempo = self.loadedBlock!.tempo
+        self.loadedBlock = newBlock
+        self.blockLength = newBlock.getBlockLength()
         self.sequencer = nil
         self.sequencer = AVAudioSequencer(audioEngine: engine)
         self.data = newBlock.getSequenceData()
@@ -197,11 +209,24 @@ class PlaybackEngine: NSObject {
             for i in 0 ..< sequencer.tracks.count {
                 sequencer.tracks[i].destinationAudioUnit = tracks[i].instrument!
                 if sequencer.tracks[i].lengthInBeats > blockLength {
-                    blockLength = sequencer.tracks[i].lengthInBeats
                     //                    print(sequencer.tracks[i].lengthInBeats)
                 }
             }
         }
+    }
+    
+    
+    func setPlaybackRange(start: AVMusicTimeStamp, length: AVMusicTimeStamp) {
+        stopSequence()
+        stopLoop()
+        sequencer.currentPositionInBeats = start
+        let timePerQuarterNote = 60 / Double(loadedBlock!.tempo)
+        let endTime = length * timePerQuarterNote
+        let dispatchTime = DispatchTime.now() + endTime
+        DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
+            self.stopSequence()
+        }
+        playSequence()
     }
     
     func addNode(type: trackType, adding: Bool?, _ cd: AudioComponentDescription?, completionHandler: @escaping ((Void) -> Void)) {

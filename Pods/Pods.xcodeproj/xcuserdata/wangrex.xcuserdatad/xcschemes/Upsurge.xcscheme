@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '38E0D914AE240128845EB7A01670D100'
+               BlueprintIdentifier = 'A02B72827CEA80AA2623A8EC8F93063F'
                BlueprintName = 'Upsurge'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Upsurge.framework'>

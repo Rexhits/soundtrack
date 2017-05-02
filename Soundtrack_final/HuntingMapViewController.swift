@@ -17,6 +17,7 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
     @IBOutlet weak var mapView: MKMapView!
     let locationManager = CLLocationManager()
     var distance: Double = 20
+    let maxRadius: Double = 200
     var billboards = [BillboardSerializer]()
     
     var location: CLLocationCoordinate2D?
@@ -165,7 +166,7 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
             dropPin.coordinate = location
             dropPin.title = i.name
             dropPin.subtitle = i.info
-            let circle = MKCircle(center: location, radius: 30)
+            let circle = MKCircle(center: location, radius: maxRadius)
             mapView.add(circle)
             mapView.addAnnotation(dropPin)
         }
@@ -286,8 +287,17 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
                 })
                 
                 // make button location related
-                let billboardBtn = DefaultButton(title: "Looking for billboard?", action: { 
-                    self.showARBillboard()
+                let billboardBtn = DefaultButton(title: "Looking for billboard?", action: {
+                    let userCoordinate = mapView.userLocation.coordinate
+                    let userLocation = CLLocation(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
+                    let billboardLocation = CLLocation(latitude: self.selectedBillboard!.latitude!, longitude: self.selectedBillboard!.longitude!)
+                    if userLocation.distance(from: billboardLocation) > self.maxRadius {
+                        let popUp = PopupDialog(title: "Your are too far away to see the billboard", message: nil)
+                        popUp.addButton(PopupDialogButton(title: "OK", action: nil))
+                        self.present(popUp, animated: true, completion: nil)
+                    } else {
+                        self.showARBillboard()
+                    }
                 })
                 
                 billboardBtn.titleColor = UIColor.orange
@@ -302,7 +312,7 @@ class HuntingMapViewController: UIViewController, MKMapViewDelegate, CLLocationM
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleView = MKCircleRenderer(overlay: overlay)
-        circleView.fillColor = UIColor.orange.withAlphaComponent(0.3)
+        circleView.fillColor = UIColor.orange.withAlphaComponent(0.2)
         return circleView
     }
     

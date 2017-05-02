@@ -209,6 +209,12 @@ class BlockInfoEditViewController: UIViewController, UITableViewDelegate, UITabl
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let des = segue.destination as? BlockUploadViewController {
+            des.uploadingBlock = true
+            des.mp3URL = nil
+        }
+    }
     
     
 }

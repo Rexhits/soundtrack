@@ -42,6 +42,7 @@ class BlockSelectionViewController: UITableViewController {
     
     override func viewDidLayoutSubviews() {
         mainBlockView.view.backgroundColor = UIColor.hexStringToUIColor(hex: "#b348ff")
+        mainBlockView.changeBtn.isHidden = true
         secondBlockView.view.backgroundColor = UIColor.hexStringToUIColor(hex: "#916ff2")
         newBlockView.view.backgroundColor = UIColor.hexStringToUIColor(hex: "#6f97e5")
         newBlockView.changeBtn.isHidden = true
@@ -129,8 +130,10 @@ extension BlockSelectionViewController: PopViewDelegate {
             
         case "Aux Block":
             rootVC.secondBlock = block
-            rootVC.secondBlockSerializer!.title = block.name
-            rootVC.secondBlockSerializer!.composedBy?.name = block.composedBy
+            let serializer = MusicBlockSerializer()
+            serializer.title = block.name
+            serializer.composedBy?.name = block.composedBy
+            rootVC.secondBlockSerializer = serializer
             piece.secondBlock = block.url
         default:
             break

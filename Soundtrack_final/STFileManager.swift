@@ -84,7 +84,7 @@ class STFileManager: NSObject {
         }
     }
     
-    private func createDir(atPath: URL) {
+    func createDir(atPath: URL) {
         if !FileManager.default.fileExists(atPath: atPath.path) {
             do {
                 try FileManager.default.createDirectory(at: atPath, withIntermediateDirectories: true, attributes: nil)

@@ -27,6 +27,7 @@ final class ServerCommunicator: NSObject {
     static let shared = ServerCommunicator()
     let serverURL = "http://45.79.208.141/"
     let manager = AFHTTPSessionManager()
+    var delegate: ServerCommunicatorDelegate?
     override init() {
         super.init()
         getToken()
@@ -37,6 +38,7 @@ final class ServerCommunicator: NSObject {
             guard response != nil else {return}
             let res = response! as! JSONPackage
             currentUser = UserInfo(json: res)
+            self.delegate?.userFetched()
         }
     }
     
@@ -109,6 +111,26 @@ final class ServerCommunicator: NSObject {
         }
     }
     
+    func uploadMusicPiece(mp3: URL, billboard: String, completion: @escaping (JSONPackage?, Error?, Int?)->Void) {
+        getToken()
+        let body = ["title": mp3.fileName(), "onboard": billboard]
+        
+        manager.post("\(serverURL)musicpiece/", parameters: body, constructingBodyWith: { (formData) in
+            do {
+                let data = try Data.init(contentsOf: mp3)
+                formData.appendPart(withFileData: data, name: "audioFile", fileName: mp3.lastPathComponent, mimeType: "audio/mpeg")
+            } catch {
+                print(error.localizedDescription)
+            }
+        }, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
+            completion(response as? JSONPackage, nil, nil)
+        }) { (task: URLSessionDataTask?, err: Error) in
+            let response = task!.response as! HTTPURLResponse
+            print(response)
+            completion(nil, err, response.statusCode)
+        }
+    }
+    
     func uploadBlock(block: MusicBlock, billboard: String, completion: @escaping (JSONPackage?, Error?, Int?)->Void) {
         getToken()
         let body = ["title": block.name, "onboard": billboard]
@@ -126,7 +148,7 @@ final class ServerCommunicator: NSObject {
                 do {
                     let url = URL(fileURLWithPath: af)
                     let audioFile = try Data.init(contentsOf: url)
-                    formData.appendPart(withFileData: audioFile, name: "audioFile", fileName: "\(block.name).mp3", mimeType: "audio/midi")
+                    formData.appendPart(withFileData: audioFile, name: "audioFile", fileName: "\(block.name).mp3", mimeType: "audio/mpeg")
                 } catch {
                     print("error reading audio file")
                 }
@@ -165,6 +187,7 @@ final class ServerCommunicator: NSObject {
             completion(response as? JSONPackage, nil, nil)
         }) { (task: URLSessionDataTask?, err: Error) in
             let response = task!.response as! HTTPURLResponse
+            print(response)
             completion(nil, err, response.statusCode)
         }
     }
@@ -201,6 +224,10 @@ final class ServerCommunicator: NSObject {
         }
         dataTask.resume()
     }
+}
+
+protocol ServerCommunicatorDelegate {
+    func userFetched()
 }
 
 let Server = ServerCommunicator.shared
@@ -504,6 +531,9 @@ extension UIImage {
         return colorizedImage!
     }
     func resize(x: CGFloat, y: CGFloat) -> UIImage {
+        
+        
+        
         let size = CGSize(width: x, height: y)
         let scale = CGFloat(max(size.width/self.size.width,
                                 size.height/self.size.height))
@@ -512,13 +542,33 @@ extension UIImage {
         
         let rr:CGRect = CGRect(x: 0, y: 0, width: width, height: height)
         
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0);
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0);
         self.draw(in: rr)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage!
     }
     
+}
+
+extension UISegmentedControl {
+    func removeBorders() {
+        setBackgroundImage(imageWithColor(color: backgroundColor!), for: .normal, barMetrics: .default)
+        setBackgroundImage(imageWithColor(color: tintColor!), for: .selected, barMetrics: .default)
+        setDividerImage(imageWithColor(color: UIColor.clear), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
+    }
+    
+    // create a 1x1 image with this color
+    private func imageWithColor(color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+        context!.setFillColor(color.cgColor);
+        context!.fill(rect);
+        let image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return image!
+    }
 }
 
 extension UIColor {
@@ -569,5 +619,12 @@ extension FileManager {
     }
 }
 
+extension Double {
+    static func remap(input: Double, oldMin: Double, oldMax: Double, newMin: Double, newMax: Double) -> Double{
+        let oldRange = oldMax - oldMin
+        let newRange = newMax - newMin
+        return (((input - oldMin) * newRange) / oldRange) + newMin
+    }
+}
 
 

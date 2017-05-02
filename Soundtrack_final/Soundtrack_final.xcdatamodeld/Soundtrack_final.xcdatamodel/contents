@@ -9,10 +9,20 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="hasBlocks" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MusicBlockData" inverseName="onBoard" inverseEntity="MusicBlockData" syncable="YES"/>
-        <relationship name="hasPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="onBoad" inverseEntity="Piece" syncable="YES"/>
+        <relationship name="hasPieces" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="onBoard" inverseEntity="Piece" syncable="YES"/>
     </entity>
-    <entity name="Clips" representedClassName="Clips" syncable="YES" codeGenerationType="class">
+    <entity name="Clip" representedClassName="Clip" syncable="YES" codeGenerationType="class">
+        <attribute name="beingUsed" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="fromMainBlock" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="index" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="length" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="midiData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="tempo" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="timeSignature" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userComposed" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="finishedPiece" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="finishedClip" inverseEntity="Piece" syncable="YES"/>
+        <relationship name="hasTracks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackData" inverseName="inClip" inverseEntity="TrackData" syncable="YES"/>
         <relationship name="inPiece" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Piece" inverseName="hasClips" inverseEntity="Piece" syncable="YES"/>
     </entity>
     <entity name="Composer" representedClassName="Composer" syncable="YES" codeGenerationType="class">
@@ -38,14 +48,21 @@
         <attribute name="mainBlock" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="secondBlock" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="hasClips" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clips" inverseName="inPiece" inverseEntity="Clips" syncable="YES"/>
-        <relationship name="onBoad" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasPieces" inverseEntity="Billboard" syncable="YES"/>
+        <relationship name="finishedClip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="finishedPiece" inverseEntity="Clip" syncable="YES"/>
+        <relationship name="hasClips" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Clip" inverseName="inPiece" inverseEntity="Clip" syncable="YES"/>
+        <relationship name="onBoard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Billboard" inverseName="hasPieces" inverseEntity="Billboard" syncable="YES"/>
+    </entity>
+    <entity name="TrackData" representedClassName="TrackData" syncable="YES" codeGenerationType="class">
+        <attribute name="pan" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="volume" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="inClip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Clip" inverseName="hasTracks" inverseEntity="Clip" syncable="YES"/>
     </entity>
     <elements>
         <element name="Billboard" positionX="-45" positionY="54" width="128" height="180"/>
+        <element name="Clip" positionX="-36" positionY="144" width="128" height="225"/>
         <element name="Composer" positionX="-45" positionY="117" width="128" height="90"/>
         <element name="MusicBlockData" positionX="-54" positionY="90" width="128" height="30"/>
-        <element name="Piece" positionX="-54" positionY="18" width="128" height="150"/>
-        <element name="Clips" positionX="-36" positionY="144" width="128" height="75"/>
+        <element name="Piece" positionX="-54" positionY="18" width="128" height="165"/>
+        <element name="TrackData" positionX="-45" positionY="162" width="128" height="90"/>
     </elements>
 </model>
