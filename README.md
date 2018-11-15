@@ -8,6 +8,8 @@ https://github.com/Rexhits/Soundtrack_Server
 
 STSynth's repo:<br>
 https://github.com/Rexhits/STSynth
+
+
 </p>
 <br><br>
 <p>
@@ -22,7 +24,8 @@ Done:<br>
 * Dedicated software synthesizer “STSynth”<br>
 * Location related functionality (MapView on iOS, geographic info in database)<br>
 * Save/restore audio engine states to/from server<br>
-* Generating one new piece by combining features from 2 collected pieces. (MIDI Based)<br>
+* Generating one new piece by combining features from 2 collected pieces. (MIDI Based)
+* Render MIDI to mp3 for sharing <br>
  </p>
 
 
