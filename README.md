@@ -10,6 +10,7 @@ STSynth's repo:<br>
 https://github.com/Rexhits/STSynth
 </p>
 <br><br>
+<p>
 To Do:
 * Improve the LSTM-based deep learning model for piece combining (MIDI Based)
 * UI for user uploading/downloading blocks
@@ -22,5 +23,6 @@ Done:
 * Location related functionality (MapView on iOS, geographic info in database)
 * Save/restore audio engine states to/from server
 * Generating one new piece by combining features from 2 collected pieces. (MIDI Based)
+ </p>
 
 
