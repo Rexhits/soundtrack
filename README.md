@@ -1,6 +1,6 @@
 # soundtrack
 
-<p>Soundtrack is an iOS musical social network APP which enables musician to post audio or MIDI clips at certain location, and let users/fans to collect those clips and mesh the clips up to compose their own pieces by using provided algorithms. This APP is written in Swift, the backend is written in Python with Django, it also features a dedicated software synthesizer I wriiten in JUCE called "STSynth".</p>
+<p>Soundtrack is an iOS musical social network APP which enables musician to post audio or MIDI clips at certain location, and let users/fans to collect those clips and mesh them up to compose their own pieces by using provided algorithms. This APP is written in Swift, the backend is written in Python with Django, it also features a dedicated software synthesizer I wriiten in JUCE called "STSynth".</p>
 <br><br>
 <p>
 Server's repo is found here: <br>
@@ -27,7 +27,7 @@ Done:<br>
 * Generating one new piece by combining features from 2 collected pieces. (MIDI Based)
 * Render MIDI to mp3 for sharing <br>
  </p>
-
+<br><br>
 
 <p>
 See the following paper for further details: <br>
