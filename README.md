@@ -7,8 +7,7 @@ Soundtrack is an iOS musical social network APP which enables musician to post a
 Server's repo is found here: <br>
 https://github.com/Rexhits/Soundtrack_Server
 
-STSynth's repo:
-
+STSynth's repo:<br>
 https://github.com/Rexhits/STSynth
 
 
