@@ -30,5 +30,6 @@ Done:<br>
 
 
 <p>
-
+See the following paper for further details: <br>
+https://github.com/Rexhits/soundtrack/blob/newBranch/Step%20into%20the%20Soundtrack.pdf
 </p>
